@@ -1,118 +1,150 @@
-# Glassy: canlı palette incelemesi / live palette audit
+# Glassy: live palette audit
 
 2026-09-14 · Plasma 6.7.5 / Wayland · Kvantum 1.1.8 / Qt 6.11.
-Bu bir tam canlı geçiş başarı raporu değildir. / Full live switching is not solved.
-Refactor doğrulaması: 94 Python testi ve 41 QML testi başarılı.
 
-## Bizim uygulamamızdan kaynaklanan kısım
+This is **not** a report claiming that full live switching has been solved.
+Refactor verification: 94 Python tests and 41 QML tests passed.
 
-Önceki `appearance.py sync`, her renk geçişinde hem `Glassy.svg` hem
-`Glassy.kvconfig` üretiyordu. `GeneralColors` içinde 13 KDE rolünün RGB karşılığı
-vardı. Dolayısıyla önceki test yalnız palette değişimini ölçmüyordu.
+## What came from our implementation
 
-Refactor ile 11 gereksiz override kaldırıldı: window, button, text, window text,
-button text, highlight, highlighted text, tooltip text, disabled text, link ve
-visited link. Kontrol başına metin renkleri de belirtilmiyor; Kvantum'un belgelenmiş
-palette fallback'i kullanılıyor. Yerel KDE `PaletteChanged` bildirimi artık dosya
-yazılmış olmasına bağlı değil. Yalnız metin/bağlantı rengi değişse de iletiliyor.
+The previous `appearance.py sync` regenerated both `Glassy.svg` and
+`Glassy.kvconfig` on every color transition. `GeneralColors` contained RGB values
+for 13 KDE palette roles, so the previous test was not measuring a palette-only
+transition.
 
-Yalnız `base.color` ve `alt.base.color` üretiliyor. Bunun nedeni tahmin değil:
-Kvantum `standardPalette()` içinde eksik Base yerine açıkça beyaz atıyor ve eksik
-AlternateBase'i bundan türetiyor. Tüm renklerin çıkarıldığı deneyde, ilk palette
-bildiriminden önce Base `#ffffff` kaldı. Bu iki rolü tutmak koyu ilk açılıştaki
-beyaz içerik/okunabilirlik regresyonunu önlüyor; renkler yine KDE'den geliyor.
+The refactor removed 11 unnecessary overrides: window, button, text, window text,
+button text, highlight, highlighted text, tooltip text, disabled text, link, and
+visited link. Per-control text colors are no longer specified either; Kvantum's
+documented palette fallback is used. The native KDE `PaletteChanged` notification
+also no longer depends on a file having been written. It is emitted even when only
+text/link colors changed.
 
-## Sabit dosya deneyi
+Only `base.color` and `alt.base.color` are still generated. This is based on an
+observed Kvantum behavior rather than an assumption: in `standardPalette()`,
+Kvantum explicitly falls back to white for a missing Base and derives a missing
+AlternateBase from it. In the experiment where every color override was removed,
+Base stayed `#ffffff` before the first palette notification. Keeping these two
+roles prevents the white-content/readability regression on a dark first launch;
+their values are still derived from KDE.
 
-`tests/glassy-live.py`, kullanıcı ayarlarına dokunmadan ayrı `XDG_CONFIG_HOME`
-altında gerçek Wayland Dolphin ve Kate süreçleri açar. SVG/config başlangıçta
-bir kere oluşturulur, geçişler boyunca **hiç değiştirilmez**. Yalnız renk şeması
-ve KDE'nin yerel palette bildirimi değişir. Test gözlemcisi palette/stil atamaz,
-repolish yapmaz. PID ve QStyle adresi üç aşamada aynı kalır; iki asset'in SHA256
-değerleri de aynı kalır. Kate'te gerçek bir metin dosyası açılır, düzenlenmez.
-Yalnız testin oluşturduğu süreçler deney sonunda kapatılır; bu bir ürün çözümü değildir.
+## Frozen-file experiment
 
-| Ölçüm, aynı Dolphin/Kate süreçlerinde | Light | Dark | Light |
+`tests/glassy-live.py` launches real Wayland Dolphin and Kate processes under a
+separate `XDG_CONFIG_HOME`, without touching user settings. The SVG/config assets
+are generated once at startup and are **never modified** during the transitions.
+Only the color scheme and KDE's native palette notification change.
+
+The observer does not assign a palette/style or trigger repolish. PID and QStyle
+address remain the same in all three stages, and the SHA-256 values of both assets
+remain unchanged. Kate opens a real text file but does not edit it. Only processes
+created by the test are closed when the experiment ends; this is not a production
+workaround.
+
+| Measurement in the same Dolphin/Kate processes | Light | Dark | Light |
 | --- | --- | --- | --- |
 | QApplication Window | `#f6f6f3` | `#090909` | `#f6f6f3` |
 | QApplication WindowText | `#121212` | `#f5f5f5` | `#121212` |
-| Kvantum standardPalette Window | açık | **açık kaldı** | açık |
-| Çizilmiş cam yüzey | açık, alfa 127 | **açık kaldı**, alfa 127 | açık, alfa 127 |
+| Kvantum standardPalette Window | light | **stayed light** | light |
+| Painted glass surface | light, alpha 127 | **stayed light**, alpha 127 | light, alpha 127 |
 
-Koyu başlangıçlı ters testte de yüzey üç aşamada koyu kaldı. Refactor edilmiş
-iki-rol sürümü koyu ilk açılışta doğru Base `#111111` ile başladı.
-Bu deney, ana yüzey probleminin yalnız SVG dosyası önbelleği olmadığını gösteriyor.
+The inverse test starting in dark mode also kept the surface dark through all
+three stages. The refactored two-role version starts correctly with Base `#111111`
+on a dark first launch.
 
-## Gerçekte canlı olan / olmayan parçalar
+This experiment shows that the main surface issue is not only an SVG file-cache
+problem.
 
-| Parça | Durum |
+## What is and is not live
+
+| Component | Status |
 | --- | --- |
-| Qt uygulama ve widget palette rolleri | Aynı süreçte güncelleniyor; Window/Text/Base/Button/Highlight rollerinde doğrulandı. |
-| Qt paletini doğrudan kullanan içerik | Güncellenebiliyor; Dolphin Places/etiket paletleri ve Kate editör içeriği kontrol edildi. |
-| Tüm metin ve ikonların çizimi | **Topluca başarılı değil.** Bazı Kvantum menü/toolbar çizimleri veya uygulamanın kendi sabitlediği renkler eski kalabiliyor. Palette değerinin değişmesi, her pikselin değiştiği anlamına gelmiyor. |
-| Cam pencere/diyalog zemini | Kvantum'un önbellekli `standardPalette()` rengi; aynı stil nesnesiyle canlı değişmiyor. |
-| SVG kontrol dolgusu, kenarı, ok/glyph, progress ve seçili item zemini | Statik SVG; Qt palette bildirimi SVG'yi yeniden renklendirmiyor. |
-| KWin blur / alfa | Renkten ayrı; yüzey alfa 127, bütün pencere opaklığı 1 kaldı. Bu deney blur gücünü değiştirmedi. |
-| Glassy Aurorae | Ayrı SystemPalette yolu kullanmaya devam ediyor; bu refactor dekorasyonu değiştirmiyor. |
+| Qt application and widget palette roles | Update in the same process; verified for Window/Text/Base/Button/Highlight roles. |
+| Content that reads the Qt palette directly | Can update; Dolphin Places/label palettes and Kate editor content were checked. |
+| Rendering of all text and icons | **Not universally live.** Some Kvantum menu/toolbar drawing or application-defined fixed colors can remain stale. A changed palette value does not imply that every pixel has changed. |
+| Glass window/dialog background | Uses Kvantum's cached `standardPalette()` color; it does not update live while the same style object remains active. |
+| SVG control fill, border, arrow/glyph, progress, and selected-item background | Static SVG; a Qt palette notification does not recolor the SVG. |
+| KWin blur / alpha | Independent of color; surface alpha stayed 127 and whole-window opacity stayed 1. This experiment did not change blur strength. |
+| Glassy Aurorae | Continues to use its separate SystemPalette path; this refactor does not change the decoration. |
 
-## Dosya üretimi neden tamamen kaldırılamadı?
+## Why file generation could not be removed completely
 
-`Glassy.kvconfig`: artık yalnız Base/AlternateBase değişince içeriği değişir.
-Window/metin/vurgu/link renkleri için dosya yazımı gerekmez. Ancak ilk açılış
-Base regresyonu çözülmeden kalan iki rolü kaldırmak güvenli değil.
+`Glassy.kvconfig` now changes only when Base/AlternateBase changes. File writes are
+not needed for Window/text/accent/link colors. The two remaining roles cannot be
+removed safely until the initial-Base regression is solved.
 
-`Glassy.svg`: mevcut opak kontrol dolguları ve glyph'ler için halen yeniden
-renklendirme gerekiyor. Kvantum `QSvgRenderer` kullanıyor, KSvg'nin Plasma
-palette sınıflarını değil. Render çağrısına Qt palette'i aktarılmıyor.
-SVG'nin tamamını şeffaf yapmak veya `interior=false` kullanmak genel bir Qt
-palette dolgusunu garanti etmiyor; bazı kontroller hiç doldurulmuyor. Bu,
-opak/okunaklı kontrol gereksinimini bozacağı için uygulanmadı.
+`Glassy.svg` still needs recoloring for the current opaque control fills and glyphs.
+Kvantum uses `QSvgRenderer`, not KSvg's Plasma palette classes, and the Qt palette
+is not passed into the SVG renderer. Making the entire SVG transparent or using
+`interior=false` does not guarantee a generic Qt-palette fill; some controls then
+receive no fill at all. That would break the opaque/readable-control requirement,
+so it was not adopted.
 
-Dolayısıyla üretim `sync` yolu, gerekli SVG/iki Base rolünü hâlâ güncelliyor;
-**tek değişmez SVG/config ile tam canlı Glassy hedefine ulaşıldığı iddia edilmiyor.**
-Yazımlar yalnız içerik farklıysa yapılır. Değişen asset'ler yeni açılan stil
-nesnelerinde yüklenir; çalışan süreçlerde otomatik reload sağlamaz.
+The production `sync` path therefore still updates the required SVG and the two
+Base roles. Writes happen only when content actually differs. Updated assets are
+loaded by newly created style objects, but they do not automatically reload inside
+running processes.
 
-Native config/SVG ile güvenli refactor bu aşamada uygulanmış durumda. Tam çözüm,
-aynı Kvantum backend'inin upstream'de palette değişiminde cached standardPalette'i
-yenilemesi ve SVG yüzeyleri için desteklenen palette-aware bir çizim yoluna sahip
-olmasını gerektiriyor. Harici motor, dependency fork'u, uygulama kapat/aç,
-session restart veya geçici Breeze→Kvantum değişimi eklenmedi.
+The safe native-config/SVG refactor is complete at this stage. A complete solution
+would require the same Kvantum backend to refresh its cached `standardPalette` on
+palette changes and provide a supported palette-aware drawing path for SVG surfaces.
+No external engine, dependency fork, application restart, session restart, or
+temporary Breeze→Kvantum style switch was added.
 
-## Reproduce / kaynaklar
+## Reproduction and sources
 
-### Context menu follow-up — 2026-09-15
+### Context-menu follow-up — 2026-09-15
 
-`tests/check-density.py` + `glassy-density` gerçek Kvantum/QMenu ile izole,
-offscreen Light → Dark → Light palette olaylarını ölçer. Config yalnız üretimdeki
-Base/AlternateBase override'larını içerir; Window/Text sabitlenmez. Aynı QStyle ve
-sabit SVG ile QMenu Window paleti `#f6f6f3 → #16191f → #f6f6f3` olurken çizilmiş
-menü yüzeyi üç aşamada da `#f6f6f3` kaldı. Her aşamada yeni oluşturulan QMenu da
-aynı eski yüzeyi çizdi. Bu, uygulamanın tek bir eski QMenu nesnesini tutmasından
-değil Kvantum'un stil/SVG cache yolundan kaynaklanıyor. Render kaynağı menü rengini
-halen doğru `window` palet rolünden üretir; üretim renk/sync davranışı değiştirilmedi.
-Bu test compositor blur doğrulaması değildir; stil değişimi, repolish veya çalışan
-uygulamayı yeniden başlatma çözümü eklenmedi.
+`tests/check-density.py` together with `glassy-density` measures isolated,
+offscreen Light → Dark → Light palette events with a real Kvantum/QMenu.
+The config contains only the production Base/AlternateBase overrides; Window/Text
+are not pinned.
 
-Boyut matrisi: 8/10/14 pt × 100/125/200% × üç density × light/dark = 54 durum.
-10 pt Normal'de buton/input/combobox 32→28, sekme 34→30, menü satırı 34→28 mantıksal
-piksel; font alt sınırı, yeniden boyutlandırmada sizeHint kararlılığı ve tema
-paritesi geçti. `cmake --build <build> --target glassy-density` ardından
-`python3 tests/check-density.py --probe <build>/glassy-density` ile tekrar ölçülebilir.
+While the QMenu Window palette changes
+`#f6f6f3 → #16191f → #f6f6f3`, the painted menu surface remains `#f6f6f3`
+through all three stages. A newly created QMenu at every stage paints the same
+stale surface as well. This shows that the behavior comes from Kvantum's style/SVG
+cache path rather than one old QMenu object being retained by the application.
+
+The render source still derives the menu color from the correct `window` palette
+role, so production color/sync behavior was not changed. This test is not a
+compositor-blur verification. No style switch, repolish, or running-application
+restart workaround was added.
+
+Density matrix:
+8/10/14 pt × 100/125/200% × three densities × light/dark = 54 states.
+
+At 10 pt Normal, button/input/combobox changed from 32→28 logical pixels, tabs
+34→30, and menu rows 34→28. Font lower bounds, `sizeHint` stability across resize,
+and theme parity passed.
+
+Reproduce that measurement after building the `glassy-density` target:
+
+```sh
+cmake --build <build> --target glassy-density
+python3 tests/check-density.py --probe <build>/glassy-density
+```
 
 ### Runtime/state follow-up — 2026-09-14
 
-`tests/runtime-live.py` gerçek oturumda Dolphin, Kate, System Settings ve Kitty'yi
-aynı süreçlerle Light → Dark → Light kontrol eder; sonunda eski accent/şemayı geri alır.
-`#806EE7` seçimi panel servisi yeniden yüklenince, yeni başlangıç helper süreçlerinde
-ve üç geçişte korundu. Gerçek logout/reboot yapılmadı. Picker Apply/Cancel/yeniden
-açılma ve geç gelen backend yanıtı QML testlerinde doğrulandı.
-Kitty PID sabit: gövde `#f6f6f3` → `#090909` → `#f6f6f3`; ana config SHA256 aynı,
-16 ANSI rengi aynı, mevcut opacity 0.5 / blur 1 korundu. Qt uygulamalarında palette
-rolleri canlı değişti; yukarıdaki cached Kvantum yüzey sınırı değişmedi.
-Üretim yalnız gerçek açık/koyu geçişinde yüklenmiş Kvantum süreçleri varsa yerel
-bildirim gösterir; tekrarlar birleştirilir, başlangıç/accent sync sessizdir.
-Test süreçleri dışında uygulama kapatma/açma veya session restart eklenmedi.
+`tests/runtime-live.py` checks Dolphin, Kate, System Settings, and Kitty in the real
+session using the same processes through Light → Dark → Light, then restores the
+previous accent and scheme.
+
+The temporary `#806EE7` accent survived a panel-service reload, fresh startup helper
+processes, and all three transitions. A real logout/reboot was not performed in
+that particular pass. Picker Apply/Cancel/reopen behavior and a late backend reply
+were verified by QML tests.
+
+Kitty kept the same PID: its body changed
+`#f6f6f3 → #090909 → #f6f6f3`; the main config SHA-256 stayed unchanged, all
+16 ANSI colors stayed unchanged, and the existing opacity 0.5 / blur 1 settings
+were preserved. Qt application palette roles updated live; the cached Kvantum
+surface limitation described above did not change.
+
+In production, a native notification is shown only on a real light/dark transition
+when loaded Kvantum processes are present. Repeated notifications are deduplicated;
+startup and accent-only syncs remain silent. No application or session restart was
+added. Test processes are the only processes closed by the test.
 
 ```sh
 cmake -S tests/glassy -B /tmp/glassy-checks
@@ -120,13 +152,15 @@ cmake --build /tmp/glassy-checks
 python3 tests/glassy-live.py --variant refactored \
   --observer /tmp/glassy-checks/libglassy-live-capture.so \
   --output /tmp/glassy-live-new-run
-# Tam omission: --variant omit-all; ters geçiş: --initial-mode dark
+# Full omission: --variant omit-all; inverse transition: --initial-mode dark
 ```
 
-Yeni bir çıktı klasörü kullanın. JSON dosyaları hem uygulama/widget palette'lerini,
-hem cached standardPalette'i, hem gerçek boyanmış yüzey örneğini içerir.
+Use a new output directory for each run. The JSON output contains application/widget
+palettes, the cached `standardPalette`, and a sample of the actually painted surface.
+
+Upstream references:
 
 - [Theme-Config, color inheritance exception 2](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/doc/Theme-Config)
-- [polishing.cpp: polish(QPalette), standardPalette ve Base fallback](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/style/polishing.cpp)
-- [Kvantum.cpp: PE_Widget ve kontrol doldurma yolları](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/style/Kvantum.cpp)
-- [rendering.cpp: QSvgRenderer ve metin fallback](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/style/rendering.cpp)
+- [polishing.cpp: polish(QPalette), standardPalette, and Base fallback](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/style/polishing.cpp)
+- [Kvantum.cpp: PE_Widget and control-fill paths](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/style/Kvantum.cpp)
+- [rendering.cpp: QSvgRenderer and text fallback](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/style/rendering.cpp)

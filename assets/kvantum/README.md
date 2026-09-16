@@ -9,7 +9,7 @@ from KDE palette roles; `Glassy.kvconfig` contains no Nothing color constants.
 Window surfaces are 50%, menus 75%; editable controls retain an opaque Base.
 Dolphin transparency uses Kvantum's own `transparent_dolphin_view` compatibility.
 
-## Important limits / Önemli sınırlar
+## Important limits
 
 **Full live switching is not production-ready.** Native Qt palettes do update
 in running Dolphin/Kate. Eleven unnecessary GeneralColors overrides have been
@@ -20,9 +20,6 @@ cached. Restart is not treated as a final solution; no automatic app/style/sessi
 restart is implemented. See the [same-process audit](LIVE-PALETTE.md) for measured
 live roles, remaining asset writes, and upstream limitations.
 
-**Qt paleti canlı değişiyor; tüm Glassy çizimi henüz değişmiyor.** Gereksiz renk
-override'ları kaldırıldı. Uygulamayı yeniden açmak final çözüm olarak kabul edilmiyor.
-
 Aurorae owns decoration pixels, not the client's content. **Round bottom corners**
 (default on) reserves a bottom decoration strip derived from the same Corner radius.
 All four outer corners use that radius; turning it off restores square lower
@@ -30,8 +27,10 @@ corners and the thin bottom border. Client content is resized, never covered.
 Maximized/tiled corners stay square. Aurorae 6.7 overrides the blur region when
 maximized, so its blur toggle only works on restored/tiled decorations. No
 misleading maximized-rounding switch is exposed. Global blur strength is untouched.
-Alt uygulama köşeleri Aurorae tarafından kesilemez; tam büyütülmüş pencerede
-bulanıklık bölgesini engine belirler. Bu sınırlar ayar açıklamalarında da belirtilir.
+
+Aurorae cannot clip the application's lower content corners, and the decoration
+engine controls the blur region for maximized windows. These limits are also
+described in the settings UI.
 
 System Settings' Qt Quick content, GTK and Electron are outside Kvantum's scope.
 Kate's editor and Qt input/view surfaces may intentionally remain opaque.
@@ -74,7 +73,6 @@ border and corner geometry. Combo popups use Kvantum's documented menu presentat
 ## Decoration defaults
 
 System Settings → Window Decorations → Glassy → Configure.
-The bundle installs English source labels and a Turkish catalog.
 
 | Setting | Default |
 | --- | --- |
@@ -89,6 +87,7 @@ The bundle installs English source labels and a Turkish catalog.
 generates `ConfigDefaults.js` and the native KSvg mask atlas from it. Values live
 under `[org.glassy.decoration]` in `auroraerc`; Apply updates existing decorations.
 No C++ decoration plugin is shipped.
+
 The small C++ executable is only a QUiLoader/KConfig settings dialog, not a renderer,
 plugin or daemon. Aurorae's Apply callback invokes the existing asset helper; the
 standalone dialog does the same. Source builds reuse the installed Qt/KDE libraries.
@@ -155,7 +154,8 @@ colors without changing kitty.conf. This does not remove the Kvantum cache limit
 above. Physical logout/reboot and a complete inactive-window visual matrix were
 not performed in this pass.
 
-Verified upstream contracts: [Kvantum theme format](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/doc/Theme-Config),
+Verified upstream contracts:
+[Kvantum theme format](https://github.com/tsujan/Kvantum/blob/V1.1.8/Kvantum/doc/Theme-Config),
 [Aurorae 6.7.5 configuration and blur](https://github.com/KDE/aurorae/blob/v6.7.5/v1/aurorae.cpp),
 [native configuration loader](https://github.com/KDE/aurorae/blob/v6.7.5/config/auroraeconfig.cpp),
 [KSvg alpha-mask generation](https://github.com/KDE/ksvg/blob/v6.30.0/src/ksvg/framesvg.cpp),
