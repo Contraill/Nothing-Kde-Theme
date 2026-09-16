@@ -1,0 +1,16 @@
+{
+  "KPackageStructure": "Plasma/Theme",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Description": "Dark Plasma style for Nothing KDE; Breeze fallback with a transparent panel shell",
+    "EnabledByDefault": true,
+    "Id": "NothingPlasmaDark",
+    "License": "GPL-3.0-or-later",
+    "Name": "Nothing KDE Dark",
+    "Version": "0.6.0-rc32"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "zinczorphin@email.com",
+        "Name": "Jack Faith"
+      }
+    ],
+    "Category": "Date and Time",
+    "Description": "Text only digital clock with multiple Nothing inspired font variants",
+    "EnabledByDefault": true,
+    "Icon": "preferences-desktop-widgets",
+    "Id": "org.nothingkde.widget.clock-digital-large",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Large Digital Clock",
+    "Version": "0.6.0-rc32",
+    "Website": "https://github.com/jaxparrow07/nothing-kde-widgets",
+    "Name[tr]": "Nothing KDE — Büyük Dijital Saat"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "zinczorphin@email.com",
+        "Name": "Jack Faith"
+      }
+    ],
+    "Category": "Multimedia",
+    "Description": "Media player control widget with album art, track info and interactive controls, in Nothing style",
+    "EnabledByDefault": true,
+    "Icon": "preferences-desktop-widgets",
+    "Id": "org.nothingkde.widget.media",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Media",
+    "Version": "0.6.0-rc32",
+    "Website": "https://github.com/jaxparrow07/nothing-kde-widgets",
+    "Name[tr]": "Nothing KDE — Medya"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

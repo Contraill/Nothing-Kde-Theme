@@ -1,0 +1,9 @@
+SPDX-License-Identifier: GPL-3.0-or-later
+
+Nothing KDE additions are distributed under the GNU General Public License
+version 3 or any later version. Full text: LICENSES/GPL-3.0.txt.
+
+KDE notification sources retain their SPDX copyright and license notices:
+GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL.
+The corresponding GPL texts are included in LICENSES/.
+Nothing KDE is an independent project and is not affiliated with Nothing.

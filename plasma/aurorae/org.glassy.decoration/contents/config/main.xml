@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0">
+  <kcfgfile name=""/>
+  <group name="">
+    <entry name="CornerRadius" type="Int"><default>10</default><min>0</min><max>24</max></entry>
+    <entry name="RoundBottomCorners" type="Bool"><default>true</default></entry>
+    <entry name="TitlebarOpacity" type="Int"><default>50</default><min>0</min><max>100</max></entry>
+    <entry name="InactiveOpacity" type="Int"><default>50</default><min>0</min><max>100</max></entry>
+    <entry name="Blur" type="Bool"><default>true</default></entry>
+    <entry name="BorderWidth" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <entry name="Separator" type="Bool"><default>false</default></entry>
+    <entry name="TitlebarSize" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <entry name="ButtonSize" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <entry name="ButtonSpacing" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <entry name="Shadow" type="Int"><default>1</default><min>0</min><max>3</max></entry>
+    <entry name="TitleAlignment" type="Int"><default>0</default><min>0</min><max>1</max></entry>
+    <entry name="InactiveButtons" type="Int"><default>0</default><min>0</min><max>1</max></entry>
+    <entry name="ActiveAccentBorder" type="Bool"><default>false</default></entry>
+    <entry name="WindowOpacity" type="Int"><default>50</default><min>10</min><max>100</max></entry>
+    <entry name="PopupOpacity" type="Int"><default>75</default><min>10</min><max>100</max></entry>
+    <entry name="BlurSurfaces" type="Bool"><default>true</default></entry>
+    <entry name="SurfaceRoundness" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <entry name="UiDensity" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <entry name="BorderStrength" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <entry name="ScrollbarSize" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <entry name="AccentIntensity" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+  </group>
+</kcfg>

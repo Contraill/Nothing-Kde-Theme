@@ -1,0 +1,37 @@
+{
+  "General": {
+    "EditableUrl": "false",
+    "ShowFullPath": "false",
+    "AlwaysShowTabBar": "true",
+    "ShowCloseButtonOnTabs": "true",
+    "ShowStatusBar": "0",
+    "ShowZoomSlider": "true",
+    "ShowToolTips": "false",
+    "TabStyle": "0"
+  },
+  "IconsMode": {
+    "UseSystemFont": "true",
+    "IconSize": "64",
+    "PreviewSize": "128",
+    "TextWidthIndex": "1",
+    "MaximumTextLines": "2"
+  },
+  "DetailsMode": {
+    "UseSystemFont": "true",
+    "IconSize": "22",
+    "PreviewSize": "64",
+    "HighlightEntireRow": "true"
+  },
+  "PlacesPanel": {
+    "IconSize": "24"
+  },
+  "MainWindow][Toolbar mainToolBar": {
+    "IconSize": "22",
+    "ToolButtonStyle": "IconOnly"
+  },
+  "CompactMode": {
+    "UseSystemFont": "true",
+    "IconSize": "32",
+    "PreviewSize": "64"
+  }
+}

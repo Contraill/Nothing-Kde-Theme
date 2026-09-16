@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name="" />
+  <group name="General">
+    <entry name="panelRole" type="String"><default>top</default></entry>
+    <entry name="islandLanguage" type="String"><default>auto</default></entry>
+    <entry name="confirmPowerActions" type="Bool"><default>true</default></entry>
+    <entry name="islandWeatherCity" type="String"><default></default></entry>
+    <entry name="horizontalPanelHeight" type="Int"><default>50</default></entry>
+    <entry name="topPanelWidthPercent" type="Int"><default>36</default></entry>
+    <entry name="topExtensionHeightPercent" type="Int"><default>31</default></entry>
+    <!-- Responsive layout: widths/heights are percentages of the logical screen. -->
+    <entry name="taskAreaMaxPercent" type="Int"><default>34</default></entry>
+    <entry name="taskPreviewWidthPercent" type="Int"><default>44</default></entry>
+    <entry name="taskPreviewHeightPercent" type="Int"><default>20</default></entry>
+    <entry name="panelWidthPercent" type="Int"><default>58</default></entry>
+    <entry name="showClock" type="Bool"><default>true</default></entry>
+    <entry name="hiddenApplications" type="StringList" />
+    <entry name="islandWeatherLatitude" type="String"><default></default></entry>
+    <entry name="islandWeatherLongitude" type="String"><default></default></entry>
+    <entry name="islandWeatherLocationQuery" type="String"><default></default></entry>
+    <entry name="pinnedLaunchers" type="StringList" />
+    <entry name="responsiveSizingVersion" type="Int"><default>0</default></entry>
+    <entry name="appearanceMode" type="String"><default>dark</default></entry>
+    <entry name="accentColor" type="Color"><default>#d71920</default></entry>
+
+    <entry name="launcherWidthPercent" type="Int"><default>30</default></entry>
+    <entry name="launcherHeightPercent" type="Int"><default>38</default></entry>
+    <entry name="quickWidthPercent" type="Int"><default>17</default></entry>
+    <entry name="quickHeightPercent" type="Int"><default>25</default></entry>
+    <entry name="wifiWidthPercent" type="Int"><default>20</default></entry>
+    <entry name="wifiHeightPercent" type="Int"><default>30</default></entry>
+    <entry name="bluetoothWidthPercent" type="Int"><default>20</default></entry>
+    <entry name="bluetoothHeightPercent" type="Int"><default>30</default></entry>
+    <entry name="audioWidthPercent" type="Int"><default>22</default></entry>
+    <entry name="audioHeightPercent" type="Int"><default>38</default></entry>
+    <entry name="displayWidthPercent" type="Int"><default>19</default></entry>
+    <entry name="displayHeightPercent" type="Int"><default>26</default></entry>
+    <entry name="powerDetailWidthPercent" type="Int"><default>20</default></entry>
+    <entry name="powerDetailHeightPercent" type="Int"><default>29</default></entry>
+    <entry name="calendarWidthPercent" type="Int"><default>20</default></entry>
+    <entry name="calendarHeightPercent" type="Int"><default>31</default></entry>
+    <entry name="powerWidthPercent" type="Int"><default>16</default></entry>
+    <entry name="powerHeightPercent" type="Int"><default>32</default></entry>
+    <entry name="panelOpacity" type="Int"><default>78</default></entry>
+    <entry name="popupOpacity" type="Int"><default>68</default></entry>
+    <entry name="glassBlur" type="Bool"><default>true</default></entry>
+    <entry name="autoWallpaper" type="Bool"><default>true</default></entry>
+  </group>
+</kcfg>

@@ -1,0 +1,12 @@
+{
+  "KPackageStructure": "KWin/Decoration",
+  "X-KWin-Config-TranslationDomain": "glassydecoration",
+  "KPlugin": {
+    "Id": "org.glassy.decoration",
+    "Name": "Glassy",
+    "Description": "Palette-driven frosted glass decoration for Aurorae",
+    "Version": "1.0.0",
+    "License": "GPL-3.0-or-later",
+    "Authors": [{"Name": "Glassy contributors"}]
+  }
+}

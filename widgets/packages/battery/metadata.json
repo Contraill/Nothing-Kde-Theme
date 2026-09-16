@@ -1,0 +1,25 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "zinczorphin@email.com",
+        "Name": "Jack Faith"
+      }
+    ],
+    "Category": "System Information",
+    "Description": "Battery status of current and paired devices",
+    "EnabledByDefault": true,
+    "Icon": "preferences-desktop-widgets",
+    "Id": "org.nothingkde.widget.battery",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Devices and Battery",
+    "Version": "0.6.0-rc32",
+    "Website": "https://github.com/jaxparrow07/nothing-kde-widgets",
+    "Name[tr]": "Nothing KDE — Cihazlar ve Pil"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

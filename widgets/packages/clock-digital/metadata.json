@@ -1,0 +1,25 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "zinczorphin@email.com",
+        "Name": "Jack Faith"
+      }
+    ],
+    "Category": "Date and Time",
+    "Description": "Minimalist digital clock with variant selection: Digital Clock or World Clock.",
+    "EnabledByDefault": true,
+    "Icon": "preferences-desktop-widgets",
+    "Id": "org.nothingkde.widget.clock-digital",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Digital and World Clock",
+    "Version": "0.6.0-rc32",
+    "Website": "https://github.com/jaxparrow07/nothing-kde-widgets",
+    "Name[tr]": "Nothing KDE — Dijital ve Dünya Saati"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

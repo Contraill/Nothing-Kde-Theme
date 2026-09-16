@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      },
+      {
+        "Name": "Omar (Nothing Island design)"
+      }
+    ],
+    "Category": "",
+    "Description": "Nothing Island top panel with a native Plasma application dock",
+    "EnabledByDefault": true,
+    "Icon": "view-list-icons",
+    "Id": "com.nothingplasma.panel",
+    "License": "GPL-3.0-or-later",
+    "Name": "Nothing KDE Island + Dock",
+    "Version": "0.6.0-rc32"
+  },
+  "X-Plasma-API-Minimum-Version": "6.7",
+  "X-Plasma-ContainmentType": "Panel",
+  "NoDisplay": true
+}

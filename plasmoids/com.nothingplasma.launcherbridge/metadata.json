@@ -1,0 +1,23 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "",
+    "Description": "Invisible native Meta launcher bridge for the Nothing bottom panel",
+    "EnabledByDefault": true,
+    "Icon": "start-here-kde-symbolic",
+    "Id": "com.nothingplasma.launcherbridge",
+    "License": "GPL-3.0-or-later",
+    "Name": "Nothing KDE Launcher Bridge",
+    "Version": "0.6.0-rc32"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-Provides": [
+    "org.kde.plasma.launchermenu"
+  ],
+  "NoDisplay": true
+}

@@ -1,0 +1,120 @@
+// Nothing KDE notification appearance adapter; native API checked by installer.
+// This is a controller, not a second notification daemon or history model.
+pragma ComponentBehavior: Bound
+import QtQuick
+import QtQml
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+import org.kde.ksvg as KSvg
+import org.kde.notificationmanager as NotificationManager
+import org.kde.taskmanager as TaskManager
+import plasma.applet.org.kde.plasma.notifications as Notifications
+
+PlasmoidItem {
+    id: globals
+    visible: false
+    implicitWidth: 0
+    implicitHeight: 0
+    readonly property bool nothingPanelActive: Plasmoid.containment !== null
+        && Plasmoid.containment.pluginName === "com.nothingplasma.panel"
+    readonly property bool nothingThemeActive: KSvg.ImageSet.imageSetName === "NothingPlasmaDark"
+        || KSvg.ImageSet.imageSetName === "NothingPlasmaLight"
+        || nothingPanelActive
+    readonly property bool nothingLightMode: nothingPanelActive
+        ? Plasmoid.containment.configuration.appearanceMode === "light"
+        : KSvg.ImageSet.imageSetName === "NothingPlasmaLight"
+    property bool initialized: false
+    readonly property bool nativeContractAvailable: Notifications.Globals.popupInstantiator !== undefined
+        && Notifications.Globals.popupNotificationsModel !== undefined
+        && Notifications.Globals.notificationSettings !== undefined
+        && Notifications.Globals.tasksModel !== undefined
+        && Notifications.Globals.screenRect !== undefined
+        && typeof Notifications.Globals.positionPopups === "function"
+    property bool armed: initialized && nothingThemeActive && Plasmoid.configuration.enabled
+        && nativeContractAvailable
+        && NotificationManager.Server.valid && Notifications.Globals.plasmoid !== null
+    readonly property int nativePopupWidth: nativeContractAvailable
+        ? Math.max(180, Math.min(340, Notifications.Globals.screenRect.width - 64)) : 340
+    Plasmoid.status: PlasmaCore.Types.HiddenStatus
+
+    // Binding.RestoreBinding restores KDE's actual previous bindings, not guessed defaults.
+    // No global settings files, DBus owners, or native applet resources are replaced.
+    Binding {
+        target: Notifications.Globals.popupInstantiator
+        property: "delegate"
+        value: nothingPopupComponent
+        when: globals.armed
+        restoreMode: Binding.RestoreBindingOrValue
+    }
+    Binding {
+        target: Notifications.Globals.popupNotificationsModel
+        property: "sortMode"
+        value: NotificationManager.Notifications.SortByDate
+        when: globals.armed
+        restoreMode: Binding.RestoreBindingOrValue
+    }
+    Binding {
+        target: Notifications.Globals.popupNotificationsModel
+        property: "sortOrder"
+        value: Qt.DescendingOrder
+        when: globals.armed
+        restoreMode: Binding.RestoreBindingOrValue
+    }
+    Binding {
+        target: Notifications.Globals
+        property: "popupLocation"
+        value: Qt.AlignTop | Qt.AlignRight
+        when: globals.armed
+        restoreMode: Binding.RestoreBindingOrValue
+    }
+    Binding {
+        target: Notifications.Globals
+        property: "popupWidth"
+        value: globals.nativePopupWidth
+        when: globals.armed
+        restoreMode: Binding.RestoreBindingOrValue
+    }
+    Binding {
+        target: Notifications.Globals
+        property: "popupEdgeDistance"
+        value: 12
+        when: globals.armed
+        restoreMode: Binding.RestoreBindingOrValue
+    }
+    Binding {
+        target: Notifications.Globals
+        property: "popupSpacing"
+        value: 8
+        when: globals.armed
+        restoreMode: Binding.RestoreBindingOrValue
+    }
+
+    Component {
+        id: nothingPopupComponent
+@@NATIVE_DELEGATE@@
+    }
+
+    Component.onCompleted: {
+        // All source contracts are checked before this applet is installed.
+        initialized = true
+        console.info("NOTHING_NOTIFICATION_BRIDGE_READY")
+    }
+    onArmedChanged: console.info("NOTHING_NOTIFICATION_BRIDGE_ACTIVE:" + armed)
+    // Opt-in diagnostics contain no notification text or application names.
+    Timer {
+        interval: 1000
+        repeat: true
+        running: globals.armed && Plasmoid.configuration.diagnostics
+        onTriggered: {
+            const popups = Notifications.Globals.popupInstantiator
+            for (let i = 0; i < popups.count; ++i) {
+                const popup = popups.objectAt(i)
+                if (popup) console.info("NOTHING_POPUP_STATE", i, popup.visible,
+                    popup.effectiveTimeout, popup.modelInterface.timeout,
+                    popup.modelInterface.remainingTime, popup.mainItem.containsMouse)
+            }
+            console.info("NOTHING_POPUP_COUNT", popups.count)
+        }
+    }
+    Component.onDestruction: armed = false
+}

@@ -1,0 +1,67 @@
+/* Nothing KDE · native Qt Widgets, scoped to Dolphin's main window.
+   Palette roles deliberately follow KDE's light/dark mode and accent.
+   Do not style file-item delegates, dialogs, menus or global QWidget. */
+DolphinMainWindow QToolBar {
+    border: none;
+    padding: 7px 10px;
+    spacing: 5px;
+    background: transparent;
+}
+DolphinMainWindow QToolBar QToolButton {
+    border: 1px solid transparent;
+    border-radius: 9px;
+    padding: 6px;
+    margin: 1px;
+}
+DolphinMainWindow QToolBar QToolButton:hover {
+    background: palette(alternate-base);
+    border-color: palette(mid);
+}
+DolphinMainWindow QToolBar QToolButton:pressed,
+DolphinMainWindow QToolBar QToolButton:checked {
+    background: palette(button);
+    border-color: palette(highlight);
+}
+DolphinMainWindow QToolBar QToolButton:focus {
+    border-color: palette(highlight);
+}
+DolphinMainWindow QTabBar::tab {
+    background: palette(window);
+    color: palette(window-text);
+    border: 1px solid transparent;
+    border-radius: 9px;
+    padding: 8px 14px;
+    /* The native close button centers on tabRect, not the painted frame.
+       Equal vertical margins keep both centers aligned. */
+    margin: 5px 3px;
+    min-width: 70px;
+}
+DolphinMainWindow QTabBar::tab:hover {
+    background: palette(alternate-base);
+}
+DolphinMainWindow QTabBar > CloseButton {
+    /* Qt places this target outside the tab padding. A wider native target
+       centers the unchanged close glyph safely inside the rounded frame. */
+    min-width: 32px;
+    max-width: 32px;
+}
+DolphinMainWindow QTabBar::tab:selected {
+    background: palette(button);
+    border-color: palette(highlight);
+}
+DolphinMainWindow QTabWidget::pane {
+    border: none;
+}
+DolphinMainWindow QStatusBar {
+    background: transparent;
+    border: none;
+    padding: 4px 10px;
+}
+DolphinMainWindow QStatusBar::item {
+    border: none;
+}
+DolphinMainWindow QDockWidget::title {
+    padding: 6px 10px;
+    background: transparent;
+    color: palette(window-text);
+}
