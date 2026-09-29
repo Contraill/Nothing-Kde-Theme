@@ -25,8 +25,9 @@ case "${1:-}" in
   --dolphin) shift; exec python3 "$ROOT/dolphin/manage.py" "$@" ;;
   --appearance) shift; exec python3 "$ROOT/runtime/appearance.py" "$@" ;;
   --kitty-theme) shift; exec python3 "$ROOT/runtime/kitty-theme.py" "$@" ;;
+  --login-wallpaper) shift; exec pkexec /usr/bin/python3 -I "$ROOT/runtime/login-wallpaper.py" "$@" ;;
   --notifications-only) shift; exec "$ROOT/notification-skin/install-native.sh" "${NOTIFICATION_ARGS[@]}" "$@" ;;
-  --help|-h) printf 'Usage: %s [--apply-layout | --panel-only | --widgets-only | --accent-links ACTION | --kitty-theme ACTION | --dolphin ACTION | --appearance ACTION [--qt5] | --notifications-only] [--restart-plasma] [--force-notifications]\n--force-notifications bypasses only the notification compatibility check, not validation or rollback.\n' "$0"; exit 0 ;;
+  --help|-h) printf 'Usage: %s [--apply-layout | --panel-only | --widgets-only | --accent-links ACTION | --kitty-theme ACTION | --login-wallpaper dark|light|remove | --dolphin ACTION | --appearance ACTION [--qt5] | --notifications-only] [--restart-plasma] [--force-notifications]\n--force-notifications bypasses only the notification compatibility check, not validation or rollback.\n' "$0"; exit 0 ;;
   *) printf 'Unknown option: %s. Use --help.\n' "$1" >&2; exit 2 ;;
 esac
 
@@ -178,7 +179,7 @@ install_notification_skin
   printf 'Warning: could not synchronize the Meta launcher shortcut yet. It can be changed from Launcher Settings.\n' >&2
 
 if (( PANEL_ONLY )); then
-  printf '\nInstalled Nothing Island + Dock v0.6.0-rc33, native Meta bridge, and Add Panel preset.\n'
+  printf '\nInstalled Nothing Island + Dock v0.6.0-rc34, native Meta bridge, and Add Panel preset.\n'
   exit 0
 fi
 
@@ -210,7 +211,7 @@ if command -v kbuildsycoca6 >/dev/null 2>&1; then
   kbuildsycoca6 >/dev/null 2>&1 || true
 fi
 
-printf '\nInstalled Nothing KDE v0.6.0-rc33.\n'
+printf '\nInstalled Nothing KDE v0.6.0-rc34.\n'
 printf 'Notifications: installed when native QML/API checks pass. On an existing layout run ./install.sh --notifications-only --restart-plasma\n'
 printf 'Panel containment: com.nothingplasma.panel\n'
 printf 'Meta launcher:     com.nothingplasma.launcherbridge\n'

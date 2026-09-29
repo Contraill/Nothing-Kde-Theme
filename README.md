@@ -13,6 +13,8 @@ Optional backends used by related controls: NetworkManager (`nmcli`), PipeWire (
 `pactl`), BlueZ, PowerDevil, `brightnessctl`, `upower`, and `powerprofilesctl`.
 
 ```sh
+git clone https://github.com/Contraill/Nothing-Kde-Theme.git
+cd Nothing-Kde-Theme
 ./install.sh                  # install / upgrade
 ./install.sh --apply-layout   # create/repair the two panels; Plasma is reloaded
 ./install.sh --widgets-only   # desktop widgets only
@@ -20,6 +22,26 @@ Optional backends used by related controls: NetworkManager (`nmcli`), PipeWire (
 
 Choose **Nothing KDE Dark** or **Nothing KDE Light** in System Settings. Add the desktop
 widgets through **Add Widgets**.
+
+### Boot login wallpaper (Plasma Login Manager)
+
+The boot login screen has separate system-wide settings from the desktop and lock screen.
+On systems using **Plasma Login Manager**, apply Nothing's wallpaper explicitly:
+
+```sh
+./install.sh --login-wallpaper dark   # or light; asks for administrator authentication
+```
+
+The selected image appears at the next boot login. To undo only this setting, run
+`./install.sh --login-wallpaper remove`.
+
+This installs public image copies and a wallpaper-only configuration drop-in. It does not
+change authentication, auto-login or the running session. Existing administrator settings
+in `/etc/plasmalogin.conf` retain precedence, including custom wallpaper choices. The boot
+wallpaper is a fixed selection; changing a user's desktop mode does not change the shared
+login screen. Uninstall removes the optional integration and exposes the previous settings;
+files edited after installation are preserved with an error rather than overwritten.
+SDDM uses a different configuration and is not changed by this command.
 
 Desktop widgets share a palette-driven Glassy surface; images and artwork keep their own
 content. Normal desktop applets share the wallpaper's window, so the widget surface uses

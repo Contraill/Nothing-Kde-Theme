@@ -4,6 +4,11 @@ export PYTHONDONTWRITEBYTECODE=1
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 
+# Remove only the optional system-wide wallpaper files whose hashes still match.
+if [[ -f /usr/local/share/nothing-kde/login-wallpaper/ownership.json ]]; then
+  pkexec /usr/bin/python3 -I "$ROOT/runtime/login-wallpaper.py" remove
+fi
+
 # Restore external appearance overlays before removing the theme helpers.
 python3 "$ROOT/runtime/appearance.py" uninstall
 python3 "$ROOT/runtime/kitty-theme.py" disable
