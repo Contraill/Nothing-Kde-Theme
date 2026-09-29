@@ -53,7 +53,7 @@ class WidgetTests(unittest.TestCase):
 
     def test_widget_archives_are_complete(self):
         for package in PACKAGES.iterdir():
-            path = Path(os.environ.get('NOTHING_PACKAGE_DIR', ROOT / 'dist')) / ('Nothing-KDE-Widget-' + package.name + '-0.6.0-rc32.plasmoid')
+            path = Path(os.environ.get('NOTHING_PACKAGE_DIR', ROOT / 'dist')) / ('Nothing-KDE-Widget-' + package.name + '-0.6.0-rc33.plasmoid')
             if not path.exists(): self.skipTest('Build packages first')
             with zipfile.ZipFile(path) as archive:
                 for name in ('metadata.json', 'LICENSE', 'UPSTREAM-NOTICE.md', 'contents/ui/main.qml',

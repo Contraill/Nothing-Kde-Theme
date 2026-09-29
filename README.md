@@ -209,6 +209,21 @@ panel configuration.
 Launcher settings list installed applications; visibility choices apply to this launcher and
 its search results.
 
+The island's appearance settings include **Show system tray** and **Configure tray items**.
+The latter opens KDE's native per-application visibility settings and remains available when
+the entire tray is hidden. These choices persist in Plasma configuration; updating Nothing
+does not reset an existing tray. Application icons appear between the player and battery.
+
+Drag dock icons to preview a new order; releasing commits it once. Releasing above or below
+the dock cancels the move. Right-click menus include actions supplied by the application's
+desktop entry, when available (for example Steam's Big Picture action).
+
+With automatic wallpaper enabled, Nothing reapplies its light/dark pair after panel startup,
+screen changes and activity changes. Custom images and other wallpaper plugins are preserved,
+including overrides on previously themed screens. Empty wallpaper settings and KDE's stock
+`Next` wallpaper are treated as unconfigured desktops. To deliberately keep `Next`, turn off
+automatic wallpaper in Nothing's settings.
+
 ## Test and package
 
 ```sh
@@ -216,6 +231,11 @@ its search results.
 ./package.sh                           # artifacts: dist/
 ./package.sh --output /tmp/nothing-kde-dist
 NOTHING_PACKAGE_DIR=/tmp/nothing-kde-dist ./validate.sh
+
+# Optional native dock interaction tests (Plasma menus require QApplication):
+cmake -S tests/qml-native -B /tmp/nothing-native-tests
+cmake --build /tmp/nothing-native-tests
+NOTHING_NATIVE_QML_RUNNER=/tmp/nothing-native-tests/nothing-native-quick ./validate.sh
 ```
 
 Qt QML tools enable lint and interaction tests. `msgfmt` rebuilds the Turkish localization

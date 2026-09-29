@@ -3,6 +3,8 @@ import "."
 Item {
     id: root
 
+    property real trayWidth: 0
+    readonly property alias traySlot: traySlot
     signal weatherSettingsRequested()
     implicitWidth: Theme.collapsedWidth
     implicitHeight: Theme.collapsedHeight
@@ -46,9 +48,17 @@ Item {
             visible: Cfg.showBattery && present
         }
         Item {
-            id: rightGroup
+            id: traySlot
             anchors.right: persistentBattery.visible ? persistentBattery.left : parent.right
             anchors.rightMargin: persistentBattery.visible ? 10 : 16
+            anchors.verticalCenter: parent.verticalCenter
+            width: root.trayWidth
+            height: 28
+        }
+        Item {
+            id: rightGroup
+            anchors.right: traySlot.left
+            anchors.rightMargin: root.trayWidth > 0 ? 10 : 0
             anchors.verticalCenter: parent.verticalCenter
             width: mini.active ? mini.implicitWidth : rightRow.width
             height: Math.max(rightRow.height, mini.implicitHeight)

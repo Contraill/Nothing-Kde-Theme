@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Window
+import QtQml.Models
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.extras as PlasmaExtras
@@ -17,7 +18,22 @@ Item {
     property int previewWidthPercent: 44
     property int previewHeightPercent: 20
     property int selectedRow: -1
+    property var dragStyleHints: Qt.styleHints
     property int dragRow: -1
+    property int dropRow: -1
+    property real dragX: 0
+    property real dragY: 0
+    property var dragIcon: ""
+    readonly property bool dragging: dragRow >= 0 && dropRow >= 0
+    function finishDrag(commit) {
+        const from = dragRow, to = dropRow;
+        dragRow = -1; dropRow = -1;
+        if (commit) moveTask(from, to);
+    }
+    function updateDrag(x, y) {
+        dragX = x; dragY = y;
+        dropRow = Math.max(0, Math.min(taskList.count - 1, Math.floor((x + taskList.contentX) / cellStep)));
+    }
     property int selectedCount: 0
     property string selectedName: ""
     property var selectedIcon: ""
@@ -54,7 +70,7 @@ Item {
     function moveTask(from, to) {
         if (!tasksModel || from < 0 || to < 0 || from === to) return;
         chooser.closePopup();
-        if (tasksModel.move(from, to)) { dragRow = to; tasksModel.syncLaunchers(); }
+        if (tasksModel.move(from, to)) tasksModel.syncLaunchers();
     }
     function activateCurrent() {
         const row = taskList.currentIndex;
@@ -74,11 +90,11 @@ Item {
     Connections {
         target: root.tasksModel
         ignoreUnknownSignals: true
-        function onRowsAboutToBeRemoved() { chooser.closePopup(); }
-        function onRowsAboutToBeInserted() { chooser.closePopup(); }
-        function onRowsAboutToBeMoved() { chooser.closePopup(); }
-        function onModelAboutToBeReset() { chooser.closePopup(); }
-        function onLayoutAboutToBeChanged() { chooser.closePopup(); }
+        function onRowsAboutToBeRemoved() { root.finishDrag(false); chooser.closePopup(); }
+        function onRowsAboutToBeInserted() { root.finishDrag(false); chooser.closePopup(); }
+        function onRowsAboutToBeMoved() { root.finishDrag(false); chooser.closePopup(); }
+        function onModelAboutToBeReset() { root.finishDrag(false); chooser.closePopup(); }
+        function onLayoutAboutToBeChanged() { root.finishDrag(false); chooser.closePopup(); }
     }
 
     ListView {
@@ -89,6 +105,8 @@ Item {
         clip: true
         model: root.tasksModel
         boundsBehavior: Flickable.StopAtBounds
+        interactive: !root.dragging
+        objectName: "dockTaskList"
         activeFocusOnTab: true
         QQC2.ScrollBar.horizontal: QQC2.ScrollBar { policy: QQC2.ScrollBar.AsNeeded }
         Keys.onLeftPressed: decrementCurrentIndex()
@@ -98,6 +116,7 @@ Item {
 
         delegate: Item {
             id: task
+            objectName: "dockTask-" + index
             required property var model
             required property int index
             readonly property bool isGroup: model.IsGroupParent === true && Number(model.ChildCount) > 1
@@ -121,7 +140,16 @@ Item {
                 } else root.activateOrMinimize(modelIndex);
             }
 
+            DesktopActions { id: desktopActions; launcherUrl: String(task.launcherUrl || "") }
             Rectangle {
+                id: taskFace
+                opacity: root.dragging && root.dragRow === task.index ? 0 : 1
+                transform: Translate {
+                    x: !root.dragging ? 0
+                        : root.dragRow < root.dropRow && task.index > root.dragRow && task.index <= root.dropRow ? -root.cellStep
+                        : root.dragRow > root.dropRow && task.index >= root.dropRow && task.index < root.dragRow ? root.cellStep : 0
+                    Behavior on x { NumberAnimation { duration: 120 } }
+                }
                 anchors.fill: parent
                 radius: 13 * root.uiScale
                 color: task.model.IsActive ? Island.Theme.surfaceTop : hover.containsMouse ? Island.Theme.surfaceHigh : "transparent"
@@ -165,29 +193,10 @@ Item {
                 }
             }
 
-            Item {
-                id: dragProxy
-                property int taskRow: task.index
-                width: 1
-                height: 1
-                Drag.active: hover.drag.active
-                Drag.source: dragProxy
-                Drag.keys: ["nothing-task"]
-                Drag.hotSpot.x: 0
-                Drag.hotSpot.y: 0
-            }
-            DropArea {
-                anchors.fill: parent
-                keys: ["nothing-task"]
-                onEntered: drag => {
-                    if (drag.source) root.moveTask(root.dragRow, task.index);
-                }
-            }
-
             PlasmaCore.ToolTipArea {
                 id: groupPreviewTip
                 anchors.fill: parent
-                active: task.windowCount > 0 && !chooser.visible && !hover.pressed && taskMenu.status !== PlasmaExtras.Menu.Open
+                active: !root.dragging && task.windowCount > 0 && !chooser.visible && !hover.pressed && taskMenu.status !== PlasmaExtras.Menu.Open
                 interactive: true
                 timeout: -1
                 location: PlasmaCore.Types.BottomEdge
@@ -205,23 +214,42 @@ Item {
                 }
                 MouseArea {
                     id: hover
+                    objectName: "dockTaskPointer-" + task.index
                     anchors.fill: parent
                     hoverEnabled: true
                     acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
                     cursorShape: Qt.PointingHandCursor
-                    drag.target: dragProxy
-                    drag.axis: Drag.XAndYAxis
-                    drag.threshold: 12
                     property bool dragged: false
-                    onPressed: { dragged = false; root.dragRow = task.index; taskList.currentIndex = task.index; }
-                    onPositionChanged: if (drag.active) dragged = true
-                    onReleased: {
-                        if (dragged) { dragProxy.Drag.drop(); root.tasksModel.syncLaunchers(); }
-                        dragProxy.x = 0; dragProxy.y = 0;
+                    property real pressX: 0
+                    property real pressY: 0
+                    preventStealing: true
+                    onPressed: mouse => {
+                        dragged = false; pressX = mouse.x; pressY = mouse.y;
+                        taskList.currentIndex = task.index;
                     }
+                    onPositionChanged: mouse => {
+                        if (!(pressedButtons & Qt.LeftButton)) return;
+                        if (!dragged && Math.hypot(mouse.x - pressX, mouse.y - pressY) >= root.dragStyleHints.startDragDistance) {
+                            dragged = true;
+                            chooser.closePopup(); groupPreviewTip.hideImmediately();
+                            root.dragRow = task.index; root.dropRow = task.index;
+                            root.dragIcon = task.model.decoration;
+                        }
+                        if (dragged && root.dragging) {
+                            const p = mapToItem(root, mouse.x, mouse.y);
+                            root.updateDrag(p.x, p.y);
+                        }
+                    }
+                    onReleased: mouse => {
+                        if (dragged) {
+                            const p = mapToItem(root, mouse.x, mouse.y);
+                            root.finishDrag(p.y >= -root.cellSize && p.y <= root.height + root.cellSize);
+                        }
+                    }
+                    onCanceled: root.finishDrag(false)
                     onClicked: mouse => {
                         if (dragged || !root.tasksModel || !task.modelIndex) return;
-                        if (mouse.button === Qt.RightButton) taskMenu.openRelative();
+                        if (mouse.button === Qt.RightButton) { desktopActions.refresh(); taskMenu.openRelative(); }
                         else if (mouse.button === Qt.MiddleButton) root.tasksModel.requestNewInstance(task.modelIndex);
                         else task.activateTask();
                     }
@@ -239,7 +267,19 @@ Item {
                 visualParent: task
                 placement: PlasmaExtras.Menu.TopPosedLeftAlignedPopup
                 minimumWidth: 220
+                readonly property Instantiator applicationActions: Instantiator {
+                    model: desktopActions.actions
+                    delegate: PlasmaExtras.MenuItem {
+                        required property var modelData
+                        text: modelData.text
+                        icon: modelData.icon || ""
+                        onClicked: desktopActions.trigger(modelData)
+                    }
+                    onObjectAdded: (index, object) => taskMenu.addMenuItem(object, pinMenuItem)
+                    onObjectRemoved: (index, object) => taskMenu.removeMenuItem(object)
+                }
                 PlasmaExtras.MenuItem {
+                    id: pinMenuItem
                     text: root.isPinned(task.model) ? Island.Cfg.t("UNPIN DOCK") : Island.Cfg.t("PIN DOCK")
                     icon: "window-pin"
                     enabled: task.launcherUrl !== null
@@ -281,6 +321,28 @@ Item {
                     onClicked: root.tasksModel.requestClose(task.modelIndex)
                 }
             }
+        }
+    }
+    Rectangle {
+        visible: root.dragging
+        x: root.dropRow * root.cellStep - taskList.contentX
+        y: 0; width: root.cellSize; height: root.cellSize
+        radius: 13 * root.uiScale
+        color: "transparent"; border.width: 1; border.color: Island.Theme.fgDim
+    }
+    Kirigami.Icon {
+        visible: root.dragging
+        x: root.dragX - width / 2; y: root.dragY - height / 2
+        width: 29 * root.uiScale; height: width
+        source: root.dragIcon
+        z: 10
+    }
+    Timer {
+        interval: 30; repeat: true; running: root.dragging
+        onTriggered: {
+            const direction = root.dragX < root.cellStep / 2 ? -1 : root.dragX > root.width - root.cellStep / 2 ? 1 : 0;
+            taskList.contentX = Math.max(0, Math.min(Math.max(0, taskList.contentWidth - taskList.width), taskList.contentX + direction * 8));
+            root.updateDrag(root.dragX, root.dragY);
         }
     }
     NothingPopupWindow {

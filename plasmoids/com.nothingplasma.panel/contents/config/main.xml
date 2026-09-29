@@ -16,6 +16,7 @@
     <entry name="taskPreviewWidthPercent" type="Int"><default>44</default></entry>
     <entry name="taskPreviewHeightPercent" type="Int"><default>20</default></entry>
     <entry name="panelWidthPercent" type="Int"><default>58</default></entry>
+    <entry name="showSystemTray" type="Bool"><default>true</default></entry>
     <entry name="showClock" type="Bool"><default>true</default></entry>
     <entry name="hiddenApplications" type="StringList" />
     <entry name="islandWeatherLatitude" type="String"><default></default></entry>

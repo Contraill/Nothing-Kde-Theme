@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Window
+import org.kde.taskmanager as TaskManager
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
@@ -24,7 +25,7 @@ Item {
     readonly property bool lightMode: Plasmoid.configuration.appearanceMode === "light"
     readonly property real availableWidth: Screen.desktopAvailableWidth || Screen.width || 1920
     readonly property real availableHeight: Screen.desktopAvailableHeight || Screen.height || 1080
-    implicitWidth: Math.min(Island.Theme.collapsedWidth, root.availableWidth - 24)
+    implicitWidth: Math.min(Island.Theme.collapsedWidth + (tray.visible ? 2 * (tray.width + 12) : 0), root.availableWidth - 24)
     implicitHeight: 50
     Layout.preferredWidth: implicitWidth
     Layout.preferredHeight: implicitHeight
@@ -45,9 +46,17 @@ Item {
     Binding { target: Island.Cfg; property: "colorTexto"; value: root.lightMode ? "#393A37" : "#FFFFFF" }
 
     Components.SystemControls { id: controls; active: popup.visible; autoWallpaper: Plasmoid.configuration.autoWallpaper }
-    Component.onCompleted: { controlsReady = true; controls.retireLegacyInhibitors(); controls.syncLockWallpaper(); controls.initAccent(); }
+    Component.onCompleted: { controlsReady = true; controls.retireLegacyInhibitors(); controls.syncLockWallpaper(); controls.initAccent(); Qt.callLater(() => controls.ensureTray()); }
     onLightModeChanged: if (controlsReady) Qt.callLater(() => controls.syncLockWallpaper())
     onAutoWallpaperChanged: if (controlsReady && autoWallpaper) Qt.callLater(() => controls.syncLockWallpaper())
+    TaskManager.ActivityInfo { id: wallpaperActivity }
+    Components.WallpaperSync {
+        enabled: root.controlsReady && root.autoWallpaper
+        mode: root.lightMode ? "light" : "dark"
+        activity: wallpaperActivity.currentActivity
+        onSynchronize: mode => controls.syncDesktopWallpaper(mode)
+    }
+    Binding { target: Island.Backend; property: "trayHost"; value: tray }
     Components.SystemStats { id: stats; active: popup.visible }
     Timer { interval: 2500; running: !popup.visible; repeat: true; triggeredOnStart: true; onTriggered: controls.refreshAudio() }
 
@@ -66,9 +75,22 @@ Item {
         Accessible.name: "Nothing Island"
         Accessible.onPressAction: root.toggleMenu()
         Island.CompactPill {
+            id: compact
             anchors.fill: parent
+            trayWidth: tray.visible ? tray.width : 0
             onWeatherSettingsRequested: { popup.openPopup(); island.openOverlay("weather"); }
         }
+    }
+
+    Components.TrayHost {
+        id: tray
+        containment: Plasmoid
+        containmentItem: root.appletItem
+        parent: compact.traySlot
+        width: Math.min(240, implicitWidth)
+        height: implicitHeight
+        anchors.verticalCenter: parent.verticalCenter
+        visible: Plasmoid.configuration.showSystemTray
     }
 
     // The working top bar's native Dialog placement and focus contract.

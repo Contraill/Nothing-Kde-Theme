@@ -40,8 +40,24 @@ apply_wallpaper() {
   local mode="$1"
   local uri
   uri="$(wallpaper_uri "$mode")"
-  local js
-  js="for (const d of desktops()) { d.wallpaperPlugin = 'org.kde.image'; d.currentConfigGroup = ['Wallpaper','org.kde.image','General']; d.writeConfig('Image', '${uri}'); }"
+  local js dark_uri light_uri
+  dark_uri="$(wallpaper_uri dark)" || return $?
+  light_uri="$(wallpaper_uri light)" || return $?
+  # Stock/new desktops and our own paired images are managed. A custom image,
+  # slideshow, live wallpaper, etc. is a user override, even with auto mode on.
+  js="for (const d of desktops()) {
+    if (d.wallpaperPlugin && d.wallpaperPlugin !== 'org.kde.image') continue;
+    d.currentConfigGroup = ['Wallpaper','org.kde.image','General'];
+    const current = String(d.readConfig('Image', ''));
+    const stock = /^(file:\\/\\/)?\\/usr\\/share\\/wallpapers\\/Next(\\/|$)/.test(current);
+    if (current && current !== '${dark_uri}' && current !== '${light_uri}' && !stock) continue;
+    if (current !== '${uri}') {
+      d.wallpaperPlugin = 'org.kde.image';
+      d.writeConfig('Image', '${uri}');
+      d.writeConfig('PreviewImage', 'null');
+      d.reloadConfig();
+    }
+  }"
   plasma_eval "$js" >/dev/null
 }
 
@@ -455,6 +471,17 @@ case "${1:-}" in
       *) echo 'usage: nothing-control.sh launcher-meta <on|off|status|init>' >&2; exit 2 ;;
     esac
     ;;
+  ensure-tray)
+    plasma_eval "for (const id of panelIds) {
+      const p = panelById(id);
+      if (!p || p.type !== 'com.nothingplasma.panel' || p.location !== 'top') continue;
+      if (p.widgets('org.kde.plasma.systemtray').length) continue;
+      const tray = p.addWidget('org.kde.plasma.systemtray');
+      tray.currentConfigGroup = ['General'];
+      tray.writeConfig('extraItems', []);
+      tray.reloadConfig();
+    }" >/dev/null
+    ;;
   wallpaper)
     apply_wallpaper "${2:-}"
     ;;
@@ -473,6 +500,7 @@ usage:
   nothing-control.sh theme <dark|light> [auto-wallpaper:0|1]
   nothing-control.sh accent <RRGGBB|sync|init|get>
   nothing-control.sh launcher-meta <on|off|status|init>
+  nothing-control.sh ensure-tray
   nothing-control.sh wallpaper <dark|light>
   nothing-control.sh lockscreen-wallpaper <dark|light>
   nothing-control.sh retire-inhibitors

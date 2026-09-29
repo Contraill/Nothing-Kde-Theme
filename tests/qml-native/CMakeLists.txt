@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.20)
+project(NothingNativeQuickTests LANGUAGES CXX)
+find_package(Qt6 REQUIRED COMPONENTS Widgets QuickTest)
+add_executable(nothing-native-quick main.cpp)
+target_compile_definitions(nothing-native-quick PRIVATE QUICK_TEST_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(nothing-native-quick PRIVATE Qt6::Widgets Qt6::QuickTest)

@@ -178,7 +178,7 @@ install_notification_skin
   printf 'Warning: could not synchronize the Meta launcher shortcut yet. It can be changed from Launcher Settings.\n' >&2
 
 if (( PANEL_ONLY )); then
-  printf '\nInstalled Nothing Island + Dock v0.6.0-rc32, native Meta bridge, and Add Panel preset.\n'
+  printf '\nInstalled Nothing Island + Dock v0.6.0-rc33, native Meta bridge, and Add Panel preset.\n'
   exit 0
 fi
 
@@ -210,7 +210,7 @@ if command -v kbuildsycoca6 >/dev/null 2>&1; then
   kbuildsycoca6 >/dev/null 2>&1 || true
 fi
 
-printf '\nInstalled Nothing KDE v0.6.0-rc32.\n'
+printf '\nInstalled Nothing KDE v0.6.0-rc33.\n'
 printf 'Notifications: installed when native QML/API checks pass. On an existing layout run ./install.sh --notifications-only --restart-plasma\n'
 printf 'Panel containment: com.nothingplasma.panel\n'
 printf 'Meta launcher:     com.nothingplasma.launcherbridge\n'

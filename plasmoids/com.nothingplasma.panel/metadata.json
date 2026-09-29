@@ -16,7 +16,7 @@
     "Id": "com.nothingplasma.panel",
     "License": "GPL-3.0-or-later",
     "Name": "Nothing KDE Island + Dock",
-    "Version": "0.6.0-rc32"
+    "Version": "0.6.0-rc33"
   },
   "X-Plasma-API-Minimum-Version": "6.7",
   "X-Plasma-ContainmentType": "Panel",

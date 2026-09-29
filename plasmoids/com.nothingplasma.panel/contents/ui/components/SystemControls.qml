@@ -367,6 +367,19 @@ Item {
         exec.run(root.helperCommand("retire-inhibitors"), function() {})
     }
 
+    function ensureTray() {
+        exec.run(root.helperCommand("ensure-tray"), function(r) {
+            if (r.exitCode !== 0) console.warn("Nothing tray initialization failed:", r.stderr)
+        })
+    }
+
+    function syncDesktopWallpaper(mode) {
+        if (!root.autoWallpaper) return
+        exec.run(root.helperCommand("wallpaper " + mode), function(r) {
+            if (r.exitCode !== 0) console.warn("Nothing desktop wallpaper update failed:", r.stderr)
+        })
+    }
+
     function syncLockWallpaper() {
         if (!root.autoWallpaper) return
         const mode = Plasmoid.configuration.appearanceMode === "light" ? "light" : "dark"

@@ -38,6 +38,8 @@ QtObject {
     property string fuenteUi: ""
     property string fuenteNumeros: ""
     readonly property var textos: ({
+        "SHOW SYSTEM TRAY": ["Sistem tepsisini göster", "Show system tray"],
+        "CONFIGURE TRAY ITEMS": ["Tepsi simgelerini yapılandır…", "Configure tray icons…"],
         "ACCENT LINKS": ["İsteğe bağlı renk bağlantıları · kapatınca eski görünüm geri gelir. Yeni terminalde etkinleşir.", "Optional accent links · disable to restore. Takes effect in a new terminal."],
         "LINKED": ["Bağlı", "Linked"],
         "UNLINKED": ["Bağlı değil", "Unlinked"],

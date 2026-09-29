@@ -17,6 +17,10 @@ function configureRole(panel, role, location, thickness, hiding) {
 var topPanel = new Panel("com.nothingplasma.panel");
 configureRole(topPanel, "top", "top", 50, "dodgewindows");
 topPanel.addWidget("org.kde.plasma.notifications");
+var tray = topPanel.addWidget("org.kde.plasma.systemtray");
+tray.currentConfigGroup = ["General"];
+tray.writeConfig("extraItems", []);
+tray.reloadConfig();
 if (knownWidgetTypes.includes("com.nothingplasma.notificationbridge")) {
     topPanel.addWidget("com.nothingplasma.notificationbridge");
 }

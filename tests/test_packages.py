@@ -12,7 +12,7 @@ import tarfile
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = Path(os.environ.get('NOTHING_PACKAGE_DIR', ROOT / 'dist'))
-VERSION = '0.6.0-rc32'
+VERSION = '0.6.0-rc33'
 
 
 @unittest.skipUnless((DIST / f'Nothing-KDE-{VERSION}.zip').exists(), 'Run ./package.sh to test distribution artifacts')

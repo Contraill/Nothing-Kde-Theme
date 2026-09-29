@@ -5,7 +5,7 @@ No native files, DBus services, or live panel configurations are modified.
 import argparse, hashlib, json, os, pathlib, re, shutil, sys, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
-VERSION = '0.6.0-rc32'
+VERSION = '0.6.0-rc33'
 NATIVE = '6.7.4'
 MODULE = 'plasma.applet.org.kde.plasma.notifications'
 RESOURCE = 'qrc:/qt/qml/plasma/applet/org/kde/plasma/notifications/components'

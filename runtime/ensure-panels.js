@@ -40,6 +40,12 @@
         p.hiding = spec.hiding;
         p.floating = false;
         if (spec.role === 'top') {
+            if (!p.widgets('org.kde.plasma.systemtray').length) {
+                const tray = p.addWidget('org.kde.plasma.systemtray');
+                tray.currentConfigGroup = ['General'];
+                tray.writeConfig('extraItems', []);
+                tray.reloadConfig();
+            }
             if (!p.widgets('org.kde.plasma.notifications').length) {
                 p.addWidget('org.kde.plasma.notifications');
             }

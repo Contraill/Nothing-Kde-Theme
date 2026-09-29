@@ -17,6 +17,7 @@ int main(int argc,char **argv) {
         auto *mode=loader.findItem("General","appearanceMode");
         if(!confirm || !mode || !confirm->property().toBool()) return 3;
         confirm->setProperty(false);mode->setProperty(QStringLiteral("light"));
+        loader.findItem("General","showSystemTray")->setProperty(false);
         loader.findItem("General","hiddenApplications")->setProperty(QStringList{"org.kde.kate.desktop", "kitty.desktop"});
         loader.findItem("General","islandWeatherCity")->setProperty(QStringLiteral("İstanbul, Türkiye"));
         loader.findItem("General","islandWeatherLocationQuery")->setProperty(QStringLiteral("İstanbul, Türkiye"));
@@ -30,6 +31,7 @@ int main(int argc,char **argv) {
         KConfigLoader loader(config,&xml);
         if(loader.findItem("General","confirmPowerActions")->property().toBool()
            || loader.findItem("General","appearanceMode")->property().toString()!="light")return 4;
+        if(loader.findItem("General","showSystemTray")->property().toBool()) return 7;
         if(loader.findItem("General","hiddenApplications")->property().toStringList()
            != QStringList{"org.kde.kate.desktop", "kitty.desktop"}
            || loader.findItem("General","islandWeatherCity")->property().toString() != QStringLiteral("İstanbul, Türkiye")

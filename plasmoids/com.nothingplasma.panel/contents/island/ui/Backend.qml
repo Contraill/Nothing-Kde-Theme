@@ -1,6 +1,7 @@
 pragma Singleton
 import QtQuick
 QtObject {
+    property var trayHost: null
     property var controls: null
     property var appletItem: null
     property var stats: null

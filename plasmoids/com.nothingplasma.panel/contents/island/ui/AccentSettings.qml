@@ -92,6 +92,36 @@ ColumnLayout {
         }
     }
     QQC2.Switch {
+        objectName: "showSystemTraySwitch"
+        Layout.fillWidth: true
+        text: Cfg.t("SHOW SYSTEM TRAY")
+        checked: root.panelConfig?.showSystemTray ?? true
+        onToggled: if (root.panelConfig) root.panelConfig.showSystemTray = checked
+    }
+    QQC2.AbstractButton {
+        id: configureTrayButton
+        objectName: "configureSystemTrayButton"
+        Layout.fillWidth: true
+        Layout.preferredHeight: 40
+        text: Cfg.t("CONFIGURE TRAY ITEMS")
+        Accessible.name: text
+        enabled: !!Backend.trayHost
+        onClicked: { Backend.trayHost.configure(); root.closed(); }
+        background: Rectangle {
+            radius: Theme.shapeMd
+            color: configureTrayButton.down || configureTrayButton.hovered ? Theme.surfaceHigh : Theme.surfaceAlt
+            border.width: configureTrayButton.activeFocus ? 1 : 0
+            border.color: Theme.primary
+            opacity: configureTrayButton.enabled ? 1 : 0.3
+        }
+        contentItem: Text {
+            text: configureTrayButton.text
+            font.family: Theme.font; font.pixelSize: 12
+            color: configureTrayButton.enabled ? Theme.fg : Theme.fgDim
+            horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+        }
+    }
+    QQC2.Switch {
         objectName: "confirmPowerActionsSwitch"
         Layout.fillWidth: true
         text: Cfg.t("CONFIRM POWER ACTIONS")

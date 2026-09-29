@@ -551,4 +551,7 @@ if [[ -n "$qml_test_runner" ]]; then
 else
   printf 'Qt Quick Test runner unavailable; skipped mock keyboard interaction tests.\n'
 fi
+if [[ -n "${NOTHING_NATIVE_QML_RUNNER:-}" ]]; then
+  QT_FORCE_STDERR_LOGGING=1 QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software "$NOTHING_NATIVE_QML_RUNNER" -input "$ROOT/tests/qml-native" -o -,txt
+fi
 printf 'Static package validation complete.\n'
