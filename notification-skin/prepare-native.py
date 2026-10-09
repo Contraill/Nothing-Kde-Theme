@@ -5,7 +5,7 @@ No native files, DBus services, or live panel configurations are modified.
 import argparse, hashlib, json, os, pathlib, re, shutil, sys, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent
-VERSION = '0.6.0-rc34'
+VERSION = '0.6.0-rc35'
 NATIVE = '6.7.4'
 MODULE = 'plasma.applet.org.kde.plasma.notifications'
 RESOURCE = 'qrc:/qt/qml/plasma/applet/org/kde/plasma/notifications/components'
@@ -101,7 +101,7 @@ def generate(globals_text, popup_text, output):
     popup_text = popup_text.replace('topMargin: notificationPopup.modelInterface.closable || notificationPopup.modelInterface.dismissable || notificationPopup.modelInterface.configurable ? -notificationPopup.topPadding : 0', 'topMargin: 0')
     popup_text = popup_text.replace('    property int popupWidth', '    property bool nothingLightMode: false\n    property int popupWidth', 1)
     popup_text = popup_text.replace('                id: notificationItem',
-        '                id: notificationItem\n                lightMode: notificationPopup.nothingLightMode\n                showTimeout: notificationPopup.showPopupTimeout', 1)
+        '                id: notificationItem\n                lightMode: notificationPopup.nothingLightMode\n                showTimeout: notificationPopup.showPopupTimeout\n                hasTimeout: notificationPopup.effectiveTimeout > 0', 1)
     if 'Delegates.NothingDelegatePopup {' not in popup_text:
         raise ValueError('Native popup content replacement failed')
     # The native module owns the QML types and timers; only the visual delegate changes.

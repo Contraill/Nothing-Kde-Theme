@@ -14,6 +14,7 @@ FocusScope {
     required property int childCount
     required property var fallbackIcon
     required property string appName
+    property string workspaceNames: ""
     property bool grouped: true
     property color accentColor: Island.Theme.fg
     property real uiScale: 1
@@ -24,7 +25,7 @@ FocusScope {
     readonly property int safeCount: Math.max(1, childCount)
     readonly property int visibleCardCount: Math.min(3, root.safeCount)
     implicitWidth: Math.min(Screen.width - 24, visibleCardCount * 232 + 28)
-    implicitHeight: 224
+    implicitHeight: 224 + (workspaceNames ? 26 : 0)
 
     function childIndex(row) { return tasksModel ? (grouped ? tasksModel.makeModelIndex(rootRow, row) : tasksModel.makeModelIndex(rootRow)) : null; }
     // Only explicit popup opening calls this; hover previews never steal focus.
@@ -53,6 +54,16 @@ FocusScope {
         anchors.fill: parent
         anchors.margins: 14
         spacing: 12
+        Text {
+            visible: root.workspaceNames.length > 0
+            Layout.fillWidth: true
+            text: root.workspaceNames
+            textFormat: Text.PlainText
+            font.family: Island.Theme.font
+            font.pixelSize: 11
+            color: Island.Theme.fgDim
+            elide: Text.ElideRight
+        }
         RowLayout {
             Layout.fillWidth: true
             Text {
@@ -115,8 +126,7 @@ FocusScope {
                         Loader {
                             anchors.fill: parent
                             active: !Island.Backend.preview && root.visible && (root.Window.window?.visible ?? false) && card.winId !== null && !card.minimized
-                            source: "NativeWindowThumbnail.qml"
-                            onLoaded: item.windowId = Qt.binding(() => card.winId)
+                            Component.onCompleted: setSource("NativeWindowThumbnail.qml", {windowId: Qt.binding(() => card.winId)})
                         }
                     }
                     RowLayout {

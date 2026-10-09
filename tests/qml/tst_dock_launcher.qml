@@ -24,6 +24,8 @@ Item {
     }
     Components.LauncherPage { id: page; anchors.fill: parent; appsModel: apps; runnerModel: runner; tasksModel: tasks }
     SignalSpy { id: launched; target: page; signalName: "launched" }
+    SignalSpy { id: localSettings; target: page; signalName: "settingsRequested" }
+    SignalSpy { id: systemSettings; target: page; signalName: "systemSettingsRequested" }
     TestCase {
         name: "DockLauncher"
         when: windowShown
@@ -44,6 +46,14 @@ Item {
             wait(30); // Let the scheduled initial search focus settle first.
         }
         function cleanup() { page.active = false; }
+        function test_settings_left_and_right_are_separate() {
+            localSettings.clear(); systemSettings.clear();
+            const button = findChild(page, "launcherSettingsButton");
+            mouseClick(button, button.width / 2, button.height / 2, Qt.RightButton);
+            compare(systemSettings.count, 1); compare(localSettings.count, 0);
+            mouseClick(button, button.width / 2, button.height / 2, Qt.LeftButton);
+            compare(systemSettings.count, 1); compare(localSettings.count, 1);
+        }
         function test_keyboard_grid_selection_launches_selected_app() {
             const search = findChild(page, "dockSearch");
             tryCompare(search, "activeFocus", true);

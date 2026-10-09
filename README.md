@@ -239,6 +239,9 @@ does not reset an existing tray. Application icons appear between the player and
 Drag dock icons to preview a new order; releasing commits it once. Releasing above or below
 the dock cancels the move. Right-click menus include actions supplied by the application's
 desktop entry, when available (for example Steam's Big Picture action).
+An icon with windows on another workspace has a small dot; hover to see the workspace
+names in the window preview. Windows shown on all workspaces are not marked. Right-click
+the launcher's settings button to open KDE System Settings; left-click opens launcher settings.
 
 With automatic wallpaper enabled, Nothing reapplies its light/dark pair after panel startup,
 screen changes and activity changes. Custom images and other wallpaper plugins are preserved,
@@ -254,7 +257,7 @@ automatic wallpaper in Nothing's settings.
 ./package.sh --output /tmp/nothing-kde-dist
 NOTHING_PACKAGE_DIR=/tmp/nothing-kde-dist ./validate.sh
 
-# Optional native dock interaction tests (Plasma menus require QApplication):
+# Optional native dock and notification geometry tests (require QApplication):
 cmake -S tests/qml-native -B /tmp/nothing-native-tests
 cmake --build /tmp/nothing-native-tests
 NOTHING_NATIVE_QML_RUNNER=/tmp/nothing-native-tests/nothing-native-quick ./validate.sh

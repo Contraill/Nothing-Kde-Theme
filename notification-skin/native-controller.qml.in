@@ -37,6 +37,25 @@ PlasmoidItem {
         ? Math.max(180, Math.min(340, Notifications.Globals.screenRect.width - 64)) : 340
     Plasmoid.status: PlasmaCore.Types.HiddenStatus
 
+    property QtObject lastExternalObstruction: null
+    function retainExternalObstruction() {
+        if (!globals.armed) return
+        const native = Notifications.Globals
+        const dialog = native.obstructingDialog
+        for (let i = 0; i < native.popupInstantiator.count; ++i) {
+            if (dialog && dialog === native.popupInstantiator.objectAt(i)) {
+                // KDE's NotificationPopup type check does not recognize our sibling popup class.
+                native.obstructingDialog = globals.lastExternalObstruction
+                return
+            }
+        }
+        globals.lastExternalObstruction = dialog
+    }
+    Connections {
+        target: Notifications.Globals
+        function onObstructingDialogChanged() { globals.retainExternalObstruction() }
+    }
+
     // Binding.RestoreBinding restores KDE's actual previous bindings, not guessed defaults.
     // No global settings files, DBus owners, or native applet resources are replaced.
     Binding {
@@ -99,7 +118,10 @@ PlasmoidItem {
         initialized = true
         console.info("NOTHING_NOTIFICATION_BRIDGE_READY")
     }
-    onArmedChanged: console.info("NOTHING_NOTIFICATION_BRIDGE_ACTIVE:" + armed)
+    onArmedChanged: {
+        retainExternalObstruction()
+        console.info("NOTHING_NOTIFICATION_BRIDGE_ACTIVE:" + armed)
+    }
     // Opt-in diagnostics contain no notification text or application names.
     Timer {
         interval: 1000

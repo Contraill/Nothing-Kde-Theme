@@ -21,6 +21,9 @@ Item {
 
     property bool lightMode: false
     property bool showTimeout: true
+    // The native timeout becomes zero while hovered/paused. Eligibility must
+    // come from effectiveTimeout, not the timer's current running state.
+    property bool hasTimeout: true
     readonly property color surface: root.lightMode ? "#f7f7f2" : "#0c0c0c"
     readonly property color surfaceAlt: root.lightMode ? "#ededE7" : "#151515"
     readonly property color textColor: root.lightMode ? "#151515" : "#f2f2ed"
@@ -116,6 +119,7 @@ Item {
 
             QQC2.ToolButton {
                 id: closeButton
+                objectName: "notificationCloseButton"
                 visible: root.modelInterface.closable || root.modelInterface.dismissable
                 Layout.alignment: Qt.AlignTop
                 implicitWidth: 28
@@ -186,7 +190,7 @@ Item {
         // currently alive fraction lights left-to-right and shrinks as the popup
         // approaches expiry, keeping the Nothing glyph language without adding bulk.
         Row {
-            visible: root.showTimeout && root.modelInterface.timeout > 0
+            visible: root.showTimeout && root.hasTimeout
             Layout.fillWidth: true
             Layout.preferredHeight: 4
             spacing: 3

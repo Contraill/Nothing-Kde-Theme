@@ -12,6 +12,8 @@ import "../../island/ui" as Island
 Item {
     id: root
     property var tasksModel
+    TaskManager.VirtualDesktopInfo { id: nativeDesktopInfo }
+    property var desktopInfo: nativeDesktopInfo
     property int maximumWidth: 420
     property color accentColor: Island.Theme.fg
     property real uiScale: 1
@@ -141,6 +143,14 @@ Item {
             }
 
             DesktopActions { id: desktopActions; launcherUrl: String(task.launcherUrl || "") }
+            TaskWorkspaces {
+                id: workspaces
+                tasksModel: root.tasksModel
+                row: task.index
+                grouped: task.isGroup
+                childCount: task.windowCount
+                desktopInfo: root.desktopInfo
+            }
             Rectangle {
                 id: taskFace
                 opacity: root.dragging && root.dragRow === task.index ? 0 : 1
@@ -156,6 +166,15 @@ Item {
                 border.width: taskList.activeFocus && taskList.currentIndex === task.index ? 1 : 0
                 border.color: Island.Theme.fgDim
                 Behavior on color { ColorAnimation { duration: Island.Theme.durShort } }
+                Rectangle {
+                    objectName: "otherWorkspaceDot"
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.margins: 6 * root.uiScale
+                    width: 5 * root.uiScale; height: width; radius: width / 2
+                    visible: workspaces.otherNames.length > 0
+                    color: root.accentColor
+                }
                 Kirigami.Icon {
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: -2
@@ -207,6 +226,7 @@ Item {
                     grouped: task.isGroup
                     fallbackIcon: task.model.decoration
                     appName: task.appName
+                    workspaceNames: workspaces.otherNames.join(", ")
                     uiScale: root.uiScale
                     previewWidthPercent: root.previewWidthPercent
                     previewHeightPercent: root.previewHeightPercent

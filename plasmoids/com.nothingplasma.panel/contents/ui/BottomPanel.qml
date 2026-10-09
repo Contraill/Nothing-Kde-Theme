@@ -12,6 +12,7 @@ import "components" as Components
 import QtQuick.Controls as QQC2
 import "../island/ui" as Island
 import org.kde.kwindowsystem as KWindowSystem
+import org.kde.kcmutils as KCMUtils
 
 Item {
     id: root
@@ -290,6 +291,10 @@ Item {
                 onLaunched: launcherPopup.closePopup()
                 onPinRequested: launcherUrl => root.togglePinnedLauncher(launcherUrl)
                 onSettingsRequested: root.openLauncherSettings()
+                onSystemSettingsRequested: {
+                    launcherPopup.closePopup()
+                    KCMUtils.KCMLauncher.openSystemSettings("")
+                }
             }
         }
     }

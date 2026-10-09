@@ -18,6 +18,7 @@ Item {
     signal launched()
     signal pinRequested(string launcherUrl)
     signal settingsRequested()
+    signal systemSettingsRequested()
     function launcherUrlFor(data) {
         const candidate = String(data?.favoriteId || data?.url || "");
         if (candidate && !candidate.includes(":") && candidate.endsWith(".desktop")) return "applications:" + candidate;
@@ -62,9 +63,14 @@ Item {
             }
             QQC2.AbstractButton {
                 id: settings
+                objectName: "launcherSettingsButton"
                 Layout.preferredWidth: 32; Layout.preferredHeight: 32
                 Accessible.name: Island.Cfg.t("LAUNCHER SETTINGS")
                 onClicked: root.settingsRequested()
+                TapHandler {
+                    acceptedButtons: Qt.RightButton
+                    onTapped: root.systemSettingsRequested()
+                }
                 background: Rectangle { radius: 16; color: settings.hovered ? Island.Theme.surfaceHigh : Island.Theme.surfaceAlt }
                 contentItem: Text {
                     text: "settings"

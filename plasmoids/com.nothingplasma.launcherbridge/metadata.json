@@ -13,7 +13,7 @@
     "Id": "com.nothingplasma.launcherbridge",
     "License": "GPL-3.0-or-later",
     "Name": "Nothing KDE Launcher Bridge",
-    "Version": "0.6.0-rc34"
+    "Version": "0.6.0-rc35"
   },
   "X-Plasma-API-Minimum-Version": "6.0",
   "X-Plasma-Provides": [
