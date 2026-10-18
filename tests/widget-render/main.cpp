@@ -22,8 +22,7 @@
 
 class TestCorona : public Plasma::Corona {
 public:
-    QRect screenGeometry(int) const override { return QRect(0, 0, 400, 400); }
-    int screenForContainment(const Plasma::Containment *) const override { return 0; }
+    QRect screenGeometry(uint) const override { return QRect(0, 0, 400, 400); }
 };
 
 int main(int argc, char **argv)
@@ -35,7 +34,9 @@ int main(int argc, char **argv)
     TestCorona corona;
     auto containment = corona.createContainment("org.kde.desktopcontainment");
     if (!containment) return 3;
-    auto applet = Plasma::PluginLoader::self()->loadApplet(QString::fromLocal8Bit(argv[1]), clockProbe ? 4242 : 0);
+    // libplasma 6.8 hands applets over as unique_ptr; the containment owns it once added.
+    auto owned = Plasma::PluginLoader::self()->loadApplet(QString::fromLocal8Bit(argv[1]), clockProbe ? 4242 : 0);
+    Plasma::Applet *applet = owned.get();
     if (!applet || !applet->pluginMetaData().isValid()) return 4;
     auto savedConfig = KSharedConfig::openConfig("nothing-clock-fixture");
     KConfigGroup savedApplet(savedConfig, "Applet");
@@ -51,7 +52,7 @@ int main(int argc, char **argv)
         savedApplet.group("Configuration").copyTo(&config);
         config.sync();
     }
-    containment->addApplet(applet);
+    containment->addApplet(std::move(owned));
     auto item = PlasmaQuick::AppletQuickItem::itemForApplet(applet);
     if (!item) return 5;
     QQuickWindow window;

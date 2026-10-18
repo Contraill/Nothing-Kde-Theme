@@ -29,7 +29,7 @@ def check(job):
         screenshot = screenshots / (name + '.png')
         env = dict(os.environ, XDG_CONFIG_HOME=td + '/config', XDG_DATA_HOME=td + '/data',
                    XDG_CACHE_HOME=td + '/cache',
-                   QT_FORCE_STDERR_LOGGING='1', QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software', QT_QPA_PLATFORMTHEME='generic',
+                   QT_FORCE_STDERR_LOGGING='1', QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software', QT_QPA_PLATFORMTHEME='kde',
                    QT_LOGGING_RULES='qml.info=true')
         extra = ['--calendar'] if package.name == 'date' and variant == 1 else []
         result = subprocess.run(['timeout', '15s', str(renderer), str(copied), str(screenshot)] + extra,
