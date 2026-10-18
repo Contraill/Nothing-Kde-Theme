@@ -59,10 +59,10 @@ Item {
     onIslandAudioOsdChanged: if (controlsReady) controls.setAudioOsd(islandAudioOsd)
     Binding { target: Island.Weather; property: "panelConfig"; value: Plasmoid.configuration }
     Binding { target: Island.Cfg; property: "weatherCity"; value: Plasmoid.configuration.islandWeatherCity }
-    Binding { target: Island.Cfg; property: "colorFondo"; value: root.lightMode ? "#EEEDE9" : "#000000" }
-    Binding { target: Island.Cfg; property: "colorTarjeta"; value: root.lightMode ? "#E7E6E1" : "#0B0B0B" }
-    Binding { target: Island.Cfg; property: "colorInvertida"; value: root.lightMode ? "#D0CFC8" : "#FFFFFF" }
-    Binding { target: Island.Cfg; property: "colorTexto"; value: root.lightMode ? "#393A37" : "#FFFFFF" }
+    Binding { target: Island.Cfg; property: "backgroundColor"; value: root.lightMode ? "#EEEDE9" : "#000000" }
+    Binding { target: Island.Cfg; property: "cardColor"; value: root.lightMode ? "#E7E6E1" : "#0B0B0B" }
+    Binding { target: Island.Cfg; property: "invertedColor"; value: root.lightMode ? "#D0CFC8" : "#FFFFFF" }
+    Binding { target: Island.Cfg; property: "textColor"; value: root.lightMode ? "#393A37" : "#FFFFFF" }
 
     Components.SystemControls { id: controls; autoWallpaper: Plasmoid.configuration.autoWallpaper }
     Component.onCompleted: { controlsReady = true; controls.retireLegacyInhibitors(); controls.syncLockWallpaper(); controls.initAccent(); controls.refreshAutoTheme(root.followSystemTheme); controls.setAudioOsd(root.islandAudioOsd); Qt.callLater(() => controls.ensureTray()); }

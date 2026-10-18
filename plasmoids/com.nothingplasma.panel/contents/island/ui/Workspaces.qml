@@ -68,7 +68,7 @@ Item {
                 height: 8
                 radius: height / 2
                 anchors.verticalCenter: parent.verticalCenter
-                color: focused ? Theme.primary : occupied ? Theme.fgVariant : Theme.containerHighest
+                color: focused ? Theme.primary : occupied ? Theme.fgDim : Theme.surfaceHigh
 
                 Behavior on width {
                     NumberAnimation {

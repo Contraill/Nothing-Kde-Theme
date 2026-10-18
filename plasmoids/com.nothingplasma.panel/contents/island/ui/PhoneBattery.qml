@@ -46,14 +46,14 @@ Row {
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: phone.charging ? "mobile_charge" : "smartphone"
-                    color: phone.charge <= 15 && !phone.charging ? Theme.error : Theme.fg
+                    color: phone.charge <= 15 && !phone.charging ? Theme.alert : Theme.fg
                     font.family: Theme.fontIcons
                     font.pixelSize: 16
                 }
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     text: phone.charge + "%"
-                    color: Theme.fgVariant
+                    color: Theme.fgDim
                     font.family: Theme.font
                     font.pixelSize: Theme.labelMedium
                 }

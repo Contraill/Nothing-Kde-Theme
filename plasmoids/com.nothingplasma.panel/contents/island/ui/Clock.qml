@@ -21,7 +21,7 @@ Row {
         // Qt rounds the dot face's ascent and descent up separately; at 17 px
         // that leaves the digits a pixel above the island's middle.
         anchors.verticalCenterOffset: 1
-        text: Qt.formatDateTime(clock.now, Cfg.fmtHora)
+        text: Qt.formatDateTime(clock.now, Cfg.timeFormat)
         color: Theme.fg
         font.family: Theme.fontDots
         font.pixelSize: 17

@@ -30,7 +30,7 @@ MouseArea {
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: root.percent
-            color: Theme.fgVariant
+            color: Theme.fgDim
             font.family: Theme.font
             font.pixelSize: Theme.labelMedium
         }

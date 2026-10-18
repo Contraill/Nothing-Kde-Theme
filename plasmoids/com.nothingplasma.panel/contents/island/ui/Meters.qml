@@ -61,7 +61,7 @@ Column {
             anchors.verticalCenter: parent.verticalCenter
             height: 6
             radius: 3
-            color: Theme.containerHighest
+            color: Theme.surfaceHigh
 
             Rectangle {
                 width: Math.max(parent.radius * 2, track.width * m.v)
@@ -129,7 +129,7 @@ Column {
         value: SysInfo.cpu / 100
         temp: SysInfo.cpuTemp
         valorAncho: root.anchoValor
-        accent: SysInfo.cpu > 85 ? Theme.error : Theme.primary
+        accent: SysInfo.cpu > 85 ? Theme.alert : Theme.primary
     }
 
     Meter {
@@ -138,7 +138,7 @@ Column {
         value: SysInfo.mem / 100
         valorAncho: root.anchoValor
         valorTexto: Cfg.ramUsage ? SysInfo.memShort : ""
-        accent: SysInfo.mem > 85 ? Theme.error : Theme.tertiary
+        accent: SysInfo.mem > 85 ? Theme.alert : Theme.fgDim
     }
 
     Meter {
@@ -148,7 +148,7 @@ Column {
         temp: SysInfo.gpuAvailable && !SysInfo.gpuAsleep ? SysInfo.gpuTemp : -1
         valorAncho: SysInfo.gpuAsleep ? 66 : root.anchoValor
         valorTexto: SysInfo.gpuAsleep ? Cfg.t("GPU ASLEEP") : ""
-        accent: SysInfo.gpu > 85 ? Theme.error : Theme.secondary
+        accent: SysInfo.gpu > 85 ? Theme.alert : Theme.fgDim
         visible: SysInfo.gpuAvailable
     }
 }

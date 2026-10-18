@@ -1,35 +1,42 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 pragma Singleton
 
 import QtQuick
 import "Translations.js" as Translations
+
+// Island settings the panel binds from its configuration, the palette's base
+// colours, and the language and time format the island speaks.
 QtObject {
     id: cfg
-    property string lang: "auto"
-    // UI language can differ from the number/date formatting locale.
-    readonly property string systemLanguage: Qt.uiLanguage || Qt.locale().uiLanguages[0] || Qt.locale().name
 
-    // The island's language: its own choice, or KDE's when a catalog exists for it.
+    // "auto", or a catalog code from po/panel.
+    property string lang: "auto"
+    // The UI language can differ from the locale used for numbers and dates.
+    readonly property string systemLanguage: Qt.uiLanguage || Qt.locale().uiLanguages[0] || Qt.locale().name
+    // The chosen catalog, else KDE's language (or its base, "pt" for "pt_BR"), else English.
     readonly property string language: {
-        if (cfg.lang !== "auto")
-            return Translations.catalogs[cfg.lang] ? cfg.lang : "en";
-        const code = cfg.systemLanguage.replace("-", "_");
-        if (Translations.catalogs[code])
-            return code;
+        if (lang !== "auto")
+            return Translations.catalogs[lang] ? lang : "en";
+        const code = systemLanguage.replace("-", "_");
         const base = code.split("_")[0];
-        return Translations.catalogs[base] ? base : "en";
+        return Translations.catalogs[code] ? code : Translations.catalogs[base] ? base : "en";
     }
     readonly property var languages: Translations.languages
     function languageName(code) {
         return Translations.catalogs[code]?.["LANGUAGE NAME"] ?? code;
     }
-    readonly property string localeName: cfg.lang === "auto" ? Qt.locale().name : Qt.locale(cfg.language).name
+    // Keys are the msgctxt of po/panel; a missing translation falls back to English.
+    function t(key) {
+        return Translations.catalogs[language][key] ?? Translations.catalogs.en[key] ?? key;
+    }
 
-    readonly property var locale: Qt.locale(cfg.localeName)
-    // Follows KDE's region settings (LC_TIME): 12-hour formats contain AM/PM.
+    readonly property string localeName: lang === "auto" ? Qt.locale().name : Qt.locale(language).name
+    readonly property var locale: Qt.locale(localeName)
+    // KDE's region settings (LC_TIME) decide: a 12-hour format has AM/PM in it.
     readonly property bool clock24: !/a/i.test(Qt.locale().timeFormat(Locale.ShortFormat).replace(/'[^']*'/g, ""))
+    readonly property string timeFormat: clock24 ? "HH:mm" : "h:mm AP"
+    readonly property string shortTimeFormat: clock24 ? "HH:mm" : "h:mm"
 
-    readonly property string fmtHora: cfg.clock24 ? "HH:mm" : "h:mm AP"
-    readonly property string fmtHoraCorta: cfg.clock24 ? "HH:mm" : "h:mm"
     property bool ramUsage: false
     property bool showWorkspaces: true
     property bool showWeather: true
@@ -41,16 +48,13 @@ QtObject {
     property bool audioOsd: true
     property bool showPhone: true
     property string weatherCity: ""
-    property color colorFondo: "#000000"
-    property color colorTarjeta: "#0B0B0B"
-    property color colorInvertida: "#FFFFFF"
-    property color colorAlerta: "#D71921"
-    property color colorTexto: "#FFFFFF"
-    property string fuenteUi: ""
-    property string fuenteNumeros: ""
 
-    // Keys are the msgctxt of po/panel; missing translations fall back to English.
-    function t(key) {
-        return Translations.catalogs[cfg.language][key] ?? Translations.catalogs.en[key] ?? key;
-    }
+    property color backgroundColor: "#000000"
+    property color cardColor: "#0B0B0B"
+    property color invertedColor: "#FFFFFF"
+    property color alertColor: "#D71921"
+    property color textColor: "#FFFFFF"
+    // Empty: the bundled Space Grotesk and Nothing Dots.
+    property string uiFont: ""
+    property string dotFont: ""
 }

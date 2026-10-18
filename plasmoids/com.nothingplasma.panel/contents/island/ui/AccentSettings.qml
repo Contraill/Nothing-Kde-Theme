@@ -262,7 +262,7 @@ ColumnLayout {
             color: Theme.fg
             placeholderTextColor: Theme.fgDim
             selectionColor: Theme.primary
-            selectedTextColor: Theme.brillo(Theme.primary) > 0.55 ? "#171717" : "#FFFFFF"
+            selectedTextColor: Theme.luminance(Theme.primary) > 0.55 ? "#171717" : "#FFFFFF"
             leftPadding: 12; rightPadding: 12
             verticalAlignment: TextInput.AlignVCenter
             selectByMouse: true

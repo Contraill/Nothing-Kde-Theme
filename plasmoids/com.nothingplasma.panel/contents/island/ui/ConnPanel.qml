@@ -496,7 +496,7 @@ Item {
                                     return Cfg.t("Saved");
                                 return Cfg.t("Available");
                             }
-                            color: cr.didFail ? Theme.alert : Theme.fgVariant
+                            color: cr.didFail ? Theme.alert : Theme.fgDim
                             font.family: Theme.font
                             font.pixelSize: Theme.labelSmall
                             elide: Text.ElideRight
@@ -573,7 +573,7 @@ Item {
                         width: parent.width
                         visible: cr.detalleTexto !== ""
                         text: cr.detalleTexto
-                        color: Theme.fgVariant
+                        color: Theme.fgDim
                         font.family: Theme.font
                         font.pixelSize: Theme.labelSmall
                         elide: Text.ElideRight
@@ -755,7 +755,7 @@ Item {
                     width: parent.width
                     horizontalAlignment: Text.AlignHCenter
                     text: Cfg.t("SCAN TO JOIN") + " · " + Net.wifiCodeSsid
-                    color: Theme.fgVariant
+                    color: Theme.fgDim
                     font.family: Theme.font
                     font.pixelSize: Theme.labelSmall
                     elide: Text.ElideMiddle

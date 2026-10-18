@@ -4,7 +4,7 @@ import QtQuick.Controls as QQC2
 Rectangle {
     id: root
     radius: Theme.shapeLg
-    color: Theme.containerHigh
+    color: Theme.surfaceAlt
     readonly property var controls: Backend.controls
     property bool keyboardMode: false
     // One entry of controls.displays; null drives the built-in (primary) display.
@@ -68,7 +68,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.bottomMargin: 9
         text: root.keyboardMode ? "keyboard" : "light_mode"
-        color: root.available ? Theme.fgVariant : Theme.fgFaint
+        color: root.available ? Theme.fgDim : Theme.fgFaint
         font.family: Theme.fontIcons
         font.pixelSize: 16
     }
@@ -107,7 +107,7 @@ Rectangle {
             width: slider.availableWidth
             height: 6
             radius: 3
-            color: Theme.containerHighest
+            color: Theme.surfaceHigh
             Rectangle {
                 width: parent.width * slider.visualPosition
                 height: parent.height

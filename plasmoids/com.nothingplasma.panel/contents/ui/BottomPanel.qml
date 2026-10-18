@@ -79,10 +79,10 @@ Item {
 
     Components.NothingPalette { id: nothingPalette; accent: root.accentColor }
     Binding { target: Island.Cfg; property: "lang"; value: Plasmoid.configuration.islandLanguage }
-    Binding { target: Island.Cfg; property: "colorFondo"; value: Plasmoid.configuration.appearanceMode === "light" ? "#EEEDE9" : "#000000" }
-    Binding { target: Island.Cfg; property: "colorTarjeta"; value: Plasmoid.configuration.appearanceMode === "light" ? "#E7E6E1" : "#0B0B0B" }
-    Binding { target: Island.Cfg; property: "colorInvertida"; value: Plasmoid.configuration.appearanceMode === "light" ? "#D0CFC8" : "#FFFFFF" }
-    Binding { target: Island.Cfg; property: "colorTexto"; value: Plasmoid.configuration.appearanceMode === "light" ? "#393A37" : "#FFFFFF" }
+    Binding { target: Island.Cfg; property: "backgroundColor"; value: Plasmoid.configuration.appearanceMode === "light" ? "#EEEDE9" : "#000000" }
+    Binding { target: Island.Cfg; property: "cardColor"; value: Plasmoid.configuration.appearanceMode === "light" ? "#E7E6E1" : "#0B0B0B" }
+    Binding { target: Island.Cfg; property: "invertedColor"; value: Plasmoid.configuration.appearanceMode === "light" ? "#D0CFC8" : "#FFFFFF" }
+    Binding { target: Island.Cfg; property: "textColor"; value: Plasmoid.configuration.appearanceMode === "light" ? "#393A37" : "#FFFFFF" }
 
     TaskManager.VirtualDesktopInfo { id: virtualDesktopInfo }
     TaskManager.ActivityInfo { id: activityInfo }

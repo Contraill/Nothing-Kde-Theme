@@ -20,6 +20,14 @@ Item {
             compare(config.calendarEvents, ["astronomicalevents"]);
             compare(panel.plugins, ["astronomicalevents"]);
         }
+        function test_isoWeeks() {
+            compare(panel.isoWeek(new Date(2026, 9, 19)), 43);
+            compare(panel.isoWeek(new Date(2026, 0, 1)), 1);
+            compare(panel.isoWeek(new Date(2027, 0, 1)), 53);
+            compare(panel.isoWeek(new Date(2024, 11, 30)), 1);
+            // Across the spring daylight saving change.
+            compare(panel.isoWeek(new Date(2026, 2, 30)), 14);
+        }
         function test_eventsAreAList() {
             compare(typeof panel.eventsOn(new Date()).length, "number");
         }

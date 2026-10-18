@@ -115,7 +115,7 @@ Row {
         width: root.btnSize
         height: 44
         radius: Theme.shapeMd
-        color: ab.on ? Theme.inverted : abMa.pressed ? Theme.surfaceTop : abMa.containsMouse ? Theme.surfaceHigh : Theme.containerHigh
+        color: ab.on ? Theme.inverted : abMa.pressed ? Theme.surfaceTop : abMa.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
         scale: abMa.pressed ? 0.98 : abMa.containsMouse ? 1.04 : 1.0
 
         Behavior on color {
@@ -134,7 +134,7 @@ Row {
         Text {
             anchors.centerIn: parent
             text: ab.icon
-            color: ab.on ? Theme.invertedFg : ab.danger ? Theme.error : Theme.fgVariant
+            color: ab.on ? Theme.invertedFg : ab.danger ? Theme.alert : Theme.fgDim
             font.family: Theme.fontIcons
             font.pixelSize: 19
         }

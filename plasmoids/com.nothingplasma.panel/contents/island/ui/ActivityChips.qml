@@ -28,7 +28,7 @@ Row {
             Text {
                 anchors.verticalCenter: parent.verticalCenter
                 text: jobs.summary.percent + "%"
-                color: Theme.fgVariant
+                color: Theme.fgDim
                 font.family: Theme.font
                 font.pixelSize: Theme.labelMedium
             }

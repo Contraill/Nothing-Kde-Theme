@@ -351,7 +351,7 @@ Item {
                             text: nrow.model.body ?? ""
                             // Notification bodies may carry the basic markup of the spec.
                             textFormat: Text.StyledText
-                            color: Theme.fgVariant
+                            color: Theme.fgDim
                             font.family: Theme.font
                             font.pixelSize: Theme.labelSmall
                             wrapMode: Text.Wrap

@@ -73,7 +73,7 @@ Item {
                     return Icons.batQuarter;
                 return Icons.batEmpty;
             }
-            color: root.charging ? Theme.primary : root.percent <= 15 ? Theme.error : Theme.fg
+            color: root.charging ? Theme.primary : root.percent <= 15 ? Theme.alert : Theme.fg
             font.family: Theme.fontIcons
             font.pixelSize: root.detailed ? 24 : 18
         }
@@ -81,7 +81,7 @@ Item {
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: root.percent + "%"
-            color: Theme.fgVariant
+            color: Theme.fgDim
             font.family: root.detailed ? Theme.fontDots : Theme.font
             font.pixelSize: root.detailed ? 26 : Theme.labelMedium
         }

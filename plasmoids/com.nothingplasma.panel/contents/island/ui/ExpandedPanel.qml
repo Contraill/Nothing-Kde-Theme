@@ -184,7 +184,7 @@ Item {
                                 // Keep the reserved clock width stable, but put
                                 // narrow digits next to the seconds, not the left edge.
                                 horizontalAlignment: Text.AlignRight
-                                text: Qt.formatDateTime(panelClock.now, Cfg.fmtHora)
+                                text: Qt.formatDateTime(panelClock.now, Cfg.timeFormat)
                                 color: Theme.fg
                                 font.family: Theme.fontDots
                                 font.pixelSize: Theme.displayLarge
@@ -293,7 +293,7 @@ Item {
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
                             radius: Theme.shapeLg
-                            color: Theme.containerHigh
+                            color: Theme.surfaceAlt
 
                             Meters {
                                 anchors.left: parent.left

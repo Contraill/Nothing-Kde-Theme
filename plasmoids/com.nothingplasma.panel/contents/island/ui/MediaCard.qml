@@ -229,7 +229,7 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 radius: Theme.shapeSm
-                color: Theme.containerHighest
+                color: Theme.surfaceHigh
             }
             Image {
                 id: artImg
@@ -264,7 +264,7 @@ Item {
                 anchors.centerIn: parent
                 visible: artImg.status !== Image.Ready && root.appIcon === ""
                 text: Icons.music
-                color: Theme.fgVariant
+                color: Theme.fgDim
                 font.family: Theme.fontIcons
                 font.pixelSize: 22
             }
@@ -291,7 +291,7 @@ Item {
             Text {
                 width: parent.width
                 text: root.player?.artist ?? ""
-                color: Theme.fgVariant
+                color: Theme.fgDim
                 font.family: Theme.font
                 font.pixelSize: Theme.bodySmall
                 elide: Text.ElideRight
@@ -417,7 +417,7 @@ Item {
                             width: Math.max(1.5, wave.barW - 1.5)
                             height: Math.max(2, wave.height * (wave.pattern[index] ?? 0.3))
                             radius: width / 2
-                            color: (index / wave.barCount) <= root.progress ? Theme.primary : Theme.containerHighest
+                            color: (index / wave.barCount) <= root.progress ? Theme.primary : Theme.surfaceHigh
 
                             Behavior on color {
                                 ColorAnimation {

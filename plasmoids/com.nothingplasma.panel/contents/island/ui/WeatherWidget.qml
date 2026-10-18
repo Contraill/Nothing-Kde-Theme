@@ -16,7 +16,7 @@ Item {
     Text {
         anchors.verticalCenter: parent.verticalCenter
         text: Weather.icon
-        color: Theme.tertiary
+        color: Theme.fgDim
         font.family: Theme.fontIcons
         font.pixelSize: 18
     }
@@ -24,7 +24,7 @@ Item {
     Text {
         anchors.verticalCenter: parent.verticalCenter
         text: Weather.temp
-        color: Theme.fgVariant
+        color: Theme.fgDim
         font.family: Theme.font
         font.pixelSize: Theme.labelMedium
     }

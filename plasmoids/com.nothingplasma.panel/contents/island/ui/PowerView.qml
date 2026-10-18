@@ -172,7 +172,7 @@ Item {
                             width: parent.width
                             visible: op.detalle !== ""
                             text: op.detalle
-                            color: Theme.fgVariant
+                            color: Theme.fgDim
                             font.family: Theme.font
                             font.pixelSize: Theme.labelSmall
                             elide: Text.ElideRight

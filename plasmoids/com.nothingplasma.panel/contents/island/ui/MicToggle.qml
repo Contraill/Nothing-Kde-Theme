@@ -32,7 +32,7 @@ Rectangle {
     Text {
         anchors.centerIn: parent
         text: Audio.inputMuted || root.systemBlocked ? "mic_off" : "mic"
-        color: root.systemBlocked || Audio.inputMuted ? Theme.invertedFg : Theme.fgVariant
+        color: root.systemBlocked || Audio.inputMuted ? Theme.invertedFg : Theme.fgDim
         font.family: Theme.fontIcons
         font.pixelSize: Math.round(root.size * 0.62)
     }

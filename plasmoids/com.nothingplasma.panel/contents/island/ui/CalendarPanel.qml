@@ -1,131 +1,153 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.workspace.calendar as PlasmaCalendar
 import "."
+
+// The island's calendar: a month of days, or the year's months to jump to,
+// with Plasma's holiday and moon-phase events and the chosen day below.
 Item {
-    id: popup
+    id: calendar
 
     signal closed
     property var panelConfig: Plasmoid.configuration
 
-    // Holidays and moon phases come from Plasma's own calendar event plugins.
+    // Events come from Plasma's own calendar plugins, switched in the header.
     readonly property var plugins: panelConfig?.calendarEvents ?? ["holidaysevents"]
     function togglePlugin(id) {
         if (!panelConfig) return;
-        const list = popup.plugins.filter(p => p !== id);
-        if (list.length === popup.plugins.length) list.push(id);
-        panelConfig.calendarEvents = list;
+        panelConfig.calendarEvents = plugins.includes(id) ? plugins.filter(p => p !== id) : plugins.concat(id);
     }
     PlasmaCalendar.EventPluginsManager {
         id: eventPlugins
-        enabledPlugins: popup.plugins
+        enabledPlugins: calendar.plugins
     }
     PlasmaCalendar.Calendar {
-        id: backend
+        id: source
         days: 7
         weeks: 6
-        firstDayOfWeek: popup.primerDia
-        today: popup.hoy
-        displayedDate: new Date(popup.verAnio, popup.verMes, 1)
+        firstDayOfWeek: calendar.locale.firstDayOfWeek
+        today: calendar.today
+        displayedDate: calendar.month
         Component.onCompleted: daysModel.setPluginsManager(eventPlugins)
     }
-    property int eventRev: 0
+    // Plugins answer asynchronously; bindings that ask for events read this.
+    property int eventsVersion: 0
     Connections {
-        target: backend.daysModel
-        function onAgendaUpdated() { popup.eventRev++; }
-        function onModelReset() { popup.eventRev++; }
+        target: source.daysModel
+        function onAgendaUpdated() { calendar.eventsVersion++; }
+        function onModelReset() { calendar.eventsVersion++; }
     }
-    function eventsOn(d) {
-        const update = popup.eventRev;
-        return backend.daysModel.eventsForDate(d);
+    function eventsOn(day) {
+        void calendar.eventsVersion;
+        return source.daysModel.eventsForDate(day);
     }
 
-    implicitHeight: col.implicitHeight + 44
-    property date hoy: new Date()
+    readonly property var locale: Cfg.locale
+    property date today: new Date()
+    // The first day of the month on show.
+    property date month: new Date(today.getFullYear(), today.getMonth(), 1)
+    property date selected: new Date(NaN)
+    property bool pickingMonth: false
+    readonly property date focusDay: isNaN(selected.getTime()) ? today : selected
+    readonly property bool onThisMonth: month.getMonth() === today.getMonth() && month.getFullYear() === today.getFullYear()
 
+    // Follows midnight without a timer per cell.
     Timer {
         interval: 60000
         running: true
         repeat: true
         onTriggered: {
-            const ahora = new Date();
-            if (ahora.getDate() !== popup.hoy.getDate() || ahora.getMonth() !== popup.hoy.getMonth() || ahora.getFullYear() !== popup.hoy.getFullYear())
-                popup.hoy = ahora;
+            const now = new Date();
+            if (!calendar.sameDay(now, calendar.today)) calendar.today = now;
         }
     }
-    property int verMes: hoy.getMonth()
-    property int verAnio: hoy.getFullYear()
-    property date elegido: new Date(NaN)
-    readonly property bool haySeleccion: !isNaN(elegido.getTime())
-    property bool eligiendoMes: false
 
-    readonly property var loc: Cfg.locale
-    readonly property int primerDia: loc.firstDayOfWeek
+    function shift(months) {
+        month = new Date(month.getFullYear(), month.getMonth() + months, 1);
+    }
+    function showToday() {
+        month = new Date(today.getFullYear(), today.getMonth(), 1);
+        selected = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        pickingMonth = false;
+    }
+    function sameDay(a, b) {
+        return a.toDateString() === b.toDateString();
+    }
+    // ISO 8601: the week that holds the year's first Thursday is week 1.
+    function isoWeek(day) {
+        const thursday = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 3 - (day.getDay() + 6) % 7);
+        // Rounded to whole days first: a daylight saving change shifts the difference by an hour.
+        return 1 + Math.floor(Math.round((thursday - new Date(thursday.getFullYear(), 0, 1)) / 86400000) / 7);
+    }
+    function upper(text) {
+        return text.toLocaleUpperCase(calendar.locale.name);
+    }
+    // Six weeks starting on the locale's first weekday.
+    readonly property var days: {
+        const lead = (month.getDay() - locale.firstDayOfWeek + 7) % 7;
+        return Array.from({length: 42}, (_, i) => new Date(month.getFullYear(), month.getMonth(), 1 - lead + i));
+    }
 
-    function mover(meses) {
-        let m = popup.verMes + meses;
-        let a = popup.verAnio;
-        while (m < 0) {
-            m += 12;
-            a--;
+    implicitHeight: content.implicitHeight + 44
+
+    // A round button: an icon, or a short label when `label` is set.
+    component RoundButton: Rectangle {
+        id: button
+        property string icon: ""
+        property string label: ""
+        property bool on: false
+        property bool flat: false
+        // A flat button that stays lit, like the title while picking a month.
+        property bool held: false
+        property int iconSize: 15
+        signal clicked
+        width: label ? caption.implicitWidth + 20 : height
+        height: 26
+        radius: height / 2
+        color: on ? Theme.inverted
+            : flat ? Qt.alpha(Theme.fg, area.containsMouse || held ? Theme.stateHover : 0)
+            : area.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
+        Behavior on color { ColorAnimation { duration: Theme.durShort } }
+        Text {
+            id: caption
+            anchors.centerIn: parent
+            text: button.label || button.icon
+            color: button.on ? Theme.invertedFg : area.containsMouse ? Theme.fg : Theme.fgDim
+            font.family: button.label ? Theme.font : Theme.fontIcons
+            font.pixelSize: button.label ? Theme.labelSmall : button.iconSize
+            font.letterSpacing: button.label ? Theme.labelSpacing : 0
         }
-        while (m > 11) {
-            m -= 12;
-            a++;
+        MouseArea {
+            id: area
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: button.clicked()
         }
-        popup.verMes = m;
-        popup.verAnio = a;
     }
 
-    function volverAHoy() {
-        popup.verMes = popup.hoy.getMonth();
-        popup.verAnio = popup.hoy.getFullYear();
-        popup.elegido = new Date(popup.hoy.getFullYear(), popup.hoy.getMonth(), popup.hoy.getDate());
-        popup.eligiendoMes = false;
-    }
-
-    function mismoDia(a, b) {
-        return a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear();
-    }
-    function semanaDe(d) {
-        const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-        const dia = (x.getDay() + 6) % 7;     // lunes = 0
-        x.setDate(x.getDate() - dia + 3);     // jueves de esta semana
-        const primerJueves = new Date(x.getFullYear(), 0, 4);
-        const dia2 = (primerJueves.getDay() + 6) % 7;
-        primerJueves.setDate(primerJueves.getDate() - dia2 + 3);
-        return 1 + Math.round((x - primerJueves) / (7 * 24 * 3600 * 1000));
-    }
-    readonly property var dias: {
-        const primero = new Date(popup.verAnio, popup.verMes, 1);
-        let corrimiento = primero.getDay() - popup.primerDia;
-        if (corrimiento < 0)
-            corrimiento += 7;
-
-        const salida = [];
-        for (var i = 0; i < 42; i++) {
-            const d = new Date(popup.verAnio, popup.verMes, 1 - corrimiento + i);
-            salida.push({
-                fecha: d,
-                dia: d.getDate(),
-                esteMes: d.getMonth() === popup.verMes
-            });
-        }
-        return salida;
+    // Swaps between the days and the months, sliding a little.
+    component Page: Item {
+        property bool shown: true
+        width: parent.width
+        opacity: shown ? 1 : 0
+        visible: opacity > 0
+        Behavior on opacity { NumberAnimation { duration: Theme.durShort } }
+        Behavior on y { NumberAnimation { duration: Theme.durMedium; easing.type: Easing.Bezier; easing.bezierCurve: Theme.emphasizedDecel } }
     }
 
     Column {
-        id: col
+        id: content
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
         spacing: 10
+
         Item {
             width: parent.width
             height: 26
-
             Text {
-                anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 text: Cfg.t("CALENDAR")
                 color: Theme.fgFaint
@@ -133,240 +155,100 @@ Item {
                 font.pixelSize: Theme.labelSmall
                 font.letterSpacing: Theme.labelSpacing
             }
-
             Row {
                 anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
                 spacing: 6
                 Repeater {
                     model: [{id: "holidaysevents", icon: "celebration", label: "HOLIDAYS"},
                         {id: "astronomicalevents", icon: "bedtime", label: "MOON PHASES"}]
-                    Rectangle {
-                        id: chip
+                    RoundButton {
                         required property var modelData
-                        readonly property bool on: popup.plugins.includes(modelData.id)
-                        anchors.verticalCenter: parent.verticalCenter
-                        width: 26
-                        height: 26
-                        radius: height / 2
-                        color: on ? Theme.inverted : chipMa.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
+                        icon: modelData.icon
+                        on: calendar.plugins.includes(modelData.id)
+                        onClicked: calendar.togglePlugin(modelData.id)
                         Accessible.role: Accessible.CheckBox
                         Accessible.name: Cfg.t(modelData.label)
                         Accessible.checked: on
-
-                        Text {
-                            anchors.centerIn: parent
-                            text: chip.modelData.icon
-                            color: chip.on ? Theme.invertedFg : Theme.fgDim
-                            font.family: Theme.fontIcons
-                            font.pixelSize: 15
-                        }
-                        MouseArea {
-                            id: chipMa
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: popup.togglePlugin(chip.modelData.id)
-                        }
                     }
                 }
-                Rectangle {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: hoyTxt.implicitWidth + 20
-                    height: 26
-                    radius: height / 2
-                    color: hoyMa.containsMouse ? Theme.inverted : Theme.surfaceAlt
-                    visible: popup.verMes !== popup.hoy.getMonth() || popup.verAnio !== popup.hoy.getFullYear()
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Theme.durShort
-                        }
-                    }
-
-                    Text {
-                        id: hoyTxt
-                        anchors.centerIn: parent
-                        text: Cfg.t("TODAY")
-                        color: hoyMa.containsMouse ? Theme.invertedFg : Theme.fgDim
-                        font.family: Theme.font
-                        font.pixelSize: Theme.labelSmall
-                        font.letterSpacing: Theme.labelSpacing
-                    }
-
-                    MouseArea {
-                        id: hoyMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: popup.volverAHoy()
-                    }
+                RoundButton {
+                    visible: !calendar.onThisMonth
+                    label: Cfg.t("TODAY")
+                    onClicked: calendar.showToday()
                 }
-
-                Rectangle {
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 26
-                    height: 26
-                    radius: height / 2
-                    color: closeMa.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Theme.durShort
-                        }
-                    }
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "close"
-                        color: closeMa.containsMouse ? Theme.fg : Theme.fgDim
-                        font.family: Theme.fontIcons
-                        font.pixelSize: 15
-                    }
-
-                    MouseArea {
-                        id: closeMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: popup.closed()
-                    }
+                RoundButton {
+                    icon: "close"
+                    onClicked: calendar.closed()
                 }
             }
         }
-        component Flecha: Rectangle {
-            id: fl
-            property string icono: ""
-            signal apretada
 
-            width: 30
-            height: 30
-            radius: height / 2
-            color: fMa.containsMouse ? Qt.alpha(Theme.fg, Theme.stateHover) : Qt.alpha(Theme.fg, 0)
-
-            Behavior on color {
-                ColorAnimation {
-                    duration: Theme.durShort
-                }
-            }
-
-            Text {
-                anchors.centerIn: parent
-                text: fl.icono
-                color: fMa.containsMouse ? Theme.fg : Theme.fgDim
-                font.family: Theme.fontIcons
-                font.pixelSize: 20
-            }
-
-            MouseArea {
-                id: fMa
-                anchors.fill: parent
-                hoverEnabled: true
-                cursorShape: Qt.PointingHandCursor
-                onClicked: fl.apretada()
-            }
-        }
-
+        // Month and year; the title switches to the month picker.
         Item {
             width: parent.width
             height: 34
-
-            Flecha {
-                id: atras
-                anchors.left: parent.left
+            RoundButton {
+                id: back
                 anchors.verticalCenter: parent.verticalCenter
-                icono: "chevron_left"
-                onApretada: popup.eligiendoMes ? popup.verAnio-- : popup.mover(-1)
+                height: 30
+                flat: true
+                iconSize: 20
+                icon: "chevron_left"
+                onClicked: calendar.shift(calendar.pickingMonth ? -12 : -1)
             }
-            Rectangle {
-                anchors.left: atras.right
-                anchors.right: adelante.left
+            RoundButton {
+                anchors.left: back.right
+                anchors.right: forward.left
+                anchors.margins: 4
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: 4
-                anchors.rightMargin: 4
                 height: 32
-                radius: height / 2
-                color: tituloMa.containsMouse || popup.eligiendoMes ? Qt.alpha(Theme.fg, Theme.stateHover) : Qt.alpha(Theme.fg, 0)
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Theme.durShort
-                    }
-                }
-
+                flat: true
+                held: calendar.pickingMonth
+                onClicked: calendar.pickingMonth = !calendar.pickingMonth
                 Text {
                     anchors.centerIn: parent
-                    text: {
-                        if (popup.eligiendoMes)
-                            return String(popup.verAnio);
-                        const d = new Date(popup.verAnio, popup.verMes, 1);
-                        return (popup.loc.standaloneMonthName(d.getMonth(), Locale.LongFormat) + " " + popup.verAnio).toLocaleUpperCase(popup.loc.name);
-                    }
+                    text: calendar.pickingMonth ? String(calendar.month.getFullYear())
+                        : calendar.upper(calendar.locale.standaloneMonthName(calendar.month.getMonth(), Locale.LongFormat) + " " + calendar.month.getFullYear())
                     color: Theme.fg
                     font.family: Theme.font
                     font.pixelSize: Theme.bodyMedium
                     font.weight: Font.Medium
                     font.letterSpacing: Theme.labelSpacing
                 }
-
-                MouseArea {
-                    id: tituloMa
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: popup.eligiendoMes = !popup.eligiendoMes
-                }
             }
-
-            Flecha {
-                id: adelante
+            RoundButton {
+                id: forward
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                icono: "chevron_right"
-                onApretada: popup.eligiendoMes ? popup.verAnio++ : popup.mover(1)
+                height: 30
+                flat: true
+                iconSize: 20
+                icon: "chevron_right"
+                onClicked: calendar.shift(calendar.pickingMonth ? 12 : 1)
             }
         }
+
         Item {
             width: parent.width
             height: 214
             clip: true
-            Column {
-                id: vistaDias
-                width: parent.width
-                spacing: 4
 
-                opacity: popup.eligiendoMes ? 0 : 1
-                visible: opacity > 0
-                y: popup.eligiendoMes ? -14 : 0
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: Theme.durShort
-                    }
-                }
-                Behavior on y {
-                    NumberAnimation {
-                        duration: Theme.durMedium
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: Theme.emphasizedDecel
-                    }
-                }
+            Page {
+                id: dayPage
+                shown: !calendar.pickingMonth
+                y: shown ? 0 : -14
+                height: parent.height
+                readonly property real cell: width / 7
                 Row {
-                    width: parent.width
-
                     Repeater {
                         model: 7
-
                         Text {
                             required property int index
-                            width: vistaDias.width / 7
+                            width: dayPage.cell
                             height: 22
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
-                            text: {
-                                const d = (popup.primerDia + index) % 7;
-                                return popup.loc.dayName(d, Locale.ShortFormat).substring(0, 2).toLocaleUpperCase(popup.loc.name);
-                            }
+                            text: calendar.upper(calendar.locale.dayName((calendar.locale.firstDayOfWeek + index) % 7, Locale.ShortFormat).substring(0, 2))
                             color: Theme.fgFaint
                             font.family: Theme.font
                             font.pixelSize: Theme.labelSmall
@@ -375,52 +257,35 @@ Item {
                     }
                 }
                 Grid {
-                    width: parent.width
+                    y: 26
                     columns: 7
-                    rows: 6
-
                     Repeater {
-                        model: popup.dias
-
+                        model: calendar.days
                         Item {
-                            id: celda
-                            required property var modelData
-                            required property int index
-
-                            width: vistaDias.width / 7
+                            id: day
+                            required property date modelData
+                            readonly property bool isToday: calendar.sameDay(modelData, calendar.today)
+                            readonly property bool inMonth: modelData.getMonth() === calendar.month.getMonth()
+                            width: dayPage.cell
                             height: 30
-
-                            readonly property bool esHoy: popup.mismoDia(modelData.fecha, popup.hoy)
-                            readonly property bool esElegido: popup.haySeleccion && popup.mismoDia(modelData.fecha, popup.elegido)
-                            readonly property bool hayEvento: popup.eventsOn(modelData.fecha).length > 0
-
                             Rectangle {
                                 anchors.centerIn: parent
                                 width: 28
                                 height: 28
-                                radius: height / 2
-                                color: celda.esHoy ? Theme.inverted : dMa.containsMouse ? Qt.alpha(Theme.fg, Theme.stateHover) : Qt.alpha(Theme.fg, 0)
-                                border.width: celda.esElegido && !celda.esHoy ? 1.5 : 0
+                                radius: 14
+                                color: day.isToday ? Theme.inverted : Qt.alpha(Theme.fg, dayArea.containsMouse ? Theme.stateHover : 0)
+                                border.width: !day.isToday && calendar.sameDay(day.modelData, calendar.selected) ? 1.5 : 0
                                 border.color: Theme.fgDim
-
-                                Behavior on color {
-                                    ColorAnimation {
-                                        duration: Theme.durShort
-                                    }
-                                }
-
+                                Behavior on color { ColorAnimation { duration: Theme.durShort } }
                                 Text {
                                     anchors.centerIn: parent
-                                    text: celda.modelData.dia
-                                    color: {
-                                        if (celda.esHoy)
-                                            return Theme.invertedFg;
-                                        return celda.modelData.esteMes ? Theme.fg : Theme.fgFaint;
-                                    }
+                                    text: day.modelData.getDate()
+                                    color: day.isToday ? Theme.invertedFg : day.inMonth ? Theme.fg : Theme.fgFaint
                                     font.family: Theme.fontDots
                                     font.pixelSize: 15
                                     font.weight: Font.Bold
                                 }
+                                // A dot under days with events.
                                 Rectangle {
                                     anchors.horizontalCenter: parent.horizontalCenter
                                     anchors.bottom: parent.bottom
@@ -428,22 +293,18 @@ Item {
                                     width: 4
                                     height: 4
                                     radius: 2
-                                    visible: celda.hayEvento
-                                    color: celda.esHoy ? Theme.invertedFg : Theme.primary
-                                    opacity: celda.modelData.esteMes ? 1 : 0.4
+                                    visible: calendar.eventsOn(day.modelData).length > 0
+                                    color: day.isToday ? Theme.invertedFg : Theme.primary
+                                    opacity: day.inMonth ? 1 : 0.4
                                 }
-
                                 MouseArea {
-                                    id: dMa
+                                    id: dayArea
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     cursorShape: Qt.PointingHandCursor
                                     onClicked: {
-                                        popup.elegido = celda.modelData.fecha;
-                                        if (!celda.modelData.esteMes) {
-                                            popup.verMes = celda.modelData.fecha.getMonth();
-                                            popup.verAnio = celda.modelData.fecha.getFullYear();
-                                        }
+                                        calendar.selected = day.modelData;
+                                        if (!day.inMonth) calendar.month = new Date(day.modelData.getFullYear(), day.modelData.getMonth(), 1);
                                     }
                                 }
                             }
@@ -451,77 +312,50 @@ Item {
                     }
                 }
             }
-            Grid {
-                id: vistaMeses
-                width: parent.width
-                columns: 4
-                rows: 3
 
-                opacity: popup.eligiendoMes ? 1 : 0
-                visible: opacity > 0
-                y: popup.eligiendoMes ? 0 : 14
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: Theme.durShort
-                    }
-                }
-                Behavior on y {
-                    NumberAnimation {
-                        duration: Theme.durMedium
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: Theme.emphasizedDecel
-                    }
-                }
-
-                Repeater {
-                    model: 12
-
-                    Item {
-                        id: mesItem
-                        required property int index
-                        width: vistaMeses.width / 4
-                        height: 66
-
-                        readonly property bool esteMes: index === popup.hoy.getMonth() && popup.verAnio === popup.hoy.getFullYear()
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: parent.width - 8
-                            height: 54
-                            radius: Theme.shapeMd
-                            color: {
-                                if (mesItem.index === popup.verMes)
-                                    return Theme.inverted;
-                                return mMa.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt;
-                            }
-                            border.width: mesItem.esteMes && mesItem.index !== popup.verMes ? 1.5 : 0
-                            border.color: Theme.fgDim
-
-                            Behavior on color {
-                                ColorAnimation {
-                                    duration: Theme.durShort
-                                }
-                            }
-
-                            Text {
+            Page {
+                id: monthPage
+                shown: calendar.pickingMonth
+                y: shown ? 0 : 14
+                height: parent.height
+                Grid {
+                    columns: 4
+                    Repeater {
+                        model: 12
+                        Item {
+                            id: monthCell
+                            required property int index
+                            readonly property bool current: index === calendar.month.getMonth()
+                            readonly property bool thisMonth: index === calendar.today.getMonth() && calendar.month.getFullYear() === calendar.today.getFullYear()
+                            width: monthPage.width / 4
+                            height: 66
+                            Rectangle {
                                 anchors.centerIn: parent
-                                text: popup.loc.standaloneMonthName(mesItem.index, Locale.ShortFormat).toLocaleUpperCase(popup.loc.name)
-                                color: mesItem.index === popup.verMes ? Theme.invertedFg : Theme.fg
-                                font.family: Theme.font
-                                font.pixelSize: Theme.bodySmall
-                                font.weight: Font.Medium
-                                font.letterSpacing: Theme.labelSpacing
-                            }
-
-                            MouseArea {
-                                id: mMa
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    popup.verMes = mesItem.index;
-                                    popup.eligiendoMes = false;
+                                width: parent.width - 8
+                                height: 54
+                                radius: Theme.shapeMd
+                                color: monthCell.current ? Theme.inverted : monthArea.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
+                                border.width: monthCell.thisMonth && !monthCell.current ? 1.5 : 0
+                                border.color: Theme.fgDim
+                                Behavior on color { ColorAnimation { duration: Theme.durShort } }
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: calendar.upper(calendar.locale.standaloneMonthName(monthCell.index, Locale.ShortFormat))
+                                    color: monthCell.current ? Theme.invertedFg : Theme.fg
+                                    font.family: Theme.font
+                                    font.pixelSize: Theme.bodySmall
+                                    font.weight: Font.Medium
+                                    font.letterSpacing: Theme.labelSpacing
+                                }
+                                MouseArea {
+                                    id: monthArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        calendar.month = new Date(calendar.month.getFullYear(), monthCell.index, 1);
+                                        calendar.pickingMonth = false;
+                                    }
                                 }
                             }
                         }
@@ -529,65 +363,57 @@ Item {
                 }
             }
         }
+
+        // The chosen day (or today): weekday, month, week number and events.
         Rectangle {
-            id: pie
+            id: summary
             width: parent.width
-            height: Math.max(46, pieCol.implicitHeight + 16)
+            height: Math.max(46, details.implicitHeight + 16)
             radius: Theme.shapeLg
             color: Theme.surfaceAlt
-
-            readonly property date foco: popup.haySeleccion ? popup.elegido : popup.hoy
-            readonly property string eventos: popup.eventsOn(foco).map(e => e.title).join(" · ")
-
+            readonly property string events: calendar.eventsOn(calendar.focusDay).map(e => e.title).join(" · ")
             Text {
-                id: numGrande
+                id: dayNumber
                 anchors.left: parent.left
                 anchors.leftMargin: 14
                 anchors.verticalCenter: parent.verticalCenter
-                text: pie.foco.getDate()
+                text: calendar.focusDay.getDate()
                 color: Theme.fg
                 font.family: Theme.fontDots
                 font.pixelSize: 24
                 font.weight: Font.Bold
             }
-
             Column {
-                id: pieCol
-                anchors.left: numGrande.right
-                anchors.leftMargin: 12
+                id: details
+                anchors.left: dayNumber.right
                 anchors.right: parent.right
+                anchors.leftMargin: 12
                 anchors.rightMargin: 14
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 1
-
                 Text {
                     width: parent.width
-                    text: popup.loc.dayName(pie.foco.getDay(), Locale.LongFormat).toLocaleUpperCase(popup.loc.name)
+                    text: calendar.upper(calendar.locale.dayName(calendar.focusDay.getDay(), Locale.LongFormat))
                     color: Theme.fg
                     font.family: Theme.font
                     font.pixelSize: Theme.labelMedium
                     font.letterSpacing: Theme.labelSpacing
                     elide: Text.ElideRight
                 }
-
                 Text {
                     width: parent.width
-                    text: {
-                        const f = pie.foco;
-                        const mes = popup.loc.standaloneMonthName(f.getMonth(), Locale.LongFormat);
-                        return (mes + " " + f.getFullYear() + " · " + Cfg.t("Week") + " " + popup.semanaDe(f)).toLocaleUpperCase(popup.loc.name);
-                    }
+                    text: calendar.upper(calendar.locale.standaloneMonthName(calendar.focusDay.getMonth(), Locale.LongFormat) + " "
+                        + calendar.focusDay.getFullYear() + " · " + Cfg.t("Week") + " " + calendar.isoWeek(calendar.focusDay))
                     color: Theme.fgFaint
                     font.family: Theme.font
                     font.pixelSize: Theme.labelSmall
                     font.letterSpacing: Theme.labelSpacing
                     elide: Text.ElideRight
                 }
-
                 Text {
                     width: parent.width
                     visible: text !== ""
-                    text: pie.eventos.toLocaleUpperCase(popup.loc.name)
+                    text: calendar.upper(summary.events)
                     color: Theme.primary
                     font.family: Theme.font
                     font.pixelSize: Theme.labelSmall

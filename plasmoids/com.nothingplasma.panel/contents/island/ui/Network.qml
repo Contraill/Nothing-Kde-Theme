@@ -9,7 +9,7 @@ Row {
         visible: !Net.connected || !Net.isWifi
         anchors.verticalCenter: parent.verticalCenter
         text: !Net.connected ? Icons.wifiOff : Net.isWifi ? Icons.wifi : Icons.ethernet
-        color: Net.connected ? Theme.fg : Theme.error
+        color: Net.connected ? Theme.fg : Theme.alert
         font.family: Theme.fontIcons
         font.pixelSize: 18
     }

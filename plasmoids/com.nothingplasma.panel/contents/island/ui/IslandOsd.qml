@@ -86,7 +86,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             visible: root.label.length > 0
             text: root.label
-            color: Theme.fgVariant
+            color: Theme.fgDim
             font.family: Theme.font
             font.pixelSize: Theme.labelMedium
         }

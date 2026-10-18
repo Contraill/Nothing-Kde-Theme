@@ -30,7 +30,7 @@ Item {
         id: paleta
         source: cover.status === Image.Ready ? cover : null
     }
-    readonly property color tono: cover.status === Image.Ready ? Theme.mezcla(Theme.surfaceAlt, paleta.dominant, 0.30) : Theme.surfaceAlt
+    readonly property color tono: cover.status === Image.Ready ? Theme.mix(Theme.surfaceAlt, paleta.dominant, 0.30) : Theme.surfaceAlt
     readonly property color tinta: {
         const c = root.tono;
         const luz = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;

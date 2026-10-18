@@ -136,7 +136,7 @@ QtObject {
         if (minutes < 60) return minutes + " " + Cfg.t("MIN");
         const then = new Date(time), now = new Date();
         if (then.toDateString() === now.toDateString())
-            return Qt.formatTime(then, Cfg.fmtHoraCorta);
+            return Qt.formatTime(then, Cfg.shortTimeFormat);
         return Qt.formatDate(then, "dd.MM");
     }
 

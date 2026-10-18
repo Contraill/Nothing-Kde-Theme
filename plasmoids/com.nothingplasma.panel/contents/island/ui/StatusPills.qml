@@ -234,7 +234,7 @@ Grid {
         width: root.pillWidth
         height: 52
         radius: Theme.shapeLg
-        color: Theme.containerHigh
+        color: Theme.surfaceAlt
         MouseArea {
             anchors.fill: parent
             acceptedButtons: Qt.RightButton
@@ -285,7 +285,7 @@ Grid {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 9
             text: Audio.muted ? "volume_off" : "volume_up"
-            color: Audio.muted ? Theme.fgFaint : Audio.boosted ? Theme.alert : Theme.fgVariant
+            color: Audio.muted ? Theme.fgFaint : Audio.boosted ? Theme.alert : Theme.fgDim
             font.family: Theme.fontIcons
             font.pixelSize: 16
 
@@ -311,7 +311,7 @@ Grid {
             anchors.right: micToggle.visible ? micToggle.left : parent.right
             anchors.rightMargin: micToggle.visible ? 8 : 12
             anchors.verticalCenter: volIcon.verticalCenter
-            color: Theme.containerHighest
+            color: Theme.surfaceHigh
             value: Audio.volume
             maxValue: Audio.maxVolume
             muted: Audio.muted
