@@ -29,6 +29,25 @@ QtObject {
 
     property real wheelRemainder: 0
 
+    // Applications recording right now. Plasma's own level meters are virtual
+    // streams and are not listed; paused (corked) streams do not count.
+    readonly property PA.SourceOutputModel recordings: PA.SourceOutputModel {}
+    readonly property Instantiator recordingRows: Instantiator {
+        model: root.recordings
+        delegate: QtObject {
+            required property var model
+            readonly property bool live: !model.VirtualStream && !model.Corked
+            readonly property string client: model.Client?.name || model.Name || ""
+        }
+    }
+    readonly property var recordingApps: {
+        const list = [];
+        for (let i = 0; i < recordingRows.count; ++i)
+            list.push(recordingRows.objectAt(i));
+        return list.filter(row => row && row.live).map(row => row.client).filter((name, index, all) => all.indexOf(name) === index);
+    }
+    readonly property bool microphoneInUse: !Backend.preview && recordingApps.length > 0
+
     function writeVolume(device, value) {
         if (!device || !device.volumeWritable) return;
         const v = Math.max(0, Math.min(root.maxVolume, value));

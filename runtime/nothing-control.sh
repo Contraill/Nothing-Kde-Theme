@@ -427,6 +427,20 @@ cleanup_widget_shortcuts() {
   done <<< "$names"
 }
 
+audio_osd() {
+  # "island": the island shows volume/mute changes, so Plasma's audio OSD is
+  # switched off; "plasma": back to Plasma's defaults. plasma-pa watches this
+  # file, so --notify applies it without a restart.
+  local key
+  for key in VolumeOsd MuteOsd MicrophoneSensitivityOsd; do
+    if [[ "${1:-}" == island ]]; then
+      kwriteconfig6 --file plasmaparc --group General --key "$key" --notify false
+    else
+      kwriteconfig6 --file plasmaparc --group General --key "$key" --notify --delete
+    fi
+  done
+}
+
 gpu_power() {
   # One line per GPU: PCI vendor, boot_vga (1 = integrated/primary) and runtime
   # PM state. Reading sysfs never wakes a suspended discrete GPU.
@@ -490,6 +504,10 @@ case "${1:-}" in
   cleanup-shortcuts)
     cleanup_widget_shortcuts
     ;;
+  audio-osd)
+    [[ "${2:-}" == island || "${2:-}" == plasma ]] || { echo 'usage: audio-osd island|plasma' >&2; exit 2; }
+    audio_osd "$2"
+    ;;
   *)
     cat >&2 <<'USAGE'
 usage:
@@ -502,6 +520,7 @@ usage:
   nothing-control.sh retire-inhibitors
   nothing-control.sh gpu-power
   nothing-control.sh cleanup-shortcuts
+  nothing-control.sh audio-osd <island|plasma>
 USAGE
     exit 2
     ;;

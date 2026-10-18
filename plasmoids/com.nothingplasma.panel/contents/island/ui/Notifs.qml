@@ -37,6 +37,15 @@ QtObject {
                 || model.jobState === NM.Notifications.JobStateSuspended
         }
     }
+    // All running jobs together, for the island's activity chip.
+    readonly property var jobSummary: {
+        const list = [];
+        for (let i = 0; i < jobRows.count; ++i)
+            list.push(jobRows.objectAt(i));
+        const running = list.filter(job => job && job.running);
+        const total = running.reduce((sum, job) => sum + job.percentage, 0);
+        return {count: running.length, percent: running.length ? Math.round(total / running.length) : 0};
+    }
     // Desktop entry -> average progress (0..100) of its running jobs.
     readonly property var jobsByApp: {
         const sums = {}, counts = {};

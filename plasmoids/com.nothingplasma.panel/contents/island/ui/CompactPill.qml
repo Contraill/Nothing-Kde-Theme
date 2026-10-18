@@ -34,11 +34,25 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 visible: Cfg.showWeather
             }
+
+            ActivityChips {
+                anchors.verticalCenter: parent.verticalCenter
+            }
         }
 
         Clock {
             anchors.centerIn: parent
             visible: Cfg.showClock
+            opacity: osd.shown ? 0 : 1
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Theme.durShort
+                }
+            }
+        }
+        IslandOsd {
+            id: osd
+            anchors.centerIn: parent
         }
         Battery {
             id: persistentBattery

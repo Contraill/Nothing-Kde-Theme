@@ -61,6 +61,8 @@ if command -v kpackagetool6 >/dev/null 2>&1; then
 fi
 
 restore_notification_skin
+# Give the volume/mute OSD back to Plasma (the island drew it).
+bash "$ROOT/runtime/nothing-control.sh" audio-osd plasma >/dev/null 2>&1 || true
 
 rm -rf \
   "$DATA_HOME/plasma/plasmoids/com.nothingplasma.panel" \

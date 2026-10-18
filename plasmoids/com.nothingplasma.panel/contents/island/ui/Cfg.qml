@@ -30,6 +30,7 @@ QtObject {
     property bool showVolume: true
     property bool showBattery: true
     property bool showMini: true
+    property bool audioOsd: true
     property string weatherCity: ""
     property color colorFondo: "#000000"
     property color colorTarjeta: "#0B0B0B"
@@ -435,7 +436,10 @@ QtObject {
         "ONLY THIS DESKTOP": ["Yalnızca bu masaüstü", "Only this desktop"],
         "ONLY THIS SCREEN": ["Yalnızca bu ekran", "Only this screen"],
         "SEARCH LAUNCHER": ["Uygulama, ayar, dosya ara veya hesapla…", "Search apps, settings, files or calculate…"],
-        "MOST USED": ["SIK KULLANILANLAR", "MOST USED"]
+        "MOST USED": ["SIK KULLANILANLAR", "MOST USED"],
+        "RUNNING JOBS": ["Süren işler", "Running jobs"],
+        "MICROPHONE IN USE": ["Mikrofon kullanımda", "Microphone in use"],
+        "AUDIO OSD IN ISLAND": ["Ses ve mikrofon değişimini adada göster", "Show volume and microphone changes in the island"]
 })
 
     function t(clave) {

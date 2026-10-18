@@ -164,6 +164,13 @@ ColumnLayout {
         }
     }
     QQC2.Switch {
+        objectName: "islandAudioOsdSwitch"
+        Layout.fillWidth: true
+        text: Cfg.t("AUDIO OSD IN ISLAND")
+        checked: root.panelConfig?.islandAudioOsd ?? true
+        onToggled: if (root.panelConfig) root.panelConfig.islandAudioOsd = checked
+    }
+    QQC2.Switch {
         objectName: "confirmPowerActionsSwitch"
         Layout.fillWidth: true
         text: Cfg.t("CONFIRM POWER ACTIONS")

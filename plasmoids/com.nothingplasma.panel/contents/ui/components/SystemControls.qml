@@ -86,6 +86,13 @@ Item {
         exec.run(root.helperCommand("retire-inhibitors"), function() {})
     }
 
+    // The island draws volume/mute changes itself; keep Plasma's audio OSD in step.
+    function setAudioOsd(inIsland) {
+        exec.run(root.helperCommand("audio-osd " + (inIsland ? "island" : "plasma")), function(r) {
+            if (r.exitCode !== 0) console.warn("Nothing audio OSD switch failed:", r.stderr)
+        })
+    }
+
     function ensureTray() {
         exec.run(root.helperCommand("ensure-tray"), function(r) {
             if (r.exitCode !== 0) console.warn("Nothing tray initialization failed:", r.stderr)

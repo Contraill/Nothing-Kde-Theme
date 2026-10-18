@@ -8,6 +8,8 @@
     <entry name="islandLanguage" type="String"><default>auto</default></entry>
     <entry name="confirmPowerActions" type="Bool"><default>true</default></entry>
     <entry name="coffeeMode" type="Bool"><default>false</default></entry>
+    <!-- Show volume/microphone changes in the island; Plasma's own audio OSD is turned off meanwhile. -->
+    <entry name="islandAudioOsd" type="Bool"><default>true</default></entry>
     <entry name="islandWeatherCity" type="String"><default></default></entry>
     <entry name="horizontalPanelHeight" type="Int"><default>50</default></entry>
     <!-- Responsive layout: widths/heights are percentages of the logical screen. -->

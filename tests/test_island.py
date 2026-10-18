@@ -59,6 +59,21 @@ class IslandTests(unittest.TestCase):
         self.assertIn('root.model.reply(', notifs)
         self.assertNotIn('NM.Server.inhibited =', notifs)
 
+    def test_live_activities_and_island_audio_osd(self):
+        compact = (UI / 'CompactPill.qml').read_text()
+        self.assertIn('ActivityChips {', compact)
+        self.assertIn('IslandOsd {', compact)
+        osd = (UI / 'IslandOsd.qml').read_text()
+        # Startup and output switches change the volume too; they must not flash the OSD.
+        self.assertIn('if (Audio.sink !== root.lastSink)', osd)
+        self.assertIn('Backend.expanded', osd)
+        audio = (UI / 'Audio.qml').read_text()
+        self.assertIn('!model.VirtualStream && !model.Corked', audio)
+        helper = (ROOT / 'runtime/nothing-control.sh').read_text()
+        self.assertIn('for key in VolumeOsd MuteOsd MicrophoneSensitivityOsd', helper)
+        self.assertIn('--notify', helper.split('audio_osd() {', 1)[1].split('\n}\n', 1)[0])
+        self.assertIn('audio-osd plasma', (ROOT / 'uninstall.sh').read_text())
+
     def test_coffee_mode_survives_shell_restarts(self):
         coffee = (UI / 'Coffee.qml').read_text()
         self.assertIn('BatteryMonitor.InhibitionControl', coffee)

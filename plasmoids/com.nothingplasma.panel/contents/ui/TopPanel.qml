@@ -46,6 +46,9 @@ Item {
     Binding { target: Island.Cfg; property: "showVolume"; value: Plasmoid.configuration.showVolume }
     Binding { target: Island.Cfg; property: "showBattery"; value: Plasmoid.configuration.showBattery }
     Binding { target: Island.Cfg; property: "showMini"; value: Plasmoid.configuration.showMiniPlayer }
+    Binding { target: Island.Cfg; property: "audioOsd"; value: Plasmoid.configuration.islandAudioOsd }
+    readonly property bool islandAudioOsd: Plasmoid.configuration.islandAudioOsd
+    onIslandAudioOsdChanged: if (controlsReady) controls.setAudioOsd(islandAudioOsd)
     Binding { target: Island.Weather; property: "panelConfig"; value: Plasmoid.configuration }
     Binding { target: Island.Cfg; property: "weatherCity"; value: Plasmoid.configuration.islandWeatherCity }
     Binding { target: Island.Cfg; property: "colorFondo"; value: root.lightMode ? "#EEEDE9" : "#000000" }
@@ -54,7 +57,7 @@ Item {
     Binding { target: Island.Cfg; property: "colorTexto"; value: root.lightMode ? "#393A37" : "#FFFFFF" }
 
     Components.SystemControls { id: controls; autoWallpaper: Plasmoid.configuration.autoWallpaper }
-    Component.onCompleted: { controlsReady = true; controls.retireLegacyInhibitors(); controls.syncLockWallpaper(); controls.initAccent(); Qt.callLater(() => controls.ensureTray()); }
+    Component.onCompleted: { controlsReady = true; controls.retireLegacyInhibitors(); controls.syncLockWallpaper(); controls.initAccent(); controls.setAudioOsd(root.islandAudioOsd); Qt.callLater(() => controls.ensureTray()); }
     onLightModeChanged: if (controlsReady) Qt.callLater(() => controls.syncLockWallpaper())
     onAutoWallpaperChanged: if (controlsReady && autoWallpaper) Qt.callLater(() => controls.syncLockWallpaper())
     TaskManager.ActivityInfo { id: wallpaperActivity }
