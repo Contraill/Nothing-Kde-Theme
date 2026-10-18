@@ -24,14 +24,8 @@ PlasmoidItem {
         useSystemAccent: Plasmoid.configuration.useSystemAccent
     }
 
-    FontLoader {
-        id: ndotFont
-        source: Qt.resolvedUrl("../fonts/ndot.ttf")
-    }
-
-    FontLoader {
-        id: ndot55Font
-        source: Qt.resolvedUrl("../fonts/ndot-55.otf")
+    Glassy.DotFont {
+        id: dotFont
     }
 
     // --- Digital clock state (variant 0) ---
@@ -371,7 +365,7 @@ PlasmoidItem {
                             Text {
                                 width: Math.min(parent.parent.parent.width * 0.2, parent.parent.parent.height * 0.15)
                                 text: root.hoursDigit1
-                                font.family: ndotFont.name
+                                font.family: dotFont.name
                                 font.pixelSize: Math.min(parent.parent.parent.width * 0.25, parent.parent.parent.height * 0.2)
                                 color: nColors.textPrimary
                                 horizontalAlignment: Text.AlignHCenter
@@ -381,7 +375,7 @@ PlasmoidItem {
                             Text {
                                 width: Math.min(parent.parent.parent.width * 0.2, parent.parent.parent.height * 0.15)
                                 text: root.hoursDigit2
-                                font.family: ndotFont.name
+                                font.family: dotFont.name
                                 font.pixelSize: Math.min(parent.parent.parent.width * 0.25, parent.parent.parent.height * 0.2)
                                 color: nColors.textPrimary
                                 horizontalAlignment: Text.AlignHCenter
@@ -396,7 +390,7 @@ PlasmoidItem {
                             Text {
                                 width: Math.min(parent.parent.parent.width * 0.2, parent.parent.parent.height * 0.15)
                                 text: root.minutesDigit1
-                                font.family: ndotFont.name
+                                font.family: dotFont.name
                                 font.pixelSize: Math.min(parent.parent.parent.width * 0.25, parent.parent.parent.height * 0.2)
                                 color: nColors.textPrimary
                                 horizontalAlignment: Text.AlignHCenter
@@ -406,7 +400,7 @@ PlasmoidItem {
                             Text {
                                 width: Math.min(parent.parent.parent.width * 0.2, parent.parent.parent.height * 0.15)
                                 text: root.minutesDigit2
-                                font.family: ndotFont.name
+                                font.family: dotFont.name
                                 font.pixelSize: Math.min(parent.parent.parent.width * 0.25, parent.parent.parent.height * 0.2)
                                 color: nColors.textPrimary
                                 horizontalAlignment: Text.AlignHCenter
@@ -428,7 +422,7 @@ PlasmoidItem {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: root.hoursDigit1
-                            font.family: ndotFont.name
+                            font.family: dotFont.name
                             font.pixelSize: Math.min(parent.parent.width * 0.15, parent.parent.height * 0.5)
                             color: nColors.textPrimary
                             horizontalAlignment: Text.AlignHCenter
@@ -438,7 +432,7 @@ PlasmoidItem {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: root.hoursDigit2
-                            font.family: ndotFont.name
+                            font.family: dotFont.name
                             font.pixelSize: Math.min(parent.parent.width * 0.15, parent.parent.height * 0.5)
                             color: nColors.textPrimary
                             horizontalAlignment: Text.AlignHCenter
@@ -456,7 +450,7 @@ PlasmoidItem {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: root.minutesDigit1
-                            font.family: ndotFont.name
+                            font.family: dotFont.name
                             font.pixelSize: Math.min(parent.parent.width * 0.15, parent.parent.height * 0.5)
                             color: nColors.textPrimary
                             horizontalAlignment: Text.AlignHCenter
@@ -466,7 +460,7 @@ PlasmoidItem {
                         Text {
                             anchors.verticalCenter: parent.verticalCenter
                             text: root.minutesDigit2
-                            font.family: ndotFont.name
+                            font.family: dotFont.name
                             font.pixelSize: Math.min(parent.parent.width * 0.15, parent.parent.height * 0.5)
                             color: nColors.textPrimary
                             horizontalAlignment: Text.AlignHCenter
@@ -518,7 +512,7 @@ PlasmoidItem {
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                                 Layout.topMargin: 5
                                 text: root.cityName
-                                font.family: ndot55Font.name
+                                font.family: dotFont.name
                                 font.pixelSize: Math.min(parent.width * 0.13, parent.height * 0.13)
                                 color: nColors.textPrimary
                                 opacity: 0.9
@@ -537,14 +531,14 @@ PlasmoidItem {
 
                                     Text {
                                         text: root.currentHours
-                                        font.family: ndotFont.name
+                                        font.family: dotFont.name
                                         font.pixelSize: Math.min(parent.parent.parent.width * 0.18, parent.parent.parent.height * 0.18)
                                         color: nColors.textPrimary
                                     }
 
                                     Text {
                                         text: ":"
-                                        font.family: ndotFont.name
+                                        font.family: dotFont.name
                                         font.pixelSize: Math.min(parent.parent.parent.width * 0.18, parent.parent.parent.height * 0.18)
                                         color: nColors.textPrimary
                                         opacity: (root.currentSeconds % 2) === 0 ? 1.0 : 0.3
@@ -553,7 +547,7 @@ PlasmoidItem {
 
                                     Text {
                                         text: root.currentMinutes
-                                        font.family: ndotFont.name
+                                        font.family: dotFont.name
                                         font.pixelSize: Math.min(parent.parent.parent.width * 0.18, parent.parent.parent.height * 0.18)
                                         color: nColors.textPrimary
                                     }
@@ -562,7 +556,7 @@ PlasmoidItem {
                                 Text {
                                     Layout.alignment: Qt.AlignTop
                                     text: root.amPm
-                                    font.family: ndot55Font.name
+                                    font.family: dotFont.name
                                     font.pixelSize: Math.min(parent.parent.width * 0.12, parent.parent.height * 0.12)
                                     color: nColors.textPrimary
                                     opacity: 0.85
@@ -582,7 +576,7 @@ PlasmoidItem {
                                 Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                                 Layout.topMargin: 5
                                 text: root.dayOfWeek
-                                font.family: ndot55Font.name
+                                font.family: dotFont.name
                                 font.pixelSize: Math.min(parent.width * 0.13, parent.height * 0.13)
                                 color: nColors.textPrimary
                                 opacity: 0.9
@@ -599,7 +593,7 @@ PlasmoidItem {
                                 Text {
                                     Layout.alignment: Qt.AlignBottom
                                     text: root.hourDifference
-                                    font.family: ndotFont.name
+                                    font.family: dotFont.name
                                     font.pixelSize: Math.min(parent.parent.width * 0.18, parent.parent.height * 0.18)
                                     color: nColors.textPrimary
                                 }
@@ -607,7 +601,7 @@ PlasmoidItem {
                                 Text {
                                     Layout.alignment: Qt.AlignBottom
                                     text: i18n("H")
-                                    font.family: ndot55Font.name
+                                    font.family: dotFont.name
                                     font.pixelSize: Math.min(parent.parent.width * 0.075, parent.parent.height * 0.075)
                                     color: nColors.textPrimary
                                     opacity: 0.85
@@ -680,7 +674,7 @@ PlasmoidItem {
                     anchors.leftMargin: parent.radius * 0.5
                     anchors.topMargin: parent.height * 0.12
                     text: root.cityAbbrev
-                    font.family: ndot55Font.name
+                    font.family: dotFont.name
                     font.pixelSize: parent.height * 0.18
                     color: nColors.textSecondary
                     opacity: 0.8
@@ -694,7 +688,7 @@ PlasmoidItem {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: root.currentHours
-                        font.family: ndotFont.name
+                        font.family: dotFont.name
                         font.pixelSize: Math.min(parent.parent.width * 0.12, parent.parent.height * 0.5)
                         color: nColors.textPrimary
                     }
@@ -702,7 +696,7 @@ PlasmoidItem {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: ":"
-                        font.family: ndotFont.name
+                        font.family: dotFont.name
                         font.pixelSize: Math.min(parent.parent.width * 0.12, parent.parent.height * 0.5)
                         color: nColors.textPrimary
                         opacity: (root.currentSeconds % 2) === 0 ? 1.0 : 0.3
@@ -712,7 +706,7 @@ PlasmoidItem {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: root.currentMinutes
-                        font.family: ndotFont.name
+                        font.family: dotFont.name
                         font.pixelSize: Math.min(parent.parent.width * 0.12, parent.parent.height * 0.5)
                         color: nColors.textPrimary
                     }
@@ -720,7 +714,7 @@ PlasmoidItem {
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
                         text: root.amPm
-                        font.family: ndot55Font.name
+                        font.family: dotFont.name
                         font.pixelSize: Math.min(parent.parent.width * 0.08, parent.parent.height * 0.3)
                         color: nColors.textPrimary
                         opacity: 0.7

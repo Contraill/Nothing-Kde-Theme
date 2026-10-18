@@ -11,14 +11,17 @@ existing PipeWire and NetworkManager helpers, native Kicker launcher and
 PowerDevil inhibition, recording implementation omitted, light palette,
 screen-size constraints. This is an adaptation, not an official Nothing product.
 
-Unmodified bundled fonts:
+Bundled fonts:
 
-- Space Grotesk: Copyright 2020 The Space Grotesk Project Authors;
+- Space Grotesk (unmodified): Copyright 2020 The Space Grotesk Project Authors;
   [SIL OFL 1.1](https://github.com/floriankarsten/space-grotesk/blob/master/OFL.txt).
-- NDOT 47 (inspired by NOTHING): Copyright 2021–2026 Interactivate;
-  [SIL OFL 1.1](https://fontstruct.com/fontstructions/download/2047444).
-- Material Symbols Rounded: Google;
+- Doto Nothing: modified from Doto, Copyright 2024 The Doto Project Authors
+  (https://github.com/oliverlalan/Doto); SIL OFL 1.1, see fonts/Doto-OFL.txt.
+  A static round, heavy instance with a single-dot colon, built by
+  `assets/fonts/build-doto.py`.
+- Material Symbols Rounded (unmodified): Google;
   [Apache 2.0](https://github.com/google/material-design-icons/blob/master/LICENSE).
 
-Full font license texts are in fonts/OFL-1.1.txt and fonts/Apache-2.0.txt.
+Full font license texts are in fonts/OFL-1.1.txt, fonts/Doto-OFL.txt and
+fonts/Apache-2.0.txt.
 The original .plasmoid remains unchanged outside the project.

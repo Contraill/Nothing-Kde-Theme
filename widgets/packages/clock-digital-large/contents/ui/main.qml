@@ -4,6 +4,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import "components"
+import "../../../../shared" as Glassy
 
 PlasmoidItem {
     id: root
@@ -33,9 +34,8 @@ PlasmoidItem {
         source: Qt.resolvedUrl("../fonts/close_dotted.ttf")
     }
 
-    FontLoader {
+    Glassy.DotFont {
         id: dotMatrixFont
-        source: Qt.resolvedUrl("../fonts/ndot.ttf")
     }
 
     FontLoader {

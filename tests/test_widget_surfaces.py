@@ -29,8 +29,9 @@ class WidgetSurfaceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             for package in (ROOT / 'widgets/packages').iterdir():
                 staged = builder.prepare(package, Path(td) / package.name)
-                for shared in (ROOT / 'widgets/shared').iterdir():
-                    self.assertEqual(shared.read_bytes(), (staged / 'contents/ui/glassy' / shared.name).read_bytes())
+                source = ROOT / 'widgets/shared'
+                for shared in (f for f in source.rglob('*') if f.is_file()):
+                    self.assertEqual(shared.read_bytes(), (staged / 'contents/ui/glassy' / shared.relative_to(source)).read_bytes())
                 for qml in staged.rglob('*.qml'):
                     for relative in re.findall(r'import "([^"]+)" as Glassy', qml.read_text()):
                         target = (qml.parent / relative).resolve()

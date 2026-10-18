@@ -44,7 +44,7 @@ QtObject {
         source: Qt.resolvedUrl("../fonts/SpaceGrotesk.ttf")
     }
     readonly property FontLoader cargaNumeros: FontLoader {
-        source: Qt.resolvedUrl("../fonts/ndot-47-inspired-by-nothing.otf")
+        source: Qt.resolvedUrl("../fonts/DotoNothing.ttf")
     }
     readonly property FontLoader cargaIconos: FontLoader {
         source: Qt.resolvedUrl("../fonts/MaterialSymbolsRounded.ttf")

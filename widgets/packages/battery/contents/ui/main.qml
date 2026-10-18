@@ -198,10 +198,8 @@ PlasmoidItem {
         onTriggered: updateBluetoothDevices()
     }
 
-    // Font loader for ndot-55
-    FontLoader {
-        id: ndotFont
-        source: Qt.resolvedUrl("../fonts/ndot-55.otf")
+    Glassy.DotFont {
+        id: dotFont
     }
 
     // Power Management Data Source (Plasma 6)
@@ -495,7 +493,7 @@ PlasmoidItem {
                 anchors.rightMargin: 20
                 anchors.bottomMargin: 20
                 text: i18n("PC")
-                font.family: ndotFont.name
+                font.family: dotFont.name
                 font.pixelSize: 17
                 color: nColors.textPrimary
                 opacity: 0.6

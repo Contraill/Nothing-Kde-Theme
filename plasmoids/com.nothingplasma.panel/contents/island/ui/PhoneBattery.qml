@@ -60,6 +60,15 @@ Row {
             }
             PlasmaCore.ToolTipArea {
                 anchors.fill: parent
+                // Opens KDE Connect on this phone's page.
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    Accessible.role: Accessible.Button
+                    Accessible.name: (phone.device.name || "KDE Connect") + " · " + phone.charge + "%"
+                    // setsid: the app must outlive a shell restart.
+                    onClicked: Exec.run("setsid -f kdeconnect-app --device " + phone.device.id().replace(/[^A-Za-z0-9_]/g, ""))
+                }
                 mainText: phone.device.name || "KDE Connect"
                 subText: phone.charge + "%" + (phone.charging ? " · " + Cfg.t("CHARGING") : "")
                 location: PlasmaCore.Types.TopEdge
