@@ -71,16 +71,15 @@ Rectangle {
             label: Cfg.t("DND TILE")
             onClicked: Notifs.toggleMute()
         }
-        // Screen off while the session keeps running, e.g. with coffee mode.
+        // Plasma's clipboard history (Meta+V), opened where the pointer is.
         QuickTile {
             width: parent.tileWidth
             enabled: !Backend.preview
-            glyph: "tv_off"
-            label: Cfg.t("SCREEN OFF")
+            glyph: "content_paste"
+            label: Cfg.t("CLIPBOARD")
             onClicked: {
                 Backend.dismissRequested();
-                // PowerDevil's own action; the pause keeps the click from waking the screen.
-                Exec.run("sleep 0.8; qdbus6 org.kde.kglobalaccel /component/org_kde_powerdevil org.kde.kglobalaccel.Component.invokeShortcut 'Turn Off Screen'");
+                Exec.run("qdbus6 org.kde.kglobalaccel /component/plasmashell org.kde.kglobalaccel.Component.invokeShortcut show-on-mouse-pos");
             }
         }
     }
