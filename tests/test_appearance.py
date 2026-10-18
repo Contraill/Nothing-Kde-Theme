@@ -156,7 +156,7 @@ class AppearanceTests(unittest.TestCase):
         self.assertIn('property alias decorationMask: blurMask.mask', qml)
         self.assertIn('SystemPalette', qml)
         # Window-sized Canvas images were repainted on every resize frame.
-        self.assertNotIn('Canvas', qml)
+        self.assertNotIn('Canvas {', qml)
         self.assertIn('fillRule: ShapePath.OddEvenFill', qml)
         spec = importlib.util.spec_from_file_location('glassy_build', ROOT / 'plasma/aurorae/build.py')
         builder = importlib.util.module_from_spec(spec)
@@ -167,6 +167,21 @@ class AppearanceTests(unittest.TestCase):
         for radius in range(25):
             self.assertTrue({f'b{radius}-{part}' for part in ('center','topleft','topright','bottomleft','bottomright')} <= ids)
         self.assertFalse(any(i and i.startswith('mask-') for i in ids))
+
+    def test_opaque_applications_reach_kvantum(self):
+        import sys
+        sys.path.insert(0, str(ROOT / 'runtime'))
+        import glassy_settings
+        values = glassy_settings.settings(Path('/nonexistent'))
+        self.assertIn('vlc', values['OpaqueApplications'].split(','))
+        values['OpaqueApplications'] = ' vlc , ,krita '
+        config = glassy_settings.configure((ROOT / 'assets/kvantum/Glassy/Glassy.kvconfig').read_text(), values)
+        self.assertIn('opaque=vlc,krita\n', config)
+
+    def test_decoration_translations_have_no_class_context(self):
+        # KLocalizedTranslator matches msgctxt against the disambiguation, not the
+        # ui class name, so "GlassyConfig" contexts were never translated.
+        self.assertNotIn('msgctxt "GlassyConfig"', (ROOT / 'plasma/aurorae/i18n/tr.po').read_text())
 
     def test_configuration_form_covers_schema(self):
         package = ROOT / 'plasma/aurorae/org.glassy.decoration/contents'

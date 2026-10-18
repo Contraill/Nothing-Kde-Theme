@@ -52,7 +52,8 @@ Decoration {
             values[key] = value;
         }
         const fingerprint=JSON.stringify([values.WindowOpacity,values.PopupOpacity,values.BlurSurfaces,
-            values.SurfaceRoundness,values.UiDensity,values.BorderStrength,values.ScrollbarSize,values.AccentIntensity]);
+            values.SurfaceRoundness,values.UiDensity,values.BorderStrength,values.ScrollbarSize,values.AccentIntensity,
+            values.OpaqueApplications]);
         if (applicationFingerprint && fingerprint !== applicationFingerprint) applicationSyncPending=true;
         applicationFingerprint=fingerprint;
         settings = values;

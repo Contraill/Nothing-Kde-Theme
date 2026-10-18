@@ -23,6 +23,8 @@
     <entry name="UiDensity" type="Int"><default>1</default><min>0</min><max>2</max></entry>
     <entry name="BorderStrength" type="Int"><default>1</default><min>0</min><max>2</max></entry>
     <entry name="ScrollbarSize" type="Int"><default>1</default><min>0</min><max>2</max></entry>
+    <!-- Kvantum keeps these windows opaque: video and OpenGL surfaces break under translucency. -->
+    <entry name="OpaqueApplications" type="String"><default>kaffeine,kmplayer,subtitlecomposer,kdenlive,vlc,smplayer,smplayer2,avidemux,avidemux2_qt4,avidemux3_qt4,avidemux3_qt5,kamoso,QtCreator,VirtualBox,VirtualBoxVM,trojita,dragon,digikam,lyx,krita,obs,shotcut</default></entry>
     <entry name="AccentIntensity" type="Int"><default>1</default><min>0</min><max>2</max></entry>
   </group>
 </kcfg>

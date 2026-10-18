@@ -29,6 +29,7 @@ def settings(path=None):
         key=e.get('name'); default=e.find('k:default',ns).text
         raw=c.get(GROUP,key,fallback=default)
         if e.get('type')=='Bool': value=raw.lower() in ('true','1','yes')
+        elif e.get('type')=='String': value=raw or ''
         else:
             try: value=int(raw)
             except ValueError: value=int(default)
@@ -57,6 +58,8 @@ def configure(template, s):
     g['blurring']=g['popup_blurring']=str(s['BlurSurfaces']).lower()
     c['Hacks']['blur_translucent']=str(s['BlurSurfaces']).lower()
     g['scroll_width']=str(m['scroll']); g['layout_spacing']=str(m['spacing'])
+    # Kvantum's own list; whitespace and empty items are dropped.
+    g['opaque']=','.join(name.strip() for name in str(s.get('OpaqueApplications','')).split(',') if name.strip())
     g['menu_blur_radius']=g['tooltip_blur_radius']=str(m['radius'])
     c['ToolTip']['frame.element']='tooltip'; c['ToolTip']['interior.element']='tooltip'
     for key in ('top','bottom'):

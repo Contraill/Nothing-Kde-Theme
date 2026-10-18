@@ -11,7 +11,8 @@ def config_ui(entries):
                         ('UiDensity','UI density',['Compact','Normal','Comfortable']),
                         ('BorderStrength','Border strength',['None','Subtle','Normal']),
                         ('ScrollbarSize','Scrollbar size',['Compact','Normal','Wide']),
-                        ('AccentIntensity','Accent intensity',['Subtle','Normal','Strong'])],
+                        ('AccentIntensity','Accent intensity',['Subtle','Normal','Strong']),
+                        ('OpaqueApplications','Always opaque applications',None)],
         'Glass': [('WindowOpacity','Window opacity',None),('PopupOpacity','Popup/menu opacity',None),
                   ('BlurSurfaces','Blur application surfaces',None),('TitlebarOpacity','Active titlebar opacity',None),
                   ('InactiveOpacity','Inactive titlebar opacity',None),('Blur','Blur titlebar',None)],
@@ -33,10 +34,12 @@ def config_ui(entries):
         for row,(key,label,choices) in enumerate(rows):
             entry=lookup[key]; kind=entry.get('type')
             out.append(f'<item row="{row}" column="0"><widget class="QLabel" name="{key}Label"><property name="text"><string>{escape(label)}:</string></property><property name="buddy"><cstring>kcfg_{key}</cstring></property></widget></item>')
-            cls='QComboBox' if choices else 'QCheckBox' if kind=='Bool' else 'QSpinBox'
+            cls='QComboBox' if choices else 'QCheckBox' if kind=='Bool' else 'QLineEdit' if kind=='String' else 'QSpinBox'
             out.append(f'<item row="{row}" column="1"><widget class="{cls}" name="kcfg_{key}">')
             if choices:
                 for choice in choices: out.append(f'<item><property name="text"><string>{choice}</string></property></item>')
+            elif kind=='String':
+                out.append('<property name="toolTip"><string>Comma-separated application names (as in their process name). Kvantum keeps their windows opaque.</string></property>')
             elif kind=='Int':
                 for field,prop in [('min','minimum'),('max','maximum')]: out.append(f'<property name="{prop}"><number>{entry.find("k:"+field,ns).text}</number></property>')
                 out.append(f'<property name="suffix"><string>{" %" if "Opacity" in key else " px"}</string></property>')
@@ -44,7 +47,7 @@ def config_ui(entries):
         if group=='Window Decoration':
             out.append('<item row="9" column="1"><widget class="QCheckBox" name="unavailableMaximizedRounding"><property name="enabled"><bool>false</bool></property><property name="text"><string>Round maximized windows (unavailable)</string></property><property name="toolTip"><string>Aurorae 6.7 forces a rectangular maximized blur region. Maximized and tiled windows stay square.</string></property></widget></item>')
         out.append('</layout></widget>')
-    out.append('</widget></item><item><widget class="QLabel" name="limits"><property name="wordWrap"><bool>true</bool></property><property name="text"><string>Application assets are updated on Apply; existing Kvantum instances may retain cached rendering. Titlebar blur strength belongs to KWin; Aurorae forces maximized blur. Bottom rounding reserves a decoration strip derived from Corner radius; application content is not covered.</string></property></widget></item></layout></widget><resources/><connections/></ui>')
+    out.append('</widget></item><item><widget class="QLabel" name="limits"><property name="wordWrap"><bool>true</bool></property><property name="text"><string>Apply reloads running KDE applications with the new look. Titlebar blur strength belongs to KWin; Aurorae forces maximized blur. Bottom rounding reserves a decoration strip derived from Corner radius; application content is not covered.</string></property></widget></item></layout></widget><resources/><connections/></ui>')
     return ''.join(out)
 
 
@@ -55,7 +58,8 @@ def assets(package):
     for entry in entries:
         value=entry.find('k:default',ns).text
         key=entry.get('name')
-        defaults[key]=value=='true' if entry.get('type')=='Bool' else int(value)
+        kind=entry.get('type')
+        defaults[key]=value=='true' if kind=='Bool' else (value or '') if kind=='String' else int(value)
         if entry.get('type')=='Int':
             limits[key]=[int(entry.find('k:min',ns).text),int(entry.find('k:max',ns).text)]
     js='// Generated from contents/config/main.xml. Do not edit.\n.pragma library\n'

@@ -4,221 +4,173 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgctxt "GlassyConfig"
 msgid "Appearance"
 msgstr "Görünüm"
 
-msgctxt "GlassyConfig"
 msgid "Corner radius:"
 msgstr "Köşe yarıçapı:"
 
-msgctxt "GlassyConfig"
 msgid " px"
 msgstr " px"
 
-msgctxt "GlassyConfig"
 msgid "Upper decoration corners only. Native Aurorae cannot clip application content at the lower corners."
 msgstr "Yalnız dekorasyonun üst köşeleri. Native Aurorae uygulama içeriğinin alt köşelerini kesemez."
 
-msgctxt "GlassyConfig"
 msgid "Border width:"
 msgstr "Kenarlık kalınlığı:"
 
-msgctxt "GlassyConfig"
 msgid "Titlebar/content separator"
 msgstr "Başlık/içerik ayırıcı"
 
-msgctxt "GlassyConfig"
 msgid "Titlebar size:"
 msgstr "Başlık çubuğu boyutu:"
 
-msgctxt "GlassyConfig"
 msgid "Compact"
 msgstr "Kompakt"
 
-msgctxt "GlassyConfig"
 msgid "Normal"
 msgstr "Normal"
 
-msgctxt "GlassyConfig"
 msgid "Comfortable"
 msgstr "Ferah"
 
-msgctxt "GlassyConfig"
 msgid "Glass"
 msgstr "Cam"
 
-msgctxt "GlassyConfig"
 msgid "Active opacity:"
 msgstr "Etkin pencere opaklığı:"
 
-msgctxt "GlassyConfig"
 msgid "Inactive opacity:"
 msgstr "Etkin olmayan opaklığı:"
 
-msgctxt "GlassyConfig"
 msgid " %"
 msgstr " %"
 
-msgctxt "GlassyConfig"
 msgid "Blur titlebar"
 msgstr "Başlık çubuğunu bulanıklaştır"
 
-msgctxt "GlassyConfig"
 msgid "Requests decoration blur only; strength is controlled by KWin. Aurorae 6.7 always blurs maximized decorations."
 msgstr "Yalnız dekorasyon bulanıklığını ister; şiddeti KWin yönetir. Aurorae 6.7 tam büyütülmüş dekorasyonları her zaman bulanıklaştırır."
 
-msgctxt "GlassyConfig"
 msgid "Controls"
 msgstr "Düğmeler"
 
-msgctxt "GlassyConfig"
 msgid "Button size:"
 msgstr "Düğme boyutu:"
 
-msgctxt "GlassyConfig"
 msgid "Large"
 msgstr "Büyük"
 
-msgctxt "GlassyConfig"
 msgid "Button spacing:"
 msgstr "Düğme aralığı:"
 
-msgctxt "GlassyConfig"
 msgid "Tight"
 msgstr "Dar"
 
-msgctxt "GlassyConfig"
 msgid "Wide"
 msgstr "Geniş"
 
-msgctxt "GlassyConfig"
 msgid "Effects"
 msgstr "Efektler"
 
-msgctxt "GlassyConfig"
 msgid "Shadow:"
 msgstr "Gölge:"
 
-msgctxt "GlassyConfig"
 msgid "Off"
 msgstr "Kapalı"
 
-msgctxt "GlassyConfig"
 msgid "Subtle"
 msgstr "Hafif"
 
-msgctxt "GlassyConfig"
 msgid "Strong"
 msgstr "Güçlü"
 
 msgid "Reset to Glassy defaults"
 msgstr "Glassy varsayılanlarına dön"
 
-msgctxt "GlassyConfig"
 msgid "Application"
 msgstr "Uygulama"
 
-msgctxt "GlassyConfig"
 msgid "Window Decoration"
 msgstr "Pencere dekorasyonu"
 
-msgctxt "GlassyConfig"
 msgid "Surface roundness:"
 msgstr "Yüzey yuvarlaklığı:"
 
-msgctxt "GlassyConfig"
 msgid "Square"
 msgstr "Köşeli"
 
-msgctxt "GlassyConfig"
 msgid "Rounded"
 msgstr "Yuvarlak"
 
-msgctxt "GlassyConfig"
 msgid "UI density:"
 msgstr "Arayüz yoğunluğu:"
 
-msgctxt "GlassyConfig"
 msgid "Border strength:"
 msgstr "Kenarlık belirginliği:"
 
-msgctxt "GlassyConfig"
 msgid "None"
 msgstr "Yok"
 
-msgctxt "GlassyConfig"
 msgid "Scrollbar size:"
 msgstr "Kaydırma çubuğu boyutu:"
 
-msgctxt "GlassyConfig"
 msgid "Accent intensity:"
 msgstr "Vurgu yoğunluğu:"
 
-msgctxt "GlassyConfig"
 msgid "Window opacity:"
 msgstr "Pencere yüzeyi opaklığı:"
 
-msgctxt "GlassyConfig"
 msgid "Popup/menu opacity:"
 msgstr "Açılır menü opaklığı:"
 
-msgctxt "GlassyConfig"
 msgid "Blur application surfaces:"
 msgstr "Uygulama yüzeylerini bulanıklaştır:"
 
-msgctxt "GlassyConfig"
 msgid "Active titlebar opacity:"
 msgstr "Etkin başlık çubuğu opaklığı:"
 
-msgctxt "GlassyConfig"
 msgid "Inactive titlebar opacity:"
 msgstr "Etkin olmayan başlık çubuğu opaklığı:"
 
-msgctxt "GlassyConfig"
 msgid "Blur titlebar:"
 msgstr "Başlık çubuğunu bulanıklaştır:"
 
-msgctxt "GlassyConfig"
 msgid "Titlebar/content separator:"
 msgstr "Başlık/içerik ayırıcı:"
 
-msgctxt "GlassyConfig"
 msgid "Title alignment:"
 msgstr "Başlık hizalaması:"
 
-msgctxt "GlassyConfig"
 msgid "Left"
 msgstr "Sol"
 
-msgctxt "GlassyConfig"
 msgid "Center"
 msgstr "Orta"
 
-msgctxt "GlassyConfig"
 msgid "Active accent border:"
 msgstr "Etkin pencerede vurgu kenarlığı:"
 
-msgctxt "GlassyConfig"
 msgid "Inactive window buttons:"
 msgstr "Etkin olmayan pencere düğmeleri:"
 
-msgctxt "GlassyConfig"
 msgid "Dimmed"
 msgstr "Soluk"
 
-msgctxt "GlassyConfig"
 msgid "Round maximized windows (unavailable)"
 msgstr "Tam büyütülmüş köşeleri yuvarlat (desteklenmiyor)"
 
-msgctxt "GlassyConfig"
 msgid "Aurorae 6.7 forces a rectangular maximized blur region. Maximized and tiled windows stay square."
 msgstr "Aurorae 6.7 tam büyütmede dikdörtgen bulanıklık bölgesi kullanır. Tam büyütülmüş ve döşenmiş pencerelerin köşeleri düz kalır."
 
-msgctxt "GlassyConfig"
-msgid "Application assets are updated on Apply; existing Kvantum instances may retain cached rendering. Titlebar blur strength belongs to KWin; Aurorae forces maximized blur. Bottom rounding reserves a decoration strip derived from Corner radius; application content is not covered."
-msgstr "Uygula, uygulama varlıklarını günceller; açık Kvantum uygulamaları eski çizimleri önbellekte tutabilir. Bulanıklık şiddetini KWin yönetir; Aurorae tam büyütmede bulanıklığı zorlar. Alt yuvarlatma, köşe yarıçapından türetilen bir dekorasyon şeridi ayırır; uygulama içeriğini örtmez."
+msgid "Apply reloads running KDE applications with the new look. Titlebar blur strength belongs to KWin; Aurorae forces maximized blur. Bottom rounding reserves a decoration strip derived from Corner radius; application content is not covered."
+msgstr "Uygula, açık KDE uygulamalarını yeni görünümle yeniden çizer. Bulanıklık şiddetini KWin yönetir; Aurorae tam büyütmede bulanıklığı zorlar. Alt yuvarlatma, köşe yarıçapından türetilen bir dekorasyon şeridi ayırır; uygulama içeriğini örtmez."
 
-msgctxt "GlassyConfig"
 msgid "Round bottom corners:"
 msgstr "Alt köşeleri yuvarlat:"
+
+msgid "Always opaque applications:"
+msgstr "Her zaman opak uygulamalar:"
+
+msgid "Comma-separated application names (as in their process name). Kvantum keeps their windows opaque."
+msgstr "Virgülle ayrılmış uygulama adları (süreç adlarıyla). Kvantum bu pencereleri opak tutar."
