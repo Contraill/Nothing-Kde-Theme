@@ -20,7 +20,14 @@ Item {
     // Reuse the existing debounced palette hook; no service or layout change.
     readonly property color kdeWindowColor: Kirigami.Theme.backgroundColor
     onKdeWindowColorChanged: if (controlsReady) accentSync.restart()
-    Timer { id: accentSync; interval: 350; onTriggered: controls.syncAccentSchemeFiles() }
+    Timer { id: accentSync; interval: 350; onTriggered: { controls.syncAccentSchemeFiles(); controls.refreshAutoTheme(root.followSystemTheme); } }
+    // Plasma's automatic switch only applies the Global Theme; finish it for
+    // Kvantum, wallpapers and the panels. One screen's island does it.
+    function followSystemTheme() {
+        const light = root.kdeWindowColor.hslLightness > 0.5;
+        if (controls.autoTheme && Plasmoid.containment.screen === 0 && light !== root.lightMode)
+            controls.applyTheme(light ? "light" : "dark");
+    }
     readonly property bool autoWallpaper: Plasmoid.configuration.autoWallpaper
     readonly property bool lightMode: Plasmoid.configuration.appearanceMode === "light"
     readonly property real availableWidth: Screen.desktopAvailableWidth || Screen.width || 1920
@@ -58,7 +65,7 @@ Item {
     Binding { target: Island.Cfg; property: "colorTexto"; value: root.lightMode ? "#393A37" : "#FFFFFF" }
 
     Components.SystemControls { id: controls; autoWallpaper: Plasmoid.configuration.autoWallpaper }
-    Component.onCompleted: { controlsReady = true; controls.retireLegacyInhibitors(); controls.syncLockWallpaper(); controls.initAccent(); controls.setAudioOsd(root.islandAudioOsd); Qt.callLater(() => controls.ensureTray()); }
+    Component.onCompleted: { controlsReady = true; controls.retireLegacyInhibitors(); controls.syncLockWallpaper(); controls.initAccent(); controls.refreshAutoTheme(root.followSystemTheme); controls.setAudioOsd(root.islandAudioOsd); Qt.callLater(() => controls.ensureTray()); }
     onLightModeChanged: if (controlsReady) Qt.callLater(() => controls.syncLockWallpaper())
     onAutoWallpaperChanged: if (controlsReady && autoWallpaper) Qt.callLater(() => controls.syncLockWallpaper())
     TaskManager.ActivityInfo { id: wallpaperActivity }

@@ -74,6 +74,23 @@ class IslandTests(unittest.TestCase):
         self.assertIn('--notify', helper.split('audio_osd() {', 1)[1].split('\n}\n', 1)[0])
         self.assertIn('audio-osd plasma', (ROOT / 'uninstall.sh').read_text())
 
+    def test_auto_theme_status_only_claims_the_nothing_pair(self):
+        import os, subprocess, tempfile
+        with tempfile.TemporaryDirectory() as td:
+            stub = Path(td) / 'kreadconfig6'
+            # Prints $KEY_<name> for --key <name>.
+            stub.write_text('#!/bin/bash\nwhile [ $# -gt 0 ]; do [ "$1" = --key ] && k=$2; shift; done\nv=KEY_$k; echo "${!v}"\n')
+            stub.chmod(0o755)
+            def status(auto, light, dark):
+                env = dict(os.environ, PATH=td + ':' + os.environ['PATH'], KEY_AutomaticLookAndFeel=auto,
+                           KEY_DefaultLightLookAndFeel=light, KEY_DefaultDarkLookAndFeel=dark)
+                return subprocess.run(['bash', str(ROOT / 'runtime/nothing-control.sh'), 'auto-theme', 'status'],
+                                      env=env, capture_output=True, text=True, check=True).stdout.strip()
+            self.assertEqual(status('true', 'com.nothingplasma.light', 'com.nothingplasma.dark'), 'on')
+            self.assertEqual(status('true', 'org.kde.breeze.desktop', 'org.kde.breezedark.desktop'), 'off')
+            self.assertEqual(status('false', 'com.nothingplasma.light', 'com.nothingplasma.dark'), 'off')
+        self.assertIn('auto-theme off', (ROOT / 'uninstall.sh').read_text())
+
     def test_coffee_mode_survives_shell_restarts(self):
         coffee = (UI / 'Coffee.qml').read_text()
         self.assertIn('BatteryMonitor.InhibitionControl', coffee)

@@ -443,7 +443,8 @@ QtObject {
         "AUDIO OSD IN ISLAND": ["Ses ve mikrofon değişimini adada göster", "Show volume and microphone changes in the island"],
         "PHONE": ["Telefon (KDE Connect)", "Phone (KDE Connect)"],
         "HOLIDAYS": ["TATİLLER", "HOLIDAYS"],
-        "MOON PHASES": ["AY EVRELERİ", "MOON PHASES"]
+        "MOON PHASES": ["AY EVRELERİ", "MOON PHASES"],
+        "AUTO THEME": ["GÜN DOĞUMU / BATIMINDA OTOMATİK", "AUTOMATIC AT SUNRISE / SUNSET"]
 })
 
     function t(clave) {

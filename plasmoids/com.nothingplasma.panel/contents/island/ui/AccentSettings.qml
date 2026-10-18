@@ -66,7 +66,11 @@ ColumnLayout {
                 checkable: true
                 checked: selected
                 Accessible.name: Cfg.t(modelData === "light" ? "LIGHT THEME" : "DARK THEME")
-                onClicked: if (!selected) root.controls.applyTheme(modelData)
+                onClicked: {
+                    // Picking a mode by hand ends automatic switching.
+                    if (root.controls.autoTheme) root.controls.setAutoTheme(false);
+                    if (!selected) root.controls.applyTheme(modelData);
+                }
                 background: Rectangle {
                     radius: Theme.shapeMd
                     color: modeButton.hovered ? Theme.surfaceHigh : Theme.surfaceAlt
@@ -90,6 +94,14 @@ ColumnLayout {
                 }
             }
         }
+    }
+    QQC2.Switch {
+        objectName: "autoThemeSwitch"
+        Layout.fillWidth: true
+        text: Cfg.t("AUTO THEME")
+        enabled: !Backend.preview && !!root.controls && !root.busy
+        checked: root.controls?.autoTheme ?? false
+        onToggled: root.controls.setAutoTheme(checked)
     }
     QQC2.Switch {
         objectName: "showSystemTraySwitch"

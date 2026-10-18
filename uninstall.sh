@@ -63,6 +63,8 @@ fi
 restore_notification_skin
 # Give the volume/mute OSD back to Plasma (the island drew it).
 bash "$ROOT/runtime/nothing-control.sh" audio-osd plasma >/dev/null 2>&1 || true
+# Automatic switching would otherwise point at the removed Nothing packages.
+[[ "$(bash "$ROOT/runtime/nothing-control.sh" auto-theme status 2>/dev/null)" != on ]] || bash "$ROOT/runtime/nothing-control.sh" auto-theme off >/dev/null 2>&1 || true
 
 rm -rf \
   "$DATA_HOME/plasma/plasmoids/com.nothingplasma.panel" \

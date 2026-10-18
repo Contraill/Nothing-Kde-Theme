@@ -441,6 +441,30 @@ audio_osd() {
   done
 }
 
+auto_theme() {
+  # Plasma's own day/night Global Theme switching (sunrise/sunset from
+  # KNightTime), paired with the Nothing light and dark packages. The panel
+  # completes each switch for Kvantum, wallpapers and the other panels.
+  local key
+  case "${1:-}" in
+    on)
+      kwriteconfig6 --file kdeglobals --group KDE --key DefaultLightLookAndFeel com.nothingplasma.light
+      kwriteconfig6 --file kdeglobals --group KDE --key DefaultDarkLookAndFeel com.nothingplasma.dark
+      kwriteconfig6 --file kdeglobals --group KDE --key AutomaticLookAndFeel --notify true
+      ;;
+    off)
+      kwriteconfig6 --file kdeglobals --group KDE --key AutomaticLookAndFeel --notify false
+      ;;
+    status)
+      # "on" only for the Nothing pair; another automatic pair belongs to the user.
+      for key in AutomaticLookAndFeel DefaultLightLookAndFeel DefaultDarkLookAndFeel; do
+        printf '%s ' "$(kreadconfig6 --file kdeglobals --group KDE --key "$key")"
+      done | grep -qx 'true com.nothingplasma.light com.nothingplasma.dark ' && echo on || echo off
+      ;;
+    *) echo 'usage: auto-theme on|off|status' >&2; return 2 ;;
+  esac
+}
+
 gpu_power() {
   # One line per GPU: PCI vendor, boot_vga (1 = integrated/primary) and runtime
   # PM state. Reading sysfs never wakes a suspended discrete GPU.
@@ -504,6 +528,9 @@ case "${1:-}" in
   cleanup-shortcuts)
     cleanup_widget_shortcuts
     ;;
+  auto-theme)
+    auto_theme "${2:-}"
+    ;;
   audio-osd)
     [[ "${2:-}" == island || "${2:-}" == plasma ]] || { echo 'usage: audio-osd island|plasma' >&2; exit 2; }
     audio_osd "$2"
@@ -521,6 +548,7 @@ usage:
   nothing-control.sh gpu-power
   nothing-control.sh cleanup-shortcuts
   nothing-control.sh audio-osd <island|plasma>
+  nothing-control.sh auto-theme <on|off|status>
 USAGE
     exit 2
     ;;

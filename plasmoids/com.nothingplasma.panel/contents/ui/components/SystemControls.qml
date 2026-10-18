@@ -127,6 +127,19 @@ Item {
         })
     }
 
+    // Plasma switches the Nothing Global Theme at sunrise and sunset.
+    property bool autoTheme: false
+    function refreshAutoTheme(done) {
+        exec.run(root.helperCommand("auto-theme status"), function(r) {
+            if (r.exitCode === 0) root.autoTheme = r.stdout.trim() === "on"
+            if (done) done()
+        })
+    }
+    function setAutoTheme(on) {
+        root.autoTheme = on
+        exec.run(root.helperCommand("auto-theme " + (on ? "on" : "off")), function() { root.refreshAutoTheme() })
+    }
+
     function hexByte(value) {
         let s = Math.max(0, Math.min(255, Math.round(value * 255))).toString(16).toUpperCase()
         return s.length < 2 ? "0" + s : s
