@@ -83,3 +83,14 @@ class CleanupTests(unittest.TestCase):
         self.assertNotIn('setStayAwake', controls)
         self.assertNotIn('refreshInhibitor', controls)
         self.assertIn('controls.retireLegacyInhibitors()', (CONTENTS / 'ui/TopPanel.qml').read_text())
+
+
+class ShortcutCleanupTests(unittest.TestCase):
+    def test_only_dead_widget_shortcuts_are_removed(self):
+        helper = (ROOT / 'runtime/nothing-control.sh').read_text()
+        body = helper.split('cleanup_widget_shortcuts() {', 1)[1].split('\n}\n', 1)[0]
+        # Live applets/containments are skipped; only plasmashell's widget actions qualify.
+        self.assertIn('&& continue', body)
+        self.assertIn(r'^activate\ widget\ ([0-9]+)$', body)
+        self.assertIn('unregister ss plasmashell', body)
+        self.assertIn('nothing-control.sh" cleanup-shortcuts', (ROOT / 'install.sh').read_text())
