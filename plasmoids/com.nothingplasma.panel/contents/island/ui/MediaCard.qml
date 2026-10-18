@@ -4,11 +4,7 @@ import org.kde.plasma.private.mpris as Mpris
 import "."
 Item {
     id: root
-    Mpris.Mpris2Model {
-        id: mpris
-    }
-
-    readonly property var player: Backend.preview ? null : mpris.currentPlayer
+    readonly property var player: Media.player
     readonly property bool active: player !== null
 
     readonly property bool isPlaying: (player?.playbackStatus ?? 0) === Mpris.PlaybackStatus.Playing
@@ -22,6 +18,27 @@ Item {
         running: root.active && root.isPlaying
         repeat: true
         onTriggered: root.player?.updatePosition()
+    }
+
+    component MediaToggle: Text {
+        id: toggle
+        property string icon: ""
+        property bool on: false
+        property string label: ""
+        signal triggered
+        text: toggle.icon
+        color: toggle.on ? Theme.primary : Theme.fgDim
+        font.family: Theme.fontIcons
+        font.pixelSize: 15
+        Accessible.role: Accessible.CheckBox
+        Accessible.name: toggle.label
+        Accessible.checked: toggle.on
+        MouseArea {
+            anchors.fill: parent
+            anchors.margins: -4
+            cursorShape: Qt.PointingHandCursor
+            onClicked: toggle.triggered()
+        }
     }
 
     function fmt(seconds) {
@@ -186,6 +203,18 @@ Item {
                     ctx.restore();
                 }
             }
+        }
+        MouseArea {
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: art.bottom
+            anchors.right: controls.left
+            anchors.bottomMargin: -2
+            enabled: root.active && (root.player?.canRaise ?? false)
+            cursorShape: Qt.PointingHandCursor
+            Accessible.role: Accessible.Button
+            Accessible.name: Cfg.t("OPEN PLAYER")
+            onClicked: Media.raise()
         }
         Item {
             id: art
@@ -422,7 +451,68 @@ Item {
             font.weight: Font.Bold
         }
 
+        // Player picker, shown only when more than one application plays media.
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 4
+            spacing: 4
+            visible: Media.players.length > 1
+            Repeater {
+                model: Media.players
+                Rectangle {
+                    id: pick
+                    required property var modelData
+                    readonly property bool selected: Media.currentIndex === modelData.index
+                    width: 22
+                    height: 22
+                    radius: 11
+                    color: pick.selected ? Qt.alpha(Theme.fg, 0.18) : pickMa.containsMouse ? Qt.alpha(Theme.fg, Theme.stateHover) : "transparent"
+                    Accessible.role: Accessible.RadioButton
+                    Accessible.name: pick.modelData.identity
+                    Accessible.checked: pick.selected
+                    Kirigami.Icon {
+                        anchors.centerIn: parent
+                        width: 15
+                        height: 15
+                        source: pick.modelData.icon
+                        fallback: "media-playback-start"
+                        opacity: pick.selected ? 1 : 0.55
+                    }
+                    MouseArea {
+                        id: pickMa
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        // Clicking the pinned player again returns to automatic selection.
+                        onClicked: Media.select(pick.selected ? 0 : pick.modelData.index)
+                    }
+                }
+            }
+        }
+        Row {
+            anchors.right: lengthText.left
+            anchors.rightMargin: 8
+            anchors.verticalCenter: lengthText.verticalCenter
+            spacing: 2
+            MediaToggle {
+                visible: root.active && (root.player?.shuffle ?? 0) !== Mpris.ShuffleStatus.Unknown
+                icon: "shuffle"
+                on: (root.player?.shuffle ?? 0) === Mpris.ShuffleStatus.On
+                label: Cfg.t("SHUFFLE")
+                onTriggered: Media.toggleShuffle()
+            }
+            MediaToggle {
+                readonly property int loop: root.player?.loopStatus ?? 0
+                visible: root.active && loop !== Mpris.LoopStatus.Unknown
+                icon: loop === Mpris.LoopStatus.Track ? "repeat_one" : "repeat"
+                on: loop === Mpris.LoopStatus.Playlist || loop === Mpris.LoopStatus.Track
+                label: Cfg.t("REPEAT")
+                onTriggered: Media.cycleLoop()
+            }
+        }
         Text {
+            id: lengthText
             anchors.right: parent.right
             anchors.rightMargin: 12
             anchors.bottom: parent.bottom

@@ -9,3 +9,4 @@ singleton Weather 1.0 Weather.qml
 singleton Notifs 1.0 Notifs.qml
 singleton Audio 1.0 Audio.qml
 singleton Net 1.0 Net.qml
+singleton Media 1.0 Media.qml

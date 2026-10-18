@@ -5,11 +5,7 @@ import "."
 Item {
     id: root
 
-    Mpris.Mpris2Model {
-        id: mpris
-    }
-
-    readonly property var player: Backend.preview ? null : mpris.currentPlayer
+    readonly property var player: Media.player
 
     readonly property int estado: player?.playbackStatus ?? Mpris.PlaybackStatus.Stopped
     readonly property bool isPlaying: estado === Mpris.PlaybackStatus.Playing

@@ -411,7 +411,10 @@ QtObject {
         "DO NOT DISTURB": ["RAHATSIZ ETME", "DO NOT DISTURB"],
         "REPLY": ["Yanıtla", "Reply"],
         "NOW": ["şimdi", "now"],
-        "MIN": ["dk", "min"]
+        "MIN": ["dk", "min"],
+        "OPEN PLAYER": ["Oynatıcıyı aç", "Open player"],
+        "SHUFFLE": ["Karıştır", "Shuffle"],
+        "REPEAT": ["Tekrarla", "Repeat"]
 })
 
     function t(clave) {
