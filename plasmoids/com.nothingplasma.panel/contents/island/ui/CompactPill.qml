@@ -35,6 +35,14 @@ Item {
                 visible: Cfg.showWeather
             }
 
+            // KDE Connect is optional; a missing module only drops this indicator.
+            Loader {
+                anchors.verticalCenter: parent.verticalCenter
+                active: Cfg.showPhone
+                source: "PhoneBattery.qml"
+                visible: status === Loader.Ready
+            }
+
             ActivityChips {
                 anchors.verticalCenter: parent.verticalCenter
             }

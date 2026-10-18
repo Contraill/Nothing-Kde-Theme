@@ -47,6 +47,7 @@ Item {
     Binding { target: Island.Cfg; property: "showBattery"; value: Plasmoid.configuration.showBattery }
     Binding { target: Island.Cfg; property: "showMini"; value: Plasmoid.configuration.showMiniPlayer }
     Binding { target: Island.Cfg; property: "audioOsd"; value: Plasmoid.configuration.islandAudioOsd }
+    Binding { target: Island.Cfg; property: "showPhone"; value: Plasmoid.configuration.showPhone }
     readonly property bool islandAudioOsd: Plasmoid.configuration.islandAudioOsd
     onIslandAudioOsdChanged: if (controlsReady) controls.setAudioOsd(islandAudioOsd)
     Binding { target: Island.Weather; property: "panelConfig"; value: Plasmoid.configuration }

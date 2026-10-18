@@ -111,7 +111,7 @@ ColumnLayout {
                 {key: "showWorkspaces", label: "WORKSPACES"}, {key: "showWeather", label: "WEATHER SETTINGS"},
                 {key: "showClock", label: "CLOCK"}, {key: "showMiniPlayer", label: "MINI PLAYER"},
                 {key: "showNetwork", label: "PART NETWORK"}, {key: "showVolume", label: "PART SOUND"},
-                {key: "showBattery", label: "BATTERY"}
+                {key: "showBattery", label: "BATTERY"}, {key: "showPhone", label: "PHONE"}
             ]
             QQC2.AbstractButton {
                 id: partButton

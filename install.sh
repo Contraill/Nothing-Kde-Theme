@@ -138,6 +138,23 @@ install_notification_skin() {
   fi
 }
 
+# The island and dock use Plasma's own QML bindings for these services; a
+# missing one leaves its controls empty. Warn instead of failing the install.
+check_plasma_modules() {
+  local qml missing=() entry
+  qml="$(qtpaths6 --query QT_INSTALL_QML 2>/dev/null || true)"
+  [[ -n "$qml" && -d "$qml" ]] || qml=/usr/lib/qt6/qml
+  for entry in "org/kde/plasma/networkmanagement:plasma-nm" "org/kde/bluezqt:bluez-qt" \
+               "org/kde/plasma/private/volume:plasma-pa" "org/kde/plasma/private/brightnesscontrolplugin:powerdevil" \
+               "org/kde/ksysguard/sensors:libksysguard" "org/kde/plasma/workspace/dbus:plasma-workspace"; do
+    [[ -d "$qml/${entry%%:*}" ]] || missing+=("${entry##*:}")
+  done
+  if (( ${#missing[@]} )); then
+    printf 'Warning: missing Plasma components (install for full island controls): %s\n' "${missing[*]}" >&2
+  fi
+}
+check_plasma_modules
+
 # Capture original appearance before any bundle settings change. Partial panel
 # or widget installs do not claim ownership of the application/decorations.
 if (( ! PANEL_ONLY )); then python3 "$ROOT/runtime/appearance.py" install; fi
