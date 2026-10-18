@@ -8,7 +8,7 @@ QtObject {
     // Appearance is explicit and panel-local for reliable rendering. The theme
     // helper mirrors appearanceMode to all installed Nothing panels, so
     // they still switch as one shell without depending on palette propagation.
-    property color accent: Kirigami.Theme.highlightColor
+    property color accent: Kirigami.Theme.focusColor
 
     readonly property string configuredMode: String(Plasmoid.configuration?.appearanceMode || "dark")
     readonly property bool lightMode: root.configuredMode === "light"

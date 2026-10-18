@@ -15,7 +15,7 @@ Item {
     required property Components.PanelRoleMetrics metrics
     required property int shortcutEpoch
     property bool controlsReady: false
-    readonly property color kdeAccent: Kirigami.Theme.highlightColor
+    readonly property color kdeAccent: Kirigami.Theme.focusColor
     onKdeAccentChanged: if (controlsReady) accentSync.restart()
     // Reuse the existing debounced palette hook; no service or layout change.
     readonly property color kdeWindowColor: Kirigami.Theme.backgroundColor

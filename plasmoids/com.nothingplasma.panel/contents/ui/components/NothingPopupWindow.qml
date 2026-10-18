@@ -16,7 +16,7 @@ PlasmaCore.Dialog {
     property int panelLocation: PlasmaCore.Types.TopEdge
     required property int popupWidth
     required property int popupHeight
-    property color accentColor: Kirigami.Theme.highlightColor
+    property color accentColor: Kirigami.Theme.focusColor
     property real surfaceOpacity: 0.72
     property bool blurEnabled: true
     property bool islandStyle: false

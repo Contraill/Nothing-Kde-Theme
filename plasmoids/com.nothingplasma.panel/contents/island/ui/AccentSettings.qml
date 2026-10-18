@@ -14,7 +14,7 @@ ColumnLayout {
     readonly property bool busy: (controls?.accentBusy ?? false) || (controls?.themeBusy ?? false)
     readonly property color candidateColor: picker.selectedColor
     readonly property bool colorDragActive: picker.dragging
-    readonly property color appliedColor: (controls?.accentReady ?? false) ? controls.activeAccent : Kirigami.Theme.highlightColor
+    readonly property color appliedColor: (controls?.accentReady ?? false) ? controls.activeAccent : Kirigami.Theme.focusColor
     property bool draftDirty: false
     property bool initialized: false
     signal closed()
@@ -204,7 +204,7 @@ ColumnLayout {
                     anchors.centerIn: parent
                     width: 32; height: 32; radius: 16
                     color: swatch.modelData
-                    border.width: swatch.hovered || swatch.activeFocus || Qt.colorEqual(swatch.modelData, Kirigami.Theme.highlightColor) ? 2 : 0
+                    border.width: swatch.hovered || swatch.activeFocus || Qt.colorEqual(swatch.modelData, Kirigami.Theme.focusColor) ? 2 : 0
                     border.color: Theme.fg
                     opacity: swatch.enabled ? 1 : 0.5
                 }

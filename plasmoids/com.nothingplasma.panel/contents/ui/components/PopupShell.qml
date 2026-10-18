@@ -7,7 +7,7 @@ import "../../island/ui" as Island
 FocusScope {
     id: root
 
-    property color accentColor: Kirigami.Theme.highlightColor
+    property color accentColor: Kirigami.Theme.focusColor
     property real surfaceOpacity: 0.72
     property real borderStrength: 0.55
     property real noiseStrength: 0.035

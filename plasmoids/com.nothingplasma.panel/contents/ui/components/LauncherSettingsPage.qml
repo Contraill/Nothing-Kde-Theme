@@ -22,7 +22,7 @@ Item {
         panelConfig.hiddenApplications = next;
     }
     property real uiScale: 1.0
-    property color accentColor: Kirigami.Theme.highlightColor
+    property color accentColor: Kirigami.Theme.focusColor
     property bool metaEnabled: false
     property bool metaBusy: false
     property string metaStatus: Island.Cfg.t("CHECKING…")

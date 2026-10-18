@@ -260,8 +260,8 @@ palette, dots, tray, top, bottom, controls, personal, launcher_settings, launche
 
 if 'Plasmoid.configuration?.appearanceMode' not in palette:
     raise SystemExit('NothingPalette must render from explicit appearanceMode so all panel instances can be synchronized reliably')
-if 'Kirigami.Theme.highlightColor' not in palette:
-    raise SystemExit('NothingPalette must use KDE system highlight as the single accent source')
+if 'Kirigami.Theme.focusColor' not in palette:
+    raise SystemExit('NothingPalette must use KDE accent (DecorationFocus) as the single accent source')
 if 'Plasmoid.configuration.accentColor' in palette:
     raise SystemExit('NothingPalette must not fall back to per-containment accentColor config')
 if 'Plasmoid.configuration.appearanceMode = mode' not in controls:

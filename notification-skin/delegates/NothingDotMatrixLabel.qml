@@ -6,7 +6,7 @@ Item {
 
     property string text: "NOW"
     property color dotColor: Kirigami.Theme.textColor
-    property color accentColor: Kirigami.Theme.highlightColor
+    property color accentColor: Kirigami.Theme.focusColor
     property real uiScale: 0.78
 
     readonly property real step: 2.75 * root.uiScale

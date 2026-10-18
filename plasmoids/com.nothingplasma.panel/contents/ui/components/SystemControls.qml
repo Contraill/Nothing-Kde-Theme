@@ -136,7 +136,7 @@ Item {
         root.accentError = ""
         const hex = root.colorToHex(value)
         // KDE is the single source of truth for accent. Every Nothing panel
-        // observes Kirigami.Theme.highlightColor, including newly-created panels.
+        // observes Kirigami.Theme.focusColor (DecorationFocus), including newly-created panels.
         exec.run(root.helperCommand("accent " + hex.slice(1)), function(r) {
             root.accentBusy = false
             root.accentError = r.exitCode === 0 ? "" : (r.stderr || "Accent change failed")

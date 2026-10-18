@@ -21,8 +21,8 @@ QtObject {
     readonly property color textMuted: Qt.tint(background, alpha(textPrimary, 0.60))
     readonly property color textDisabled: Qt.tint(background, alpha(textPrimary, 0.45))
     readonly property color textPlaceholder: textMuted
-    readonly property color accent: useSystemAccent ? Kirigami.Theme.highlightColor : "#ff4444"
-    readonly property color accentSecondHand: useSystemAccent ? Kirigami.Theme.highlightColor : "#D71921"
+    readonly property color accent: useSystemAccent ? Kirigami.Theme.focusColor : "#ff4444"
+    readonly property color accentSecondHand: useSystemAccent ? Kirigami.Theme.focusColor : "#D71921"
     readonly property color warning: Kirigami.Theme.neutralTextColor
     readonly property color error: Kirigami.Theme.negativeTextColor
     readonly property color divider: alpha(textPrimary, 0.12)

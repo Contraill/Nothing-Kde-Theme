@@ -40,7 +40,8 @@ Item {
     property var allAppsModel: null
     property bool launcherPersistenceReady: false
 
-    readonly property color accentColor: Kirigami.Theme.highlightColor
+    // KDE's accent (DecorationFocus), not the blended selection tone.
+    readonly property color accentColor: Kirigami.Theme.focusColor
     readonly property real uiScale: Math.max(0.85, Math.min(1.45, root.height / 50.0))
     readonly property real logicalScreenWidth: Screen.desktopAvailableWidth > 0 ? Screen.desktopAvailableWidth : Screen.width
     readonly property real logicalScreenHeight: Screen.desktopAvailableHeight > 0 ? Screen.desktopAvailableHeight : Screen.height
@@ -276,9 +277,7 @@ Item {
                 Layout.preferredHeight: root.controlHeight
                 maximumWidth: root.taskAreaLimit
                 tasksModel: taskSourceModel
-                // highlightColor is KDE's selection tone (accent blended into the
-                // background); dock marks show the chosen accent itself.
-                accentColor: Plasmoid.configuration.accentColor
+                accentColor: root.accentColor
                 uiScale: root.uiScale
                 previewWidthPercent: Plasmoid.configuration.taskPreviewWidthPercent
                 previewHeightPercent: Plasmoid.configuration.taskPreviewHeightPercent

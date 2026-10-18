@@ -25,7 +25,9 @@ QtObject {
     function brillo(c) {
         return 0.299 * c.r + 0.587 * c.g + 0.114 * c.b;
     }
-    readonly property color primary: Kirigami.Theme.highlightColor
+    // DecorationFocus is KDE's accent itself; highlightColor is the selection tone
+    // (accent blended into the background), which reads darker in dark mode.
+    readonly property color primary: Kirigami.Theme.focusColor
     readonly property color primaryFg: invertedFg
     readonly property color secondary: fgDim
     readonly property color tertiary: fgDim
