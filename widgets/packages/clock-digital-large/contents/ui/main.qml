@@ -69,7 +69,7 @@ PlasmoidItem {
 
     function updateDateTime() {
         var now = new Date()
-        root.currentDate = Qt.formatDate(now, "ddd, dd MMM")
+        root.currentDate = Qt.locale().toString(now, "ddd, dd MMM")
 
         // Arrow Subway font (fontStyle 3) uses format without separator
         if (root.fontStyle === 3 || root.fontStyle == 4) {

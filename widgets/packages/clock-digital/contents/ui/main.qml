@@ -210,8 +210,7 @@ PlasmoidItem {
         if (totalHours >= 24) dayOffset = 1
 
         var adjustedDay = (now.getUTCDay() + dayOffset + 7) % 7
-        var dayNames = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
-        return dayNames[adjustedDay]
+        return Qt.locale().standaloneDayName(adjustedDay, Locale.LongFormat).toLocaleUpperCase(Qt.locale().name)
     }
 
     function calculateHourDifference(timezone) {
@@ -255,6 +254,14 @@ PlasmoidItem {
         } else {
             currentHours = "12"
             currentMinutes = "00"
+        }
+        // Same clock style as the local variant: 24 hours, or the locale's AM/PM.
+        if (root.use24HourFormat) {
+            var h = parseInt(currentHours, 10) % 12 + (amPm === "PM" ? 12 : 0)
+            currentHours = (h < 10 ? "0" : "") + h
+            amPm = ""
+        } else if (amPm) {
+            amPm = amPm === "AM" ? Qt.locale().amText : Qt.locale().pmText
         }
 
         dayOfWeek = getDayOfWeekInTimezone(timeZone)
@@ -599,7 +606,7 @@ PlasmoidItem {
 
                                 Text {
                                     Layout.alignment: Qt.AlignBottom
-                                    text: "H"
+                                    text: i18n("H")
                                     font.family: ndot55Font.name
                                     font.pixelSize: Math.min(parent.parent.width * 0.075, parent.parent.height * 0.075)
                                     color: nColors.textPrimary
