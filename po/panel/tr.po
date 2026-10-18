@@ -1,0 +1,953 @@
+# Turkish translation of Nothing KDE island and dock.
+# GPL-3.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Nothing KDE panel\n"
+"MIME-Version: 1.0\n"
+"PO-Revision-Date: 2026-10-18 20:30+0300\n"
+"Last-Translator: Nothing KDE contributors\n"
+"Language-Team: Turkish\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "ACCENT COLOR"
+msgid "Accent color"
+msgstr "Vurgu rengi"
+
+msgctxt "ACCENT DESCRIPTION"
+msgid "Changes the accent color of KDE and Nothing panels."
+msgstr "KDE ve Nothing panellerinin vurgu rengini değiştirir."
+
+msgctxt "ACCENT FAILED"
+msgid "Could not apply the color. Please try again."
+msgstr "Renk uygulanamadı. Tekrar deneyin."
+
+msgctxt "ACCENT LINKS"
+msgid "Optional accent links · disable to restore. Takes effect in a new terminal."
+msgstr "İsteğe bağlı renk bağlantıları · kapatınca eski görünüm geri gelir. Yeni terminalde etkinleşir."
+
+msgctxt "ACTION FAILED"
+msgid "Could not apply the change"
+msgstr "İşlem uygulanamadı"
+
+msgctxt "ACTIVATE DOCK ENTRY"
+msgid "Activate dock entry %1"
+msgstr "Dock'taki %1. uygulamayı etkinleştir"
+
+msgctxt "AIRPLANE MODE"
+msgid "Airplane mode"
+msgstr "Uçak modu"
+
+msgctxt "ALL APPS"
+msgid "ALL APPLICATIONS"
+msgstr "TÜM UYGULAMALAR"
+
+msgctxt "APP HIDDEN"
+msgid "Hidden"
+msgstr "Gizli"
+
+msgctxt "APP SHOWN"
+msgid "Visible"
+msgstr "Görünür"
+
+msgctxt "APP VISIBILITY"
+msgid "Apps shown in the launcher"
+msgstr "Başlatıcıda gösterilen uygulamalar"
+
+msgctxt "APPLICATIONS"
+msgid "Applications"
+msgstr "Uygulamalar"
+
+msgctxt "APPLY COLOR"
+msgid "Apply"
+msgstr "Uygula"
+
+msgctxt "APPS"
+msgid "APPS"
+msgstr "UYGULAMALAR"
+
+msgctxt "AUDIO OSD IN ISLAND"
+msgid "Show volume and microphone changes in the island"
+msgstr "Ses ve mikrofon değişimini adada göster"
+
+msgctxt "AUTH CANCELLED"
+msgid "Administrator approval was not granted"
+msgstr "Yönetici onayı verilmedi"
+
+msgctxt "AUTO CITY"
+msgid "Enter a city name"
+msgstr "Şehir adı girin"
+
+msgctxt "AUTO THEME"
+msgid "AUTOMATIC AT SUNRISE / SUNSET"
+msgstr "GÜN DOĞUMU / BATIMINDA OTOMATİK"
+
+msgctxt "Asks for the password on return"
+msgid "Asks for the password on return"
+msgstr "Döndüğünüzde parola ister"
+
+msgctxt "Available"
+msgid "Available"
+msgstr "Kullanılabilir"
+
+msgctxt "BALANCED"
+msgid "Balanced"
+msgstr "Dengeli"
+
+msgctxt "BATTERY"
+msgid "Battery"
+msgstr "Batarya"
+
+msgctxt "BATTERY HEALTH"
+msgid "Battery health"
+msgstr "Pil sağlığı"
+
+msgctxt "BLUETOOTH SETTINGS"
+msgid "Bluetooth settings"
+msgstr "Bluetooth ayarları"
+
+msgctxt "BRIGHTNESS"
+msgid "BRIGHTNESS"
+msgstr "PARLAKLIK"
+
+msgctxt "BRIGHTNESS HELP"
+msgid "Built-in display brightness"
+msgstr "Dahili ekran parlaklığı"
+
+msgctxt "BRIGHTNESS RIGHT CLICK"
+msgid "Right-click for every display and keyboard lighting"
+msgstr "Tüm ekranlar ve klavye ışığı için sağ tıklayın"
+
+msgctxt "Bluetooth off"
+msgid "Bluetooth off"
+msgstr "Bluetooth kapalı"
+
+msgctxt "CALCULATING"
+msgid "Estimating time left…"
+msgstr "Kalan süre hesaplanıyor…"
+
+msgctxt "CALENDAR"
+msgid "CALENDAR"
+msgstr "TAKVİM"
+
+msgctxt "CAMERA"
+msgid "Camera"
+msgstr "Kamera"
+
+msgctxt "CAMERA HELP"
+msgid "Blocks or allows connected USB cameras. Allowing asks for administrator approval; blocking does not once the passwordless setup is installed. Reconnecting or rebooting may reset it."
+msgstr "Bağlı USB kameraları engeller ya da açar. Açmak yönetici onayı ister; kapatmak, şifresiz kurulum yapıldıysa istemez. Yeniden takınca veya başlatınca sıfırlanabilir."
+
+msgctxt "CAN BE ENABLED OR REMOVED"
+msgid "CAN BE ENABLED OR REMOVED"
+msgstr "İstediğinde açıp kapatabilirsin"
+
+msgctxt "CANCEL"
+msgid "CANCEL"
+msgstr "VAZGEÇ"
+
+msgctxt "CHARGE LIMIT"
+msgid "charge limit"
+msgstr "şarj sınırı"
+
+msgctxt "CHARGING"
+msgid "Charging"
+msgstr "Şarj oluyor"
+
+msgctxt "CHECKING…"
+msgid "CHECKING…"
+msgstr "Kontrol ediliyor…"
+
+msgctxt "CHOOSE WINDOW"
+msgid "Choose window"
+msgstr "Pencere seç"
+
+msgctxt "CLEAR"
+msgid "CLEAR"
+msgstr "TEMİZLE"
+
+msgctxt "CLEAR REMOVES THE ALTERNATE COMBINATION"
+msgid "CLEAR REMOVES THE ALTERNATE COMBINATION"
+msgstr "Temizle düğmesi alternatif kısayolu kaldırır"
+
+msgctxt "CLIPBOARD"
+msgid "Clipboard"
+msgstr "Pano geçmişi"
+
+msgctxt "CLOCK"
+msgid "Clock"
+msgstr "Saat"
+
+msgctxt "CLOSE"
+msgid "Close"
+msgstr "Kapat"
+
+msgctxt "CLOSE ALL WINDOWS"
+msgid "Close all windows"
+msgstr "Tüm pencereleri kapat"
+
+msgctxt "CLOSE WINDOW"
+msgid "Close window"
+msgstr "Pencereyi kapat"
+
+msgctxt "COFFEE MODE"
+msgid "COFFEE MODE"
+msgstr "KAHVE MODU"
+
+msgctxt "COLOR ARROW HELP"
+msgid "Left/right adjusts saturation; up/down adjusts brightness."
+msgstr "Sol/sağ doygunluğu, yukarı/aşağı parlaklığı değiştirir."
+
+msgctxt "COLOR HUE"
+msgid "Hue"
+msgstr "Renk tonu"
+
+msgctxt "COLOR SATURATION VALUE"
+msgid "Color saturation and brightness"
+msgstr "Renk doygunluğu ve parlaklığı"
+
+msgctxt "CONFIGURE TRAY ITEMS"
+msgid "Configure tray icons…"
+msgstr "Tepsi simgelerini yapılandır…"
+
+msgctxt "CONFIRM POWER ACTIONS"
+msgid "Confirm power actions"
+msgstr "Güç işlemlerini onayla"
+
+msgctxt "CONNECT"
+msgid "CONNECT"
+msgstr "BAĞLAN"
+
+msgctxt "CONNECTED"
+msgid "CONNECTED"
+msgstr "BAĞLI"
+
+msgctxt "Closes the open programs"
+msgid "Closes the open programs"
+msgstr "Açık uygulamaları kapatır"
+
+msgctxt "Connected"
+msgid "Connected"
+msgstr "Bağlı"
+
+msgctxt "Connecting…"
+msgid "Connecting…"
+msgstr "Bağlanıyor…"
+
+msgctxt "Couldn't connect"
+msgid "Couldn't connect"
+msgstr "Bağlanılamadı"
+
+msgctxt "DARK THEME"
+msgid "Dark"
+msgstr "Karanlık"
+
+msgctxt "DEVICES"
+msgid "DEVICES"
+msgstr "CİHAZLAR"
+
+msgctxt "DISABLING META…"
+msgid "DISABLING META…"
+msgstr "Meta kapatılıyor…"
+
+msgctxt "DISCONNECT"
+msgid "DISCONNECT"
+msgstr "BAĞLANTIYI KES"
+
+msgctxt "DISPLAYS AND KEYBOARD"
+msgid "DISPLAYS AND KEYBOARD"
+msgstr "EKRANLAR VE KLAVYE"
+
+msgctxt "DND TILE"
+msgid "Do not disturb"
+msgstr "Rahatsız etme"
+
+msgctxt "DO NOT DISTURB"
+msgid "DO NOT DISTURB"
+msgstr "RAHATSIZ ETME"
+
+msgctxt "DOCK PIN HINT"
+msgid "Right-click to pin · Drag on the dock to reorder"
+msgstr "Sabitlemek için sağ tık · Sıralamak için alt barda sürükle"
+
+msgctxt "DOCK WINDOWS"
+msgid "Windows shown in the dock"
+msgstr "Dock'ta gösterilen pencereler"
+
+msgctxt "ENABLING META…"
+msgid "ENABLING META…"
+msgstr "Meta etkinleştiriliyor…"
+
+msgctxt "EXTENSION OPACITY"
+msgid "Extension opacity:"
+msgstr "Açılır pencere opaklığı:"
+
+msgctxt "Enter the password"
+msgid "Enter the password"
+msgstr "Parolayı girin"
+
+msgctxt "FORGET"
+msgid "FORGET"
+msgstr "UNUT"
+
+msgctxt "FULLY CHARGED"
+msgid "Fully charged"
+msgstr "Tam dolu"
+
+msgctxt "GENERAL"
+msgid "General"
+msgstr "Genel"
+
+msgctxt "GLASS BLUR OPTION"
+msgid "Use KWin background blur behind Nothing extensions"
+msgstr "Nothing açılır pencerelerinin arkasında KWin bulanıklığını kullan"
+
+msgctxt "GLASS EFFECT"
+msgid "Glass effect:"
+msgstr "Cam efekti:"
+
+msgctxt "GPU ASLEEP"
+msgid "ASLEEP"
+msgstr "UYKUDA"
+
+msgctxt "HEX COLOR"
+msgid "Manual color code (HEX)"
+msgstr "Manuel renk kodu (HEX)"
+
+msgctxt "HIBERNATE"
+msgid "HIBERNATE"
+msgstr "HAZIRDA BEKLET"
+
+msgctxt "HIDE PASSWORD"
+msgid "Hide password"
+msgstr "Şifreyi gizle"
+
+msgctxt "HOLIDAYS"
+msgid "HOLIDAYS"
+msgstr "TATİLLER"
+
+msgctxt "HOTSPOT"
+msgid "Hotspot"
+msgstr "Erişim noktası (hotspot)"
+
+msgctxt "HOURS SHORT"
+msgid "h"
+msgstr "sa"
+
+msgctxt "INPUT"
+msgid "INPUT"
+msgstr "GİRİŞ"
+
+msgctxt "ISLAND LANGUAGE"
+msgid "Island language:"
+msgstr "Ada dili:"
+
+msgctxt "ISLAND SETTINGS"
+msgid "Island settings"
+msgstr "Ada ayarları"
+
+msgctxt "KEYBOARD BRIGHTNESS"
+msgid "KEYBOARD BRIGHTNESS"
+msgstr "KLAVYE PARLAKLIĞI"
+
+msgctxt "KEYBOARD LIGHTING"
+msgid "KEYBOARD LIGHTING"
+msgstr "KLAVYE AYDINLATMASI"
+
+msgctxt "KEYBOARD RIGHT CLICK"
+msgid "Right-click for keyboard lighting"
+msgstr "Klavye aydınlatması için sağ tıklayın"
+
+msgctxt "KNOWN DEVICES"
+msgid "KNOWN DEVICES"
+msgstr "BİLİNEN CİHAZLAR"
+
+msgctxt "LANGUAGE NAME"
+msgid "English"
+msgstr "Türkçe"
+
+msgctxt "LAUNCHER / SETTINGS"
+msgid "LAUNCHER / SETTINGS"
+msgstr "Başlatıcı ayarları"
+
+msgctxt "LAUNCHER HEIGHT"
+msgid "Launcher height:"
+msgstr "Başlatıcı yüksekliği:"
+
+msgctxt "LAUNCHER MIN WIDTH"
+msgid "Launcher minimum width:"
+msgstr "Başlatıcı en küçük genişliği:"
+
+msgctxt "LAUNCHER SETTINGS"
+msgid "Launcher settings"
+msgstr "Başlatıcı ayarları"
+
+msgctxt "LIGHT THEME"
+msgid "Light"
+msgstr "Aydınlık"
+
+msgctxt "LINK FAILED"
+msgid "Could not apply accent link."
+msgstr "Renk bağlantısı uygulanamadı."
+
+msgctxt "LINKED"
+msgid "Linked"
+msgstr "Bağlı"
+
+msgctxt "LOADING APPS"
+msgid "Loading applications…"
+msgstr "Uygulamalar yükleniyor…"
+
+msgctxt "LOCK"
+msgid "LOCK"
+msgstr "KİLİTLE"
+
+msgctxt "LOG OUT"
+msgid "LOG OUT"
+msgstr "OTURUMU KAPAT"
+
+msgctxt "MAXIMIZE WINDOW"
+msgid "Maximize"
+msgstr "Büyüt"
+
+msgctxt "META / START KEY"
+msgid "META / START KEY"
+msgstr "META / BAŞLAT TUŞU"
+
+msgctxt "META KEY DISABLED"
+msgid "META KEY DISABLED"
+msgstr "Meta tuşu kapalı"
+
+msgctxt "META KEY ENABLED"
+msgid "META KEY ENABLED"
+msgstr "Meta tuşu etkin"
+
+msgctxt "META STATUS UNAVAILABLE"
+msgid "META STATUS UNAVAILABLE"
+msgstr "Meta durumu alınamadı"
+
+msgctxt "META UPDATE FAILED"
+msgid "META UPDATE FAILED"
+msgstr "Meta güncellenemedi"
+
+msgctxt "MIC BLOCKED"
+msgid "Microphone blocked by the system · click to allow"
+msgstr "Mikrofon sistemde engelli · açmak için tıkla"
+
+msgctxt "MIC BUSY"
+msgid "Another application is using the microphone directly. Stop recording and retry; the change was rolled back."
+msgstr "Başka bir uygulama mikrofonu doğrudan kullanıyor. Kaydı kapatıp tekrar deneyin; değişiklik geri alındı."
+
+msgctxt "MIC HELP"
+msgid "Block/allow system access to local ALSA microphones. Requires administrator approval and briefly restarts audio. Bluetooth and virtual sources are not supported."
+msgstr "Yerel ALSA mikrofonlarına sistem erişimini engeller/açar. Yönetici onayı gerekir; ses hizmeti kısa süre yeniden başlar. Bluetooth ve sanal kaynaklar desteklenmez."
+
+msgctxt "MICROPHONE"
+msgid "Microphone"
+msgstr "Mikrofon"
+
+msgctxt "MICROPHONE IN USE"
+msgid "Microphone in use"
+msgstr "Mikrofon kullanımda"
+
+msgctxt "MICROPHONE MUTED"
+msgid "Microphone muted"
+msgstr "Mikrofon sessizde"
+
+msgctxt "MIN"
+msgid "min"
+msgstr "dk"
+
+msgctxt "MINI PLAYER"
+msgid "Mini player"
+msgstr "Mini oynatıcı"
+
+msgctxt "MINIMIZE WINDOW"
+msgid "Minimize"
+msgstr "Küçült"
+
+msgctxt "MOON PHASES"
+msgid "MOON PHASES"
+msgstr "AY EVRELERİ"
+
+msgctxt "MOST USED"
+msgid "MOST USED"
+msgstr "SIK KULLANILANLAR"
+
+msgctxt "MUTE"
+msgid "MUTE"
+msgstr "SESSİZE AL"
+
+msgctxt "MUTE MICROPHONE"
+msgid "Mute microphone"
+msgstr "Mikrofonu sessize al"
+
+msgctxt "MUTED"
+msgid "MUTED"
+msgstr "SESSİZ"
+
+msgctxt "N NOTIFICATIONS"
+msgid "%1 NOTIFICATIONS"
+msgstr "%1 BİLDİRİM"
+
+msgctxt "NEARBY DEVICES"
+msgid "NEARBY DEVICES"
+msgstr "YAKINDAKİ CİHAZLAR"
+
+msgctxt "NEARBY NETWORKS"
+msgid "NEARBY NETWORKS"
+msgstr "YAKINDAKİ AĞLAR"
+
+msgctxt "NETWORK"
+msgid "NETWORK"
+msgstr "AĞ"
+
+msgctxt "NETWORK SETTINGS"
+msgid "Network settings (hidden and enterprise networks)"
+msgstr "Ağ ayarları (gizli ve kurumsal ağlar)"
+
+msgctxt "NEW WINDOW"
+msgid "Open new window"
+msgstr "Yeni pencere aç"
+
+msgctxt "NO APPS FOUND"
+msgid "No applications found"
+msgstr "Uygulama bulunamadı"
+
+msgctxt "NO NEARBY DEVICES"
+msgid "No nearby devices found"
+msgstr "Yakında cihaz bulunamadı"
+
+msgctxt "NO NETWORK"
+msgid "NO NETWORK"
+msgstr "BAĞLANTI YOK"
+
+msgctxt "NO NOTIFICATIONS"
+msgid "NO NOTIFICATIONS"
+msgstr "BİLDİRİM YOK"
+
+msgctxt "NO OTHER NETWORKS"
+msgid "No other networks found"
+msgstr "Başka ağ bulunamadı"
+
+msgctxt "NOT CONNECTED"
+msgid "NOT CONNECTED"
+msgstr "BAĞLI DEĞİL"
+
+msgctxt "NOTIFICATIONS"
+msgid "NOTIFICATIONS"
+msgstr "BİLDİRİMLER"
+
+msgctxt "NOW"
+msgid "now"
+msgstr "şimdi"
+
+msgctxt "No inputs"
+msgid "No inputs"
+msgstr "Giriş bulunamadı"
+
+msgctxt "No network"
+msgid "No network"
+msgstr "Bağlantı yok"
+
+msgctxt "No outputs"
+msgid "No outputs"
+msgstr "Çıkış bulunamadı"
+
+msgctxt "No results"
+msgid "No results"
+msgstr "Sonuç yok"
+
+msgctxt "Nothing playing"
+msgid "Nothing playing"
+msgstr "Çalan bir şey yok"
+
+msgctxt "OFF"
+msgid "OFF"
+msgstr "KAPALI"
+
+msgctxt "ON"
+msgid "ON"
+msgstr "AÇIK"
+
+msgctxt "ONLY THIS DESKTOP"
+msgid "Only this desktop"
+msgstr "Yalnızca bu masaüstü"
+
+msgctxt "ONLY THIS SCREEN"
+msgid "Only this screen"
+msgstr "Yalnızca bu ekran"
+
+msgctxt "OPEN APP"
+msgid "Open"
+msgstr "Aç"
+
+msgctxt "OPEN APP LAUNCHER"
+msgid "OPEN APP LAUNCHER"
+msgstr "UYGULAMA BAŞLATICI"
+
+msgctxt "OPEN PLAYER"
+msgid "Open player"
+msgstr "Oynatıcıyı aç"
+
+msgctxt "OPTIONAL ALTERNATE SHORTCUT"
+msgid "OPTIONAL ALTERNATE SHORTCUT"
+msgstr "ALTERNATİF KISAYOL"
+
+msgctxt "OUTPUT"
+msgid "OUTPUT"
+msgstr "ÇIKIŞ"
+
+msgctxt "Open"
+msgid "Open"
+msgstr "Açık"
+
+msgctxt "PANEL GEOMETRY"
+msgid "Panel geometry"
+msgstr "Panel boyutları"
+
+msgctxt "PANEL OPACITY"
+msgid "Panel opacity:"
+msgstr "Panel opaklığı:"
+
+msgctxt "PANEL THICKNESS"
+msgid "Panels:"
+msgstr "Paneller:"
+
+msgctxt "PANELS NOTE"
+msgid "The top island and bottom dock are independent Plasma panels. Glass settings apply to the dock."
+msgstr "Üst ada ve alt dock iki bağımsız Plasma panelidir. Cam ayarları dock içindir."
+
+msgctxt "PART NETWORK"
+msgid "Network"
+msgstr "Ağ"
+
+msgctxt "PART SOUND"
+msgid "Sound"
+msgstr "Ses"
+
+msgctxt "PARTIAL"
+msgid "Full blocking could not be verified"
+msgstr "Tam engelleme doğrulanamadı"
+
+msgctxt "PERFORMANCE"
+msgid "Performance"
+msgstr "Performans"
+
+msgctxt "PHONE"
+msgid "Phone (KDE Connect)"
+msgstr "Telefon (KDE Connect)"
+
+msgctxt "PIN DOCK"
+msgid "Pin to dock"
+msgstr "Alt bara sabitle"
+
+msgctxt "PLUGGED NOT CHARGING"
+msgid "Plugged in, not charging"
+msgstr "Prize takılı, şarj olmuyor"
+
+msgctxt "POWER"
+msgid "POWER"
+msgstr "GÜÇ"
+
+msgctxt "POWER SAVER"
+msgid "Power saver"
+msgstr "Güç tasarrufu"
+
+msgctxt "PRIVACY OFF"
+msgid "Access blocked"
+msgstr "Erişim engelli"
+
+msgctxt "PRIVACY ON"
+msgid "Access allowed"
+msgstr "Erişim açık"
+
+msgctxt "Pairing…"
+msgid "Pairing…"
+msgstr "Eşleştiriliyor…"
+
+msgctxt "Password"
+msgid "Password"
+msgstr "Parola"
+
+msgctxt "Powers off and starts again"
+msgid "Powers off and starts again"
+msgstr "Bilgisayarı yeniden başlatır"
+
+msgctxt "Powers off the computer"
+msgid "Powers off the computer"
+msgstr "Bilgisayarı kapatır"
+
+msgctxt "RECORDING"
+msgid "RECORDING"
+msgstr "SES KAYDI"
+
+msgctxt "REFRESH WEATHER"
+msgid "Refresh weather"
+msgstr "Hava durumunu yenile"
+
+msgctxt "REPEAT"
+msgid "Repeat"
+msgstr "Tekrarla"
+
+msgctxt "REPLY"
+msgid "Reply"
+msgstr "Yanıtla"
+
+msgctxt "RESTART"
+msgid "RESTART"
+msgstr "YENİDEN BAŞLAT"
+
+msgctxt "RESTORE WINDOW"
+msgid "Restore"
+msgstr "Geri yükle"
+
+msgctxt "RUNNING JOBS"
+msgid "Running jobs"
+msgstr "Süren işler"
+
+msgctxt "SAVED NETWORKS"
+msgid "SAVED NETWORKS"
+msgstr "KAYITLI AĞLAR"
+
+msgctxt "SCAN TO JOIN"
+msgid "Scan to join"
+msgstr "Bağlanmak için okutun"
+
+msgctxt "SEARCH APPS"
+msgid "Search applications…"
+msgstr "Uygulama ara…"
+
+msgctxt "SEARCH CITY"
+msgid "Search city"
+msgstr "Şehir ara"
+
+msgctxt "SEARCH LAUNCHER"
+msgid "Search apps, settings, files or calculate…"
+msgstr "Uygulama, ayar, dosya ara veya hesapla…"
+
+msgctxt "SEARCH RESULTS"
+msgid "SEARCH RESULTS"
+msgstr "ARAMA SONUÇLARI"
+
+msgctxt "SELECTED COLOR"
+msgid "Selected color"
+msgstr "Seçilen renk"
+
+msgctxt "SHARE"
+msgid "SHARE"
+msgstr "PAYLAŞ"
+
+msgctxt "SHOW DESKTOP"
+msgid "Show desktop"
+msgstr "Masaüstünü göster"
+
+msgctxt "SHOW IN COMPACT ISLAND"
+msgid "Show in the compact island"
+msgstr "Kompakt adada göster"
+
+msgctxt "SHOW PASSWORD"
+msgid "Show password"
+msgstr "Şifreyi göster"
+
+msgctxt "SHOW SYSTEM TRAY"
+msgid "Show system tray"
+msgstr "Sistem tepsisini göster"
+
+msgctxt "SHUFFLE"
+msgid "Shuffle"
+msgstr "Karıştır"
+
+msgctxt "SHUT DOWN"
+msgid "SHUT DOWN"
+msgstr "KAPAT"
+
+msgctxt "SLEEP"
+msgid "SLEEP"
+msgstr "UYKU"
+
+msgctxt "SOUND"
+msgid "SOUND"
+msgstr "SES"
+
+msgctxt "SYSTEM LANGUAGE"
+msgid "System language"
+msgstr "Sistem dili"
+
+msgctxt "Saved"
+msgid "Saved"
+msgstr "Kayıtlı"
+
+msgctxt "Saves everything to disk and powers off"
+msgid "Saves everything to disk and powers off"
+msgstr "Oturumu diske kaydeder ve kapatır"
+
+msgctxt "Screen off, everything stays as it is"
+msgid "Screen off, everything stays as it is"
+msgstr "Ekran kapanır, oturumunuz korunur"
+
+msgctxt "Search apps…"
+msgid "Search apps…"
+msgstr "Uygulama ara…"
+
+msgctxt "Searching…"
+msgid "Searching…"
+msgstr "Aranıyor…"
+
+msgctxt "Secured"
+msgid "Secured"
+msgstr "Korumalı"
+
+msgctxt "Signal"
+msgid "Signal"
+msgstr "Sinyal"
+
+msgctxt "TASK AREA MAX WIDTH"
+msgid "Task area maximum width:"
+msgstr "Görev alanı en büyük genişliği:"
+
+msgctxt "TASK PREVIEW HEIGHT"
+msgid "Task preview height:"
+msgstr "Görev önizleme yüksekliği:"
+
+msgctxt "TASK PREVIEW WIDTH"
+msgid "Task preview width:"
+msgstr "Görev önizleme genişliği:"
+
+msgctxt "THEME FAILED"
+msgid "Could not change the theme. Please try again."
+msgstr "Tema değiştirilemedi. Lütfen tekrar deneyin."
+
+msgctxt "THEME WALLPAPER"
+msgid "Theme wallpaper:"
+msgstr "Tema duvar kâğıdı:"
+
+msgctxt "THEME WALLPAPER OPTION"
+msgid "Switch desktop and lock-screen wallpapers with the theme"
+msgstr "Masaüstü ve kilit ekranı duvar kâğıdını temayla değiştir"
+
+msgctxt "TIME LEFT"
+msgid "Time left"
+msgstr "Kalan süre"
+
+msgctxt "TIME TO FULL"
+msgid "Until full"
+msgstr "Dolmasına"
+
+msgctxt "TODAY"
+msgid "TODAY"
+msgstr "BUGÜN"
+
+msgctxt "UNAVAILABLE"
+msgid "Unavailable"
+msgstr "Kullanılamıyor"
+
+msgctxt "UNLINKED"
+msgid "Unlinked"
+msgstr "Bağlı değil"
+
+msgctxt "UNMUTE"
+msgid "Unmute"
+msgstr "Sesi aç"
+
+msgctxt "UNMUTE MICROPHONE"
+msgid "Unmute microphone"
+msgstr "Mikrofonu aç"
+
+msgctxt "UNPIN DOCK"
+msgid "Unpin from dock"
+msgstr "Sabitlemeyi kaldır"
+
+msgctxt "Unknown"
+msgid "Unknown"
+msgstr "Bilinmiyor"
+
+msgctxt "WEATHER CHOOSE CITY"
+msgid "Click to choose a city"
+msgstr "Şehir seçmek için tıklayın"
+
+msgctxt "WEATHER CITY"
+msgid "Weather city:"
+msgstr "Hava durumu şehri:"
+
+msgctxt "WEATHER CITY SEARCH"
+msgid "Search for a city…"
+msgstr "Şehir ara…"
+
+msgctxt "WEATHER CLEAR"
+msgid "Clear"
+msgstr "Açık"
+
+msgctxt "WEATHER CLOUDY"
+msgid "Cloudy"
+msgstr "Bulutlu"
+
+msgctxt "WEATHER ERROR"
+msgid "Weather unavailable. Try again."
+msgstr "Hava durumu alınamadı. Yeniden deneyin."
+
+msgctxt "WEATHER FOG"
+msgid "Foggy"
+msgstr "Sisli"
+
+msgctxt "WEATHER LAST VALUE"
+msgid "Last received value:"
+msgstr "Son alınan değer:"
+
+msgctxt "WEATHER LOADING"
+msgid "Loading weather…"
+msgstr "Hava durumu alınıyor…"
+
+msgctxt "WEATHER NO CITY"
+msgid "City not found"
+msgstr "Şehir bulunamadı"
+
+msgctxt "WEATHER RAIN"
+msgid "Rainy"
+msgstr "Yağmurlu"
+
+msgctxt "WEATHER SETTINGS"
+msgid "Weather"
+msgstr "Hava durumu"
+
+msgctxt "WEATHER SNOW"
+msgid "Snowy"
+msgstr "Karlı"
+
+msgctxt "WEATHER STORM"
+msgid "Thunderstorm"
+msgstr "Gök gürültülü"
+
+msgctxt "WIFI HARDWARE OFF"
+msgid "Wi-Fi is off by its hardware switch"
+msgstr "Wi-Fi donanım anahtarıyla kapalı"
+
+msgctxt "WINDOWS"
+msgid "windows"
+msgstr "pencere"
+
+msgctxt "WORKING"
+msgid "Applying…"
+msgstr "Uygulanıyor…"
+
+msgctxt "WORKSPACES"
+msgid "Workspaces"
+msgstr "Masaüstleri"
+
+msgctxt "Week"
+msgid "Week"
+msgstr "Hafta"
+
+msgctxt "Wi-Fi off"
+msgid "Wi-Fi off"
+msgstr "Wi-Fi kapalı"
+
+msgctxt "YES"
+msgid "YES"
+msgstr "EVET"
+
+msgctxt "‹ BACK"
+msgid "‹ BACK"
+msgstr "‹ Geri"

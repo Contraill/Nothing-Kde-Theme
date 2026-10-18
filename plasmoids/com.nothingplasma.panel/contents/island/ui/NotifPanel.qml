@@ -200,7 +200,7 @@ Item {
         }
 
         Text {
-            text: popup.notificationCount + (Cfg.turkish ? " BİLDİRİM" : " NOTIFICATIONS")
+            text: Cfg.t("N NOTIFICATIONS").replace("%1", popup.notificationCount)
             color: Theme.fgDim
             font.family: Theme.font
             font.pixelSize: Theme.labelSmall

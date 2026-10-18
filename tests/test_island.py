@@ -7,17 +7,35 @@ ROOT = Path(__file__).resolve().parents[1]
 UI = ROOT / 'plasmoids/com.nothingplasma.panel/contents/island/ui'
 
 
+def translation_catalogs():
+    """Catalogs of the generated Translations.js, by language."""
+    source = (UI / 'Translations.js').read_text()
+    return json.loads(source.split('var catalogs = ', 1)[1].rstrip().rstrip(';'))
+
+
 class IslandTests(unittest.TestCase):
     def test_all_translation_keys_exist_and_no_spanish_ui(self):
         cfg = (UI / 'Cfg.qml').read_text()
-        texts = json.loads(cfg.split('readonly property var textos: (', 1)[1].split(')\n', 1)[0])
-        for file in UI.glob('*.qml'):
+        catalogs = translation_catalogs()
+        # Every key the panel asks for has English and Turkish text.
+        for file in list(UI.glob('*.qml')) + list((UI.parent.parent / 'ui').rglob('*.qml')) + [UI.parent.parent / 'config/config.qml']:
             for key in re.findall(r'Cfg\.t\("([^"]+)"\)', file.read_text()):
-                self.assertIn(key, texts, str(file))
+                self.assertIn(key, catalogs['en'], str(file))
+                self.assertIn(key, catalogs['tr'], str(file))
         self.assertNotIn('EN LA BANDEJA', (UI / 'NotifPanel.qml').read_text())
         self.assertNotIn('es_ES', cfg)
-        self.assertEqual(texts['COFFEE MODE'][0], 'KAHVE MODU')
+        self.assertEqual(catalogs['tr']['COFFEE MODE'], 'KAHVE MODU')
         self.assertIn('property string lang: "auto"', cfg)
+        # Language choices are Cfg.t() catalogs, not per-language branches.
+        for file in (UI.parent.parent).rglob('*.qml'):
+            self.assertNotIn('Cfg.turkish', file.read_text(), str(file))
+            self.assertNotRegex(file.read_text(), r'\bi18nc?\(', str(file))
+
+    @unittest.skipUnless(__import__('shutil').which('msgfmt'), 'gettext msgfmt is not installed')
+    def test_translation_sources_build_the_catalog(self):
+        import subprocess
+        result = subprocess.run(['python3', '-I', str(ROOT / 'po/build.py'), '--check'], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn('PowerPrivacyCard {', (UI / 'ExpandedPanel.qml').read_text())
         self.assertNotIn('Cfg.t("PLACEHOLDER")', (UI / 'ExpandedPanel.qml').read_text())
 

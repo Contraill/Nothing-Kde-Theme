@@ -40,15 +40,15 @@ KCM.SimpleKCM {
         }
 
         QQC2.Label {
-            Kirigami.FormData.label: i18nc("@label", "Panel thickness:") // qmllint disable unqualified
-            text: Island.Cfg.turkish ? "Üst ada ve alt dock iki bağımsız Plasma panelidir. Cam ayarları dock içindir." : "The top island and bottom dock are independent Plasma panels. Glass settings apply to the dock."
+            Kirigami.FormData.label: Island.Cfg.t("PANEL THICKNESS")
+            text: Island.Cfg.t("PANELS NOTE")
             wrapMode: Text.WordWrap
             Layout.maximumWidth: 460
         }
 
         QQC2.SpinBox {
             id: panelOpacity
-            Kirigami.FormData.label: i18nc("@label:spinbox", "Panel opacity:") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("PANEL OPACITY")
             from: 20; to: 98; stepSize: 2
             textFromValue: function(value) { return value + "%" }
             valueFromText: function(text) { return parseInt(text) }
@@ -56,7 +56,7 @@ KCM.SimpleKCM {
 
         QQC2.SpinBox {
             id: popupOpacity
-            Kirigami.FormData.label: i18nc("@label:spinbox", "Extension opacity:") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("EXTENSION OPACITY")
             from: 18; to: 96; stepSize: 2
             textFromValue: function(value) { return value + "%" }
             valueFromText: function(text) { return parseInt(text) }
@@ -64,26 +64,28 @@ KCM.SimpleKCM {
 
         QQC2.CheckBox {
             id: glassBlur
-            Kirigami.FormData.label: i18nc("@label", "Glass effect:") // qmllint disable unqualified
-            text: i18nc("@option:check", "Use KWin background blur behind Nothing extensions") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("GLASS EFFECT")
+            text: Island.Cfg.t("GLASS BLUR OPTION")
         }
 
         QQC2.CheckBox {
             id: autoWallpaper
-            Kirigami.FormData.label: i18nc("@label", "Theme wallpaper:") // qmllint disable unqualified
-            text: Island.Cfg.turkish ? "Masaüstü ve kilit ekranı duvar kâğıdını temayla değiştir" : "Switch desktop and lock-screen wallpapers with the theme"
+            Kirigami.FormData.label: Island.Cfg.t("THEME WALLPAPER")
+            text: Island.Cfg.t("THEME WALLPAPER OPTION")
         }
 
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
-            Kirigami.FormData.label: i18nc("@title:group", "Panel geometry") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("PANEL GEOMETRY")
         }
 
         QQC2.ComboBox {
             Kirigami.FormData.label: Island.Cfg.t("ISLAND LANGUAGE")
-            model: [Island.Cfg.t("SYSTEM LANGUAGE"), "Türkçe", "English"]
-            currentIndex: root.cfg_islandLanguage === "en" ? 2 : root.cfg_islandLanguage === "tr" ? 1 : 0
-            onActivated: root.cfg_islandLanguage = ["auto", "tr", "en"][currentIndex]
+            // "auto" plus one entry per catalog in po/panel.
+            readonly property var codes: ["auto"].concat(Island.Cfg.languages)
+            model: codes.map(code => code === "auto" ? Island.Cfg.t("SYSTEM LANGUAGE") : Island.Cfg.languageName(code))
+            currentIndex: Math.max(0, codes.indexOf(root.cfg_islandLanguage))
+            onActivated: root.cfg_islandLanguage = codes[currentIndex]
         }
         QQC2.TextField {
             id: islandWeatherCity
@@ -93,31 +95,31 @@ KCM.SimpleKCM {
 
         PercentSpin {
             id: launcherWidthPercent
-            Kirigami.FormData.label: i18nc("@label", "Launcher minimum width:") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("LAUNCHER MIN WIDTH")
             from: 22; to: 60
         }
 
         PercentSpin {
             id: launcherHeightPercent
-            Kirigami.FormData.label: i18nc("@label", "Launcher height:") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("LAUNCHER HEIGHT")
             from: 24; to: 65
         }
 
         PercentSpin {
             id: taskAreaMaxPercent
-            Kirigami.FormData.label: i18nc("@label", "Task area maximum width:") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("TASK AREA MAX WIDTH")
             from: 18; to: 60
         }
 
         PercentSpin {
             id: taskPreviewWidthPercent
-            Kirigami.FormData.label: i18nc("@label", "Task preview width:") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("TASK PREVIEW WIDTH")
             from: 28; to: 70
         }
 
         PercentSpin {
             id: taskPreviewHeightPercent
-            Kirigami.FormData.label: i18nc("@label", "Task preview height:") // qmllint disable unqualified
+            Kirigami.FormData.label: Island.Cfg.t("TASK PREVIEW HEIGHT")
             from: 14; to: 34
         }
 

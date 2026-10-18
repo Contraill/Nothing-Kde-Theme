@@ -1,0 +1,415 @@
+# Turkish translation of the Nothing KDE desktop widgets.
+# GPL-3.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Nothing KDE widgets\n"
+"MIME-Version: 1.0\n"
+"PO-Revision-Date: 2026-10-18 20:30+0300\n"
+"Last-Translator: Nothing KDE contributors\n"
+"Language-Team: Turkish\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add Mapping"
+msgstr "Eşleştirme ekle"
+
+msgid "Add custom icon mappings based on device name patterns"
+msgstr "Cihaz adı kalıplarına göre özel simge eşleştirmeleri ekleyin"
+
+msgid "Adds margin around the image to reveal the dark background, creating a frame effect"
+msgstr "Görselin çevresinde boşluk bırakarak arka planı çerçeve olarak gösterir"
+
+msgid "Appearance"
+msgstr "Görünüm"
+
+msgid "Automatically creates a circle (if square) or pill shape (if rectangular). When disabled, uses standard rounded corners."
+msgstr "Kare alanda daire, dikdörtgende hap biçimi oluşturur. Kapalıyken standart yuvarlatılmış köşeler kullanılır."
+
+msgid "Basic Settings"
+msgstr "Temel ayarlar"
+
+msgid "Bluetooth devices that have been connected to this system"
+msgstr "Bu sisteme daha önce bağlanmış Bluetooth cihazları"
+
+msgid "Border Settings"
+msgstr "Çerçeve ayarları"
+
+msgid "Border Size:"
+msgstr "Çerçeve kalınlığı:"
+
+msgid "Browse..."
+msgstr "Göz at..."
+
+msgid "Celsius (°C)"
+msgstr "Santigrat (°C)"
+
+msgid "Choose Style"
+msgstr "Görünüm seç"
+
+msgid "Choose between Celsius and Fahrenheit for temperature display."
+msgstr "Sıcaklığın gösterileceği Santigrat veya Fahrenhayt birimini seçin."
+
+msgid "Circle Pages"
+msgstr "Dairesel sayfalar"
+
+msgid "Circular"
+msgstr "Dairesel"
+
+msgid "City Name:"
+msgstr "Şehir adı:"
+
+msgid "Clear"
+msgstr "Açık"
+
+msgid "Convert the image to black and white (grayscale)"
+msgstr "Görseli siyah beyaza (gri tonlara) dönüştürür"
+
+msgid "Crop (Fill Frame)"
+msgstr "Kırp (çerçeveyi doldur)"
+
+msgid "Crop: Fills the frame completely, may crop parts of the image\nFit: Shows the entire image, may have letterboxing\nStretch: Fills frame completely, may distort the image"
+msgstr "Kırp: Çerçeveyi doldurur, görselin bir kısmını kesebilir\nSığdır: Görselin tamamını gösterir, kenarlarda boşluk bırakabilir\nUzat: Çerçeveyi doldurur, görselin oranını bozabilir"
+
+msgid "Custom Device Icons"
+msgstr "Özel cihaz simgeleri"
+
+msgid "Dark"
+msgstr "Karanlık"
+
+msgid "Dark: Nothing's signature dark aesthetic. Light: Nothing's light palette. Follow System: Matches your KDE dark/light scheme."
+msgstr "Karanlık: Nothing'in koyu görünümü. Aydınlık: Nothing'in açık paleti. Sistemi izle: KDE açık/koyu temasına uyar."
+
+msgid "Dense Drizzle"
+msgstr "Yoğun çisenti"
+
+msgid "Depositing Rime Fog"
+msgstr "Kırağılı sis"
+
+msgid "Desktop PC"
+msgstr "Masaüstü bilgisayar"
+
+msgid "Detecting Battery..."
+msgstr "Pil algılanıyor..."
+
+msgid "Device History"
+msgstr "Cihaz geçmişi"
+
+msgid "Device Type:"
+msgstr "Cihaz türü:"
+
+msgid "Device name pattern"
+msgstr "Cihaz adı kalıbı"
+
+msgid "Digital Clock"
+msgstr "Dijital saat"
+
+msgid "Display the current date above the time (e.g., \"Thu, 31 Jan\")"
+msgstr "Güncel tarihi saatin üzerinde gösterir (ör. \"Per, 31 Oca\")"
+
+msgid "Dot Matrix"
+msgstr "Nokta matrisi"
+
+msgid "Dot Matrix: Nothing's iconic dot matrix font"
+msgstr "Nokta matrisi: Nothing'in tanınmış noktalı yazı tipi"
+
+msgid "Dotted"
+msgstr "Noktalı"
+
+msgid "Dotted: Bigger dots, cleaner look"
+msgstr "Noktalı: Büyük noktalar, sade görünüm"
+
+msgid "Drizzle"
+msgstr "Çisenti"
+
+msgid "Effects"
+msgstr "Efektler"
+
+msgid "Enable Borders"
+msgstr "Çerçeveyi etkinleştir"
+
+msgid "Enter a city name, optionally followed by a country (e.g., 'Victoria, Canada'). For ambiguous or hard-to-find places, enter exact coordinates as 'Label|latitude,longitude'."
+msgstr "Şehir adı ve isteğe bağlı ülke girin (ör. 'İstanbul, Türkiye'). Bulunamayan yerler için 'Ad|enlem,boylam' biçiminde koordinat girebilirsiniz."
+
+msgid "Enter the city name to display on the widget."
+msgstr "Widget üzerinde gösterilecek şehir adını girin."
+
+msgid "FRI"
+msgstr "CUM"
+
+msgid "Fahrenheit (°F)"
+msgstr "Fahrenhayt (°F)"
+
+msgid "Failed to load image"
+msgstr "Görsel yüklenemedi"
+
+msgid "Fit (Show All)"
+msgstr "Sığdır (tamamını göster)"
+
+msgid "Fit Mode:"
+msgstr "Sığdırma biçimi:"
+
+msgid "Fog"
+msgstr "Sisli"
+
+msgid "Follow System"
+msgstr "Sistemi izle"
+
+msgid "Font Style:"
+msgstr "Yazı tipi:"
+
+msgid "Freezing Drizzle"
+msgstr "Dondurucu çisenti"
+
+msgid "Freezing Rain"
+msgstr "Dondurucu yağmur"
+
+msgid "Full"
+msgstr "Tam"
+
+msgid "General"
+msgstr "Genel"
+
+msgid "Grayscale"
+msgstr "Gri tonlama"
+
+msgid "H"
+msgstr "S"
+
+msgid "Heavy Rain"
+msgstr "Şiddetli yağmur"
+
+msgid "Heavy Snow"
+msgstr "Yoğun kar"
+
+msgid "Heavy Snow Showers"
+msgstr "Yoğun kar sağanağı"
+
+msgid "Heavy Thunderstorm with Hail"
+msgstr "Dolu ve şiddetli gök gürültülü fırtına"
+
+msgid "Icon Mappings:"
+msgstr "Simge eşleştirmeleri:"
+
+msgid "Image"
+msgstr "Görsel"
+
+msgid "Image Error"
+msgstr "Görsel hatası"
+
+msgid "Image Fit Mode"
+msgstr "Görsel sığdırma"
+
+msgid "Image Source"
+msgstr "Görsel kaynağı"
+
+msgid "Laptop"
+msgstr "Dizüstü"
+
+msgid "Light"
+msgstr "Aydınlık"
+
+msgid "Light Drizzle"
+msgstr "Hafif çisenti"
+
+msgid "Light Freezing Drizzle"
+msgstr "Hafif dondurucu çisenti"
+
+msgid "Light Freezing Rain"
+msgstr "Hafif dondurucu yağmur"
+
+msgid "Loading..."
+msgstr "Yükleniyor..."
+
+msgid "Location not found"
+msgstr "Konum bulunamadı"
+
+msgid "Location:"
+msgstr "Konum:"
+
+msgid "MON"
+msgstr "PZT"
+
+msgid "Mainly Clear"
+msgstr "Genellikle açık"
+
+msgid "Minimalist"
+msgstr "Sade"
+
+msgid "NOTE: Segmented fonts don't have separator (:)"
+msgstr "NOT: Parçalı yazı tiplerinde ayırıcı (:) bulunmaz"
+
+msgid "No Image"
+msgstr "Görsel yok"
+
+msgid "No devices found in history"
+msgstr "Geçmişte cihaz bulunamadı"
+
+msgid "Overcast"
+msgstr "Kapalı"
+
+msgid "PC"
+msgstr "PC"
+
+msgid "Partly Cloudy"
+msgstr "Parçalı bulutlu"
+
+msgid "Pill Shape"
+msgstr "Hap biçimi"
+
+msgid "Previously Connected:"
+msgstr "Daha önce bağlananlar:"
+
+msgid "Quick Add"
+msgstr "Hızlı ekle"
+
+msgid "Rain"
+msgstr "Yağmur"
+
+msgid "Rain Showers"
+msgstr "Sağanak"
+
+msgid "Replace Nothing's red accent with your KDE system highlight color while keeping the Nothing aesthetic."
+msgstr "Nothing görünümünü koruyarak kırmızı vurgu yerine KDE sistem vurgu rengini kullanır."
+
+msgid "Right-click to configure"
+msgstr "Ayarlamak için sağ tıklayın"
+
+msgid "SAT"
+msgstr "CMT"
+
+msgid "SUN"
+msgstr "PAZ"
+
+msgid "Segmented"
+msgstr "Parçalı"
+
+msgid "Segmented Sharp"
+msgstr "Keskin parçalı"
+
+msgid "Segmented Sharp: Segmented but sharper"
+msgstr "Keskin parçalı: Daha keskin çizgilerle parçalı yazı tipi"
+
+msgid "Segmented: Subway board inspired font that nothing designed"
+msgstr "Parçalı: Metro tabelalarından esinlenen Nothing yazı tipi"
+
+msgid "Select a photo to display in the widget (PNG, JPG, JPEG, WebP)"
+msgstr "Widget üzerinde gösterilecek fotoğrafı seçin (PNG, JPG, JPEG, WebP)"
+
+msgid "Select a timezone from the list above. The widget will display the time for the selected location."
+msgstr "Yukarıdan bir saat dilimi seçin. Widget seçilen konumun saatini gösterir."
+
+msgid "Select an Image"
+msgstr "Görsel seç"
+
+msgid "Select an image file..."
+msgstr "Bir görsel dosyası seçin..."
+
+msgid "Serif"
+msgstr "Serif"
+
+msgid "Serif: Nothing's new serif font"
+msgstr "Serif: Nothing'in yeni serif yazı tipi"
+
+msgid "Shape Settings"
+msgstr "Şekil ayarları"
+
+msgid "Show Date"
+msgstr "Tarihi göster"
+
+msgid "Show time in 24-hour format (e.g., 14:30) instead of 12-hour format (e.g., 2:30)"
+msgstr "Saati 12 saat biçimi (ör. 2:30) yerine 24 saat biçiminde (ör. 14:30) gösterir"
+
+msgid "Slight Rain"
+msgstr "Hafif yağmur"
+
+msgid "Slight Rain Showers"
+msgstr "Hafif sağanak"
+
+msgid "Slight Snow"
+msgstr "Hafif kar"
+
+msgid "Slight Snow Showers"
+msgstr "Hafif kar sağanağı"
+
+msgid "Smooth Moving Second Hand"
+msgstr "Akıcı saniye ibresi"
+
+msgid "Snow"
+msgstr "Kar"
+
+msgid "Snow Grains"
+msgstr "Kar taneleri"
+
+msgid "Stretch"
+msgstr "Uzat"
+
+msgid "Style:"
+msgstr "Görünüm:"
+
+msgid "Swiss Railway"
+msgstr "İsviçre demiryolu"
+
+msgid "THU"
+msgstr "PER"
+
+msgid "TUE"
+msgstr "SAL"
+
+msgid "Temperature Unit:"
+msgstr "Sıcaklık birimi:"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "Theme:"
+msgstr "Tema:"
+
+msgid "Thunderstorm"
+msgstr "Gök gürültülü fırtına"
+
+msgid "Thunderstorm with Hail"
+msgstr "Dolu ve gök gürültülü fırtına"
+
+msgid "Time Zone:"
+msgstr "Saat dilimi:"
+
+msgid "Unknown"
+msgstr "Bilinmiyor"
+
+msgid "Update Interval (ms):"
+msgstr "Güncelleme aralığı (ms):"
+
+msgid "Update second hand every 50ms instead of 1000ms ( 1s ) for a smoother motion"
+msgstr "Daha akıcı hareket için saniye ibresini 1000 ms yerine 50 ms aralıklarla günceller"
+
+msgid "Use 24-Hour Format"
+msgstr "24 saat biçimini kullan"
+
+msgid "Use Darker Font Color"
+msgstr "Koyu yazı rengi kullan"
+
+msgid "Use a darker font color for better visibility on lighter backgrounds"
+msgstr "Açık arka planlarda okunabilirlik için koyu yazı rengi kullanır"
+
+msgid "Use system accent color"
+msgstr "Sistem vurgu rengini kullan"
+
+msgid "Violent Rain Showers"
+msgstr "Şiddetli sağanak"
+
+msgid "WED"
+msgstr "ÇAR"
+
+msgid "World Clock"
+msgstr "Dünya saati"
+
+msgid "can be changed later in configuration"
+msgstr "daha sonra ayarlardan değiştirilebilir"
+
+msgid "e.g., Austin, New York, Tokyo"
+msgstr "ör. İstanbul, Londra, Tokyo"
+
+msgid "e.g., Victoria, Canada or Home|48.4284,-123.3656"
+msgstr "ör. İstanbul, Türkiye veya Ev|41.0082,28.9784"

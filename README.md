@@ -329,8 +329,15 @@ cmake --build /tmp/nothing-native-tests
 NOTHING_NATIVE_QML_RUNNER=/tmp/nothing-native-tests/nothing-native-quick ./validate.sh
 ```
 
-Qt QML tools enable lint and interaction tests. `msgfmt` rebuilds the Turkish localization
-catalogs. Pinned KDE sources and compiled translations are retained for offline packaging.
+Qt QML tools enable lint and interaction tests.
+
+Translations are gettext catalogs in `po/`: `po/panel` for the island and dock (the
+`msgctxt` is the key the QML passes to `Cfg.t()`, the `msgid` the English text) and
+`po/widgets` for the desktop widgets. After editing, run `python3 po/build.py`; it checks
+the files with `msgfmt`, writes the island's `Translations.js` and the widgets' `.mo`
+catalogs, and `--check` verifies without writing. A new language is a new `<lang>.po`; the
+island's language setting lists every catalog, and "System language" picks the KDE
+language when a catalog exists for it. Pinned KDE sources and compiled translations are retained for offline packaging.
 
 Store dependencies can be prepared with:
 

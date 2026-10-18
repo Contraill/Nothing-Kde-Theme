@@ -52,7 +52,7 @@ QtObject {
             fetchCoordinates(panelConfig.islandWeatherLatitude, panelConfig.islandWeatherLongitude, query);
             return;
         }
-        transport.get(Data.searchUrl(query, Cfg.turkish ? "tr" : "en"), data => {
+        transport.get(Data.searchUrl(query, Cfg.language), data => {
             const found = Data.locations(data);
             if (!found.length) { fail("WEATHER NO CITY"); return; }
             const place = found[0];

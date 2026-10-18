@@ -71,10 +71,10 @@ class DockTests(unittest.TestCase):
         self.assertIn('active: root.waylandId', native)
 
     def test_all_dock_strings_have_tr_en_translations(self):
-        cfg = (UI.parent / 'island/ui/Cfg.qml').read_text()
-        texts = json.loads(cfg.split('readonly property var textos: (', 1)[1].split(')\n', 1)[0])
+        source = (UI.parent / 'island/ui/Translations.js').read_text()
+        catalogs = json.loads(source.split('var catalogs = ', 1)[1].rstrip().rstrip(';'))
         for name in ('BottomPanel.qml', 'components/TaskStrip.qml', 'components/TaskPreviewContent.qml',
                      'components/LauncherPage.qml', 'components/LauncherSettingsPage.qml'):
             for key in re.findall(r'Island\.Cfg\.t\("([^"]+)"\)', (UI / name).read_text()):
-                self.assertIn(key, texts, name)
-                self.assertEqual(len(texts[key]), 2)
+                self.assertIn(key, catalogs['en'], name)
+                self.assertIn(key, catalogs['tr'], name)

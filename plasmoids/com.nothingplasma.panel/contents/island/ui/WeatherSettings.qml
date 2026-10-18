@@ -14,7 +14,7 @@ ColumnLayout {
     function searchCity() {
         if (cityInput.text.trim().length < 2) return;
         places = []; searchError = "";
-        searchRequest.get(Data.searchUrl(cityInput.text, Cfg.turkish ? "tr" : "en"), data => {
+        searchRequest.get(Data.searchUrl(cityInput.text, Cfg.language), data => {
             places = Data.locations(data);
             if (!places.length) searchError = Cfg.t("WEATHER NO CITY");
         }, () => searchError = Cfg.t("WEATHER ERROR"));

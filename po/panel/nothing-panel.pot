@@ -1,0 +1,952 @@
+# Nothing KDE island and dock. msgctxt is the key passed to Cfg.t().
+# GPL-3.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Nothing KDE panel\n"
+"MIME-Version: 1.0\n"
+"PO-Revision-Date: 2026-10-18 20:30+0300\n"
+"Last-Translator: Nothing KDE contributors\n"
+"Language-Team: none\n"
+"Language: \n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgctxt "ACCENT COLOR"
+msgid "Accent color"
+msgstr ""
+
+msgctxt "ACCENT DESCRIPTION"
+msgid "Changes the accent color of KDE and Nothing panels."
+msgstr ""
+
+msgctxt "ACCENT FAILED"
+msgid "Could not apply the color. Please try again."
+msgstr ""
+
+msgctxt "ACCENT LINKS"
+msgid "Optional accent links · disable to restore. Takes effect in a new terminal."
+msgstr ""
+
+msgctxt "ACTION FAILED"
+msgid "Could not apply the change"
+msgstr ""
+
+msgctxt "ACTIVATE DOCK ENTRY"
+msgid "Activate dock entry %1"
+msgstr ""
+
+msgctxt "AIRPLANE MODE"
+msgid "Airplane mode"
+msgstr ""
+
+msgctxt "ALL APPS"
+msgid "ALL APPLICATIONS"
+msgstr ""
+
+msgctxt "APP HIDDEN"
+msgid "Hidden"
+msgstr ""
+
+msgctxt "APP SHOWN"
+msgid "Visible"
+msgstr ""
+
+msgctxt "APP VISIBILITY"
+msgid "Apps shown in the launcher"
+msgstr ""
+
+msgctxt "APPLICATIONS"
+msgid "Applications"
+msgstr ""
+
+msgctxt "APPLY COLOR"
+msgid "Apply"
+msgstr ""
+
+msgctxt "APPS"
+msgid "APPS"
+msgstr ""
+
+msgctxt "AUDIO OSD IN ISLAND"
+msgid "Show volume and microphone changes in the island"
+msgstr ""
+
+msgctxt "AUTH CANCELLED"
+msgid "Administrator approval was not granted"
+msgstr ""
+
+msgctxt "AUTO CITY"
+msgid "Enter a city name"
+msgstr ""
+
+msgctxt "AUTO THEME"
+msgid "AUTOMATIC AT SUNRISE / SUNSET"
+msgstr ""
+
+msgctxt "Asks for the password on return"
+msgid "Asks for the password on return"
+msgstr ""
+
+msgctxt "Available"
+msgid "Available"
+msgstr ""
+
+msgctxt "BALANCED"
+msgid "Balanced"
+msgstr ""
+
+msgctxt "BATTERY"
+msgid "Battery"
+msgstr ""
+
+msgctxt "BATTERY HEALTH"
+msgid "Battery health"
+msgstr ""
+
+msgctxt "BLUETOOTH SETTINGS"
+msgid "Bluetooth settings"
+msgstr ""
+
+msgctxt "BRIGHTNESS"
+msgid "BRIGHTNESS"
+msgstr ""
+
+msgctxt "BRIGHTNESS HELP"
+msgid "Built-in display brightness"
+msgstr ""
+
+msgctxt "BRIGHTNESS RIGHT CLICK"
+msgid "Right-click for every display and keyboard lighting"
+msgstr ""
+
+msgctxt "Bluetooth off"
+msgid "Bluetooth off"
+msgstr ""
+
+msgctxt "CALCULATING"
+msgid "Estimating time left…"
+msgstr ""
+
+msgctxt "CALENDAR"
+msgid "CALENDAR"
+msgstr ""
+
+msgctxt "CAMERA"
+msgid "Camera"
+msgstr ""
+
+msgctxt "CAMERA HELP"
+msgid "Blocks or allows connected USB cameras. Allowing asks for administrator approval; blocking does not once the passwordless setup is installed. Reconnecting or rebooting may reset it."
+msgstr ""
+
+msgctxt "CAN BE ENABLED OR REMOVED"
+msgid "CAN BE ENABLED OR REMOVED"
+msgstr ""
+
+msgctxt "CANCEL"
+msgid "CANCEL"
+msgstr ""
+
+msgctxt "CHARGE LIMIT"
+msgid "charge limit"
+msgstr ""
+
+msgctxt "CHARGING"
+msgid "Charging"
+msgstr ""
+
+msgctxt "CHECKING…"
+msgid "CHECKING…"
+msgstr ""
+
+msgctxt "CHOOSE WINDOW"
+msgid "Choose window"
+msgstr ""
+
+msgctxt "CLEAR"
+msgid "CLEAR"
+msgstr ""
+
+msgctxt "CLEAR REMOVES THE ALTERNATE COMBINATION"
+msgid "CLEAR REMOVES THE ALTERNATE COMBINATION"
+msgstr ""
+
+msgctxt "CLIPBOARD"
+msgid "Clipboard"
+msgstr ""
+
+msgctxt "CLOCK"
+msgid "Clock"
+msgstr ""
+
+msgctxt "CLOSE"
+msgid "Close"
+msgstr ""
+
+msgctxt "CLOSE ALL WINDOWS"
+msgid "Close all windows"
+msgstr ""
+
+msgctxt "CLOSE WINDOW"
+msgid "Close window"
+msgstr ""
+
+msgctxt "COFFEE MODE"
+msgid "COFFEE MODE"
+msgstr ""
+
+msgctxt "COLOR ARROW HELP"
+msgid "Left/right adjusts saturation; up/down adjusts brightness."
+msgstr ""
+
+msgctxt "COLOR HUE"
+msgid "Hue"
+msgstr ""
+
+msgctxt "COLOR SATURATION VALUE"
+msgid "Color saturation and brightness"
+msgstr ""
+
+msgctxt "CONFIGURE TRAY ITEMS"
+msgid "Configure tray icons…"
+msgstr ""
+
+msgctxt "CONFIRM POWER ACTIONS"
+msgid "Confirm power actions"
+msgstr ""
+
+msgctxt "CONNECT"
+msgid "CONNECT"
+msgstr ""
+
+msgctxt "CONNECTED"
+msgid "CONNECTED"
+msgstr ""
+
+msgctxt "Closes the open programs"
+msgid "Closes the open programs"
+msgstr ""
+
+msgctxt "Connected"
+msgid "Connected"
+msgstr ""
+
+msgctxt "Connecting…"
+msgid "Connecting…"
+msgstr ""
+
+msgctxt "Couldn't connect"
+msgid "Couldn't connect"
+msgstr ""
+
+msgctxt "DARK THEME"
+msgid "Dark"
+msgstr ""
+
+msgctxt "DEVICES"
+msgid "DEVICES"
+msgstr ""
+
+msgctxt "DISABLING META…"
+msgid "DISABLING META…"
+msgstr ""
+
+msgctxt "DISCONNECT"
+msgid "DISCONNECT"
+msgstr ""
+
+msgctxt "DISPLAYS AND KEYBOARD"
+msgid "DISPLAYS AND KEYBOARD"
+msgstr ""
+
+msgctxt "DND TILE"
+msgid "Do not disturb"
+msgstr ""
+
+msgctxt "DO NOT DISTURB"
+msgid "DO NOT DISTURB"
+msgstr ""
+
+msgctxt "DOCK PIN HINT"
+msgid "Right-click to pin · Drag on the dock to reorder"
+msgstr ""
+
+msgctxt "DOCK WINDOWS"
+msgid "Windows shown in the dock"
+msgstr ""
+
+msgctxt "ENABLING META…"
+msgid "ENABLING META…"
+msgstr ""
+
+msgctxt "EXTENSION OPACITY"
+msgid "Extension opacity:"
+msgstr ""
+
+msgctxt "Enter the password"
+msgid "Enter the password"
+msgstr ""
+
+msgctxt "FORGET"
+msgid "FORGET"
+msgstr ""
+
+msgctxt "FULLY CHARGED"
+msgid "Fully charged"
+msgstr ""
+
+msgctxt "GENERAL"
+msgid "General"
+msgstr ""
+
+msgctxt "GLASS BLUR OPTION"
+msgid "Use KWin background blur behind Nothing extensions"
+msgstr ""
+
+msgctxt "GLASS EFFECT"
+msgid "Glass effect:"
+msgstr ""
+
+msgctxt "GPU ASLEEP"
+msgid "ASLEEP"
+msgstr ""
+
+msgctxt "HEX COLOR"
+msgid "Manual color code (HEX)"
+msgstr ""
+
+msgctxt "HIBERNATE"
+msgid "HIBERNATE"
+msgstr ""
+
+msgctxt "HIDE PASSWORD"
+msgid "Hide password"
+msgstr ""
+
+msgctxt "HOLIDAYS"
+msgid "HOLIDAYS"
+msgstr ""
+
+msgctxt "HOTSPOT"
+msgid "Hotspot"
+msgstr ""
+
+msgctxt "HOURS SHORT"
+msgid "h"
+msgstr ""
+
+msgctxt "INPUT"
+msgid "INPUT"
+msgstr ""
+
+msgctxt "ISLAND LANGUAGE"
+msgid "Island language:"
+msgstr ""
+
+msgctxt "ISLAND SETTINGS"
+msgid "Island settings"
+msgstr ""
+
+msgctxt "KEYBOARD BRIGHTNESS"
+msgid "KEYBOARD BRIGHTNESS"
+msgstr ""
+
+msgctxt "KEYBOARD LIGHTING"
+msgid "KEYBOARD LIGHTING"
+msgstr ""
+
+msgctxt "KEYBOARD RIGHT CLICK"
+msgid "Right-click for keyboard lighting"
+msgstr ""
+
+msgctxt "KNOWN DEVICES"
+msgid "KNOWN DEVICES"
+msgstr ""
+
+msgctxt "LANGUAGE NAME"
+msgid "English"
+msgstr ""
+
+msgctxt "LAUNCHER / SETTINGS"
+msgid "LAUNCHER / SETTINGS"
+msgstr ""
+
+msgctxt "LAUNCHER HEIGHT"
+msgid "Launcher height:"
+msgstr ""
+
+msgctxt "LAUNCHER MIN WIDTH"
+msgid "Launcher minimum width:"
+msgstr ""
+
+msgctxt "LAUNCHER SETTINGS"
+msgid "Launcher settings"
+msgstr ""
+
+msgctxt "LIGHT THEME"
+msgid "Light"
+msgstr ""
+
+msgctxt "LINK FAILED"
+msgid "Could not apply accent link."
+msgstr ""
+
+msgctxt "LINKED"
+msgid "Linked"
+msgstr ""
+
+msgctxt "LOADING APPS"
+msgid "Loading applications…"
+msgstr ""
+
+msgctxt "LOCK"
+msgid "LOCK"
+msgstr ""
+
+msgctxt "LOG OUT"
+msgid "LOG OUT"
+msgstr ""
+
+msgctxt "MAXIMIZE WINDOW"
+msgid "Maximize"
+msgstr ""
+
+msgctxt "META / START KEY"
+msgid "META / START KEY"
+msgstr ""
+
+msgctxt "META KEY DISABLED"
+msgid "META KEY DISABLED"
+msgstr ""
+
+msgctxt "META KEY ENABLED"
+msgid "META KEY ENABLED"
+msgstr ""
+
+msgctxt "META STATUS UNAVAILABLE"
+msgid "META STATUS UNAVAILABLE"
+msgstr ""
+
+msgctxt "META UPDATE FAILED"
+msgid "META UPDATE FAILED"
+msgstr ""
+
+msgctxt "MIC BLOCKED"
+msgid "Microphone blocked by the system · click to allow"
+msgstr ""
+
+msgctxt "MIC BUSY"
+msgid "Another application is using the microphone directly. Stop recording and retry; the change was rolled back."
+msgstr ""
+
+msgctxt "MIC HELP"
+msgid "Block/allow system access to local ALSA microphones. Requires administrator approval and briefly restarts audio. Bluetooth and virtual sources are not supported."
+msgstr ""
+
+msgctxt "MICROPHONE"
+msgid "Microphone"
+msgstr ""
+
+msgctxt "MICROPHONE IN USE"
+msgid "Microphone in use"
+msgstr ""
+
+msgctxt "MICROPHONE MUTED"
+msgid "Microphone muted"
+msgstr ""
+
+msgctxt "MIN"
+msgid "min"
+msgstr ""
+
+msgctxt "MINI PLAYER"
+msgid "Mini player"
+msgstr ""
+
+msgctxt "MINIMIZE WINDOW"
+msgid "Minimize"
+msgstr ""
+
+msgctxt "MOON PHASES"
+msgid "MOON PHASES"
+msgstr ""
+
+msgctxt "MOST USED"
+msgid "MOST USED"
+msgstr ""
+
+msgctxt "MUTE"
+msgid "MUTE"
+msgstr ""
+
+msgctxt "MUTE MICROPHONE"
+msgid "Mute microphone"
+msgstr ""
+
+msgctxt "MUTED"
+msgid "MUTED"
+msgstr ""
+
+msgctxt "N NOTIFICATIONS"
+msgid "%1 NOTIFICATIONS"
+msgstr ""
+
+msgctxt "NEARBY DEVICES"
+msgid "NEARBY DEVICES"
+msgstr ""
+
+msgctxt "NEARBY NETWORKS"
+msgid "NEARBY NETWORKS"
+msgstr ""
+
+msgctxt "NETWORK"
+msgid "NETWORK"
+msgstr ""
+
+msgctxt "NETWORK SETTINGS"
+msgid "Network settings (hidden and enterprise networks)"
+msgstr ""
+
+msgctxt "NEW WINDOW"
+msgid "Open new window"
+msgstr ""
+
+msgctxt "NO APPS FOUND"
+msgid "No applications found"
+msgstr ""
+
+msgctxt "NO NEARBY DEVICES"
+msgid "No nearby devices found"
+msgstr ""
+
+msgctxt "NO NETWORK"
+msgid "NO NETWORK"
+msgstr ""
+
+msgctxt "NO NOTIFICATIONS"
+msgid "NO NOTIFICATIONS"
+msgstr ""
+
+msgctxt "NO OTHER NETWORKS"
+msgid "No other networks found"
+msgstr ""
+
+msgctxt "NOT CONNECTED"
+msgid "NOT CONNECTED"
+msgstr ""
+
+msgctxt "NOTIFICATIONS"
+msgid "NOTIFICATIONS"
+msgstr ""
+
+msgctxt "NOW"
+msgid "now"
+msgstr ""
+
+msgctxt "No inputs"
+msgid "No inputs"
+msgstr ""
+
+msgctxt "No network"
+msgid "No network"
+msgstr ""
+
+msgctxt "No outputs"
+msgid "No outputs"
+msgstr ""
+
+msgctxt "No results"
+msgid "No results"
+msgstr ""
+
+msgctxt "Nothing playing"
+msgid "Nothing playing"
+msgstr ""
+
+msgctxt "OFF"
+msgid "OFF"
+msgstr ""
+
+msgctxt "ON"
+msgid "ON"
+msgstr ""
+
+msgctxt "ONLY THIS DESKTOP"
+msgid "Only this desktop"
+msgstr ""
+
+msgctxt "ONLY THIS SCREEN"
+msgid "Only this screen"
+msgstr ""
+
+msgctxt "OPEN APP"
+msgid "Open"
+msgstr ""
+
+msgctxt "OPEN APP LAUNCHER"
+msgid "OPEN APP LAUNCHER"
+msgstr ""
+
+msgctxt "OPEN PLAYER"
+msgid "Open player"
+msgstr ""
+
+msgctxt "OPTIONAL ALTERNATE SHORTCUT"
+msgid "OPTIONAL ALTERNATE SHORTCUT"
+msgstr ""
+
+msgctxt "OUTPUT"
+msgid "OUTPUT"
+msgstr ""
+
+msgctxt "Open"
+msgid "Open"
+msgstr ""
+
+msgctxt "PANEL GEOMETRY"
+msgid "Panel geometry"
+msgstr ""
+
+msgctxt "PANEL OPACITY"
+msgid "Panel opacity:"
+msgstr ""
+
+msgctxt "PANEL THICKNESS"
+msgid "Panels:"
+msgstr ""
+
+msgctxt "PANELS NOTE"
+msgid "The top island and bottom dock are independent Plasma panels. Glass settings apply to the dock."
+msgstr ""
+
+msgctxt "PART NETWORK"
+msgid "Network"
+msgstr ""
+
+msgctxt "PART SOUND"
+msgid "Sound"
+msgstr ""
+
+msgctxt "PARTIAL"
+msgid "Full blocking could not be verified"
+msgstr ""
+
+msgctxt "PERFORMANCE"
+msgid "Performance"
+msgstr ""
+
+msgctxt "PHONE"
+msgid "Phone (KDE Connect)"
+msgstr ""
+
+msgctxt "PIN DOCK"
+msgid "Pin to dock"
+msgstr ""
+
+msgctxt "PLUGGED NOT CHARGING"
+msgid "Plugged in, not charging"
+msgstr ""
+
+msgctxt "POWER"
+msgid "POWER"
+msgstr ""
+
+msgctxt "POWER SAVER"
+msgid "Power saver"
+msgstr ""
+
+msgctxt "PRIVACY OFF"
+msgid "Access blocked"
+msgstr ""
+
+msgctxt "PRIVACY ON"
+msgid "Access allowed"
+msgstr ""
+
+msgctxt "Pairing…"
+msgid "Pairing…"
+msgstr ""
+
+msgctxt "Password"
+msgid "Password"
+msgstr ""
+
+msgctxt "Powers off and starts again"
+msgid "Powers off and starts again"
+msgstr ""
+
+msgctxt "Powers off the computer"
+msgid "Powers off the computer"
+msgstr ""
+
+msgctxt "RECORDING"
+msgid "RECORDING"
+msgstr ""
+
+msgctxt "REFRESH WEATHER"
+msgid "Refresh weather"
+msgstr ""
+
+msgctxt "REPEAT"
+msgid "Repeat"
+msgstr ""
+
+msgctxt "REPLY"
+msgid "Reply"
+msgstr ""
+
+msgctxt "RESTART"
+msgid "RESTART"
+msgstr ""
+
+msgctxt "RESTORE WINDOW"
+msgid "Restore"
+msgstr ""
+
+msgctxt "RUNNING JOBS"
+msgid "Running jobs"
+msgstr ""
+
+msgctxt "SAVED NETWORKS"
+msgid "SAVED NETWORKS"
+msgstr ""
+
+msgctxt "SCAN TO JOIN"
+msgid "Scan to join"
+msgstr ""
+
+msgctxt "SEARCH APPS"
+msgid "Search applications…"
+msgstr ""
+
+msgctxt "SEARCH CITY"
+msgid "Search city"
+msgstr ""
+
+msgctxt "SEARCH LAUNCHER"
+msgid "Search apps, settings, files or calculate…"
+msgstr ""
+
+msgctxt "SEARCH RESULTS"
+msgid "SEARCH RESULTS"
+msgstr ""
+
+msgctxt "SELECTED COLOR"
+msgid "Selected color"
+msgstr ""
+
+msgctxt "SHARE"
+msgid "SHARE"
+msgstr ""
+
+msgctxt "SHOW DESKTOP"
+msgid "Show desktop"
+msgstr ""
+
+msgctxt "SHOW IN COMPACT ISLAND"
+msgid "Show in the compact island"
+msgstr ""
+
+msgctxt "SHOW PASSWORD"
+msgid "Show password"
+msgstr ""
+
+msgctxt "SHOW SYSTEM TRAY"
+msgid "Show system tray"
+msgstr ""
+
+msgctxt "SHUFFLE"
+msgid "Shuffle"
+msgstr ""
+
+msgctxt "SHUT DOWN"
+msgid "SHUT DOWN"
+msgstr ""
+
+msgctxt "SLEEP"
+msgid "SLEEP"
+msgstr ""
+
+msgctxt "SOUND"
+msgid "SOUND"
+msgstr ""
+
+msgctxt "SYSTEM LANGUAGE"
+msgid "System language"
+msgstr ""
+
+msgctxt "Saved"
+msgid "Saved"
+msgstr ""
+
+msgctxt "Saves everything to disk and powers off"
+msgid "Saves everything to disk and powers off"
+msgstr ""
+
+msgctxt "Screen off, everything stays as it is"
+msgid "Screen off, everything stays as it is"
+msgstr ""
+
+msgctxt "Search apps…"
+msgid "Search apps…"
+msgstr ""
+
+msgctxt "Searching…"
+msgid "Searching…"
+msgstr ""
+
+msgctxt "Secured"
+msgid "Secured"
+msgstr ""
+
+msgctxt "Signal"
+msgid "Signal"
+msgstr ""
+
+msgctxt "TASK AREA MAX WIDTH"
+msgid "Task area maximum width:"
+msgstr ""
+
+msgctxt "TASK PREVIEW HEIGHT"
+msgid "Task preview height:"
+msgstr ""
+
+msgctxt "TASK PREVIEW WIDTH"
+msgid "Task preview width:"
+msgstr ""
+
+msgctxt "THEME FAILED"
+msgid "Could not change the theme. Please try again."
+msgstr ""
+
+msgctxt "THEME WALLPAPER"
+msgid "Theme wallpaper:"
+msgstr ""
+
+msgctxt "THEME WALLPAPER OPTION"
+msgid "Switch desktop and lock-screen wallpapers with the theme"
+msgstr ""
+
+msgctxt "TIME LEFT"
+msgid "Time left"
+msgstr ""
+
+msgctxt "TIME TO FULL"
+msgid "Until full"
+msgstr ""
+
+msgctxt "TODAY"
+msgid "TODAY"
+msgstr ""
+
+msgctxt "UNAVAILABLE"
+msgid "Unavailable"
+msgstr ""
+
+msgctxt "UNLINKED"
+msgid "Unlinked"
+msgstr ""
+
+msgctxt "UNMUTE"
+msgid "Unmute"
+msgstr ""
+
+msgctxt "UNMUTE MICROPHONE"
+msgid "Unmute microphone"
+msgstr ""
+
+msgctxt "UNPIN DOCK"
+msgid "Unpin from dock"
+msgstr ""
+
+msgctxt "Unknown"
+msgid "Unknown"
+msgstr ""
+
+msgctxt "WEATHER CHOOSE CITY"
+msgid "Click to choose a city"
+msgstr ""
+
+msgctxt "WEATHER CITY"
+msgid "Weather city:"
+msgstr ""
+
+msgctxt "WEATHER CITY SEARCH"
+msgid "Search for a city…"
+msgstr ""
+
+msgctxt "WEATHER CLEAR"
+msgid "Clear"
+msgstr ""
+
+msgctxt "WEATHER CLOUDY"
+msgid "Cloudy"
+msgstr ""
+
+msgctxt "WEATHER ERROR"
+msgid "Weather unavailable. Try again."
+msgstr ""
+
+msgctxt "WEATHER FOG"
+msgid "Foggy"
+msgstr ""
+
+msgctxt "WEATHER LAST VALUE"
+msgid "Last received value:"
+msgstr ""
+
+msgctxt "WEATHER LOADING"
+msgid "Loading weather…"
+msgstr ""
+
+msgctxt "WEATHER NO CITY"
+msgid "City not found"
+msgstr ""
+
+msgctxt "WEATHER RAIN"
+msgid "Rainy"
+msgstr ""
+
+msgctxt "WEATHER SETTINGS"
+msgid "Weather"
+msgstr ""
+
+msgctxt "WEATHER SNOW"
+msgid "Snowy"
+msgstr ""
+
+msgctxt "WEATHER STORM"
+msgid "Thunderstorm"
+msgstr ""
+
+msgctxt "WIFI HARDWARE OFF"
+msgid "Wi-Fi is off by its hardware switch"
+msgstr ""
+
+msgctxt "WINDOWS"
+msgid "windows"
+msgstr ""
+
+msgctxt "WORKING"
+msgid "Applying…"
+msgstr ""
+
+msgctxt "WORKSPACES"
+msgid "Workspaces"
+msgstr ""
+
+msgctxt "Week"
+msgid "Week"
+msgstr ""
+
+msgctxt "Wi-Fi off"
+msgid "Wi-Fi off"
+msgstr ""
+
+msgctxt "YES"
+msgid "YES"
+msgstr ""
+
+msgctxt "‹ BACK"
+msgid "‹ BACK"
+msgstr ""
