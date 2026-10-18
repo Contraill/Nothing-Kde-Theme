@@ -98,6 +98,48 @@ ColumnLayout {
         checked: root.panelConfig?.showSystemTray ?? true
         onToggled: if (root.panelConfig) root.panelConfig.showSystemTray = checked
     }
+    Text {
+        Layout.fillWidth: true
+        text: Cfg.t("SHOW IN COMPACT ISLAND")
+        color: Theme.fgDim; font.family: Theme.font; font.pixelSize: 11
+    }
+    Flow {
+        Layout.fillWidth: true
+        spacing: 6
+        Repeater {
+            model: [
+                {key: "showWorkspaces", label: "WORKSPACES"}, {key: "showWeather", label: "WEATHER SETTINGS"},
+                {key: "showClock", label: "CLOCK"}, {key: "showMiniPlayer", label: "MINI PLAYER"},
+                {key: "showNetwork", label: "PART NETWORK"}, {key: "showVolume", label: "PART SOUND"},
+                {key: "showBattery", label: "BATTERY"}
+            ]
+            QQC2.AbstractButton {
+                id: partButton
+                required property var modelData
+                readonly property bool shown: root.panelConfig?.[modelData.key] ?? true
+                objectName: "compactPart-" + modelData.key
+                width: partText.implicitWidth + 24
+                height: 30
+                checkable: true
+                checked: shown
+                Accessible.name: Cfg.t(modelData.label)
+                onClicked: if (root.panelConfig) root.panelConfig[modelData.key] = !shown
+                background: Rectangle {
+                    radius: height / 2
+                    color: partButton.shown ? Theme.inverted : partButton.hovered ? Theme.surfaceHigh : Theme.surfaceAlt
+                    border.width: partButton.activeFocus ? 1 : 0
+                    border.color: Theme.primary
+                }
+                contentItem: Text {
+                    id: partText
+                    text: Cfg.t(partButton.modelData.label)
+                    color: partButton.shown ? Theme.invertedFg : Theme.fgDim
+                    font.family: Theme.font; font.pixelSize: 11
+                    horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                }
+            }
+        }
+    }
     QQC2.AbstractButton {
         id: configureTrayButton
         objectName: "configureSystemTrayButton"

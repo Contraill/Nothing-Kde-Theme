@@ -17,7 +17,8 @@ QtObject {
 
     readonly property var locale: Qt.locale(cfg.localeName)
     readonly property bool turkish: cfg.lang === "tr" || (cfg.lang === "auto" && cfg.systemLanguage.toLowerCase().startsWith("tr"))
-    property bool clock24: true
+    // Follows KDE's region settings (LC_TIME): 12-hour formats contain AM/PM.
+    readonly property bool clock24: !/a/i.test(Qt.locale().timeFormat(Locale.ShortFormat).replace(/'[^']*'/g, ""))
 
     readonly property string fmtHora: cfg.clock24 ? "HH:mm" : "h:mm AP"
     readonly property string fmtHoraCorta: cfg.clock24 ? "HH:mm" : "h:mm"
@@ -414,7 +415,21 @@ QtObject {
         "MIN": ["dk", "min"],
         "OPEN PLAYER": ["Oynatıcıyı aç", "Open player"],
         "SHUFFLE": ["Karıştır", "Shuffle"],
-        "REPEAT": ["Tekrarla", "Repeat"]
+        "REPEAT": ["Tekrarla", "Repeat"],
+        "SHOW IN COMPACT ISLAND": ["Kompakt adada göster", "Show in the compact island"],
+        "WORKSPACES": ["Masaüstleri", "Workspaces"],
+        "CLOCK": ["Saat", "Clock"],
+        "MINI PLAYER": ["Mini oynatıcı", "Mini player"],
+        "PART NETWORK": ["Ağ", "Network"],
+        "PART SOUND": ["Ses", "Sound"],
+        "HOURS SHORT": ["sa", "h"],
+        "FULLY CHARGED": ["Tam dolu", "Fully charged"],
+        "PLUGGED NOT CHARGING": ["Prize takılı, şarj olmuyor", "Plugged in, not charging"],
+        "CHARGE LIMIT": ["şarj sınırı", "charge limit"],
+        "TIME TO FULL": ["Dolmasına", "Until full"],
+        "TIME LEFT": ["Kalan süre", "Time left"],
+        "CALCULATING": ["Kalan süre hesaplanıyor…", "Estimating time left…"],
+        "BATTERY HEALTH": ["Pil sağlığı", "Battery health"]
 })
 
     function t(clave) {

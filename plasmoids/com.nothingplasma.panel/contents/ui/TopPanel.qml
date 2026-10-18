@@ -38,6 +38,12 @@ Item {
     Binding { target: Island.Backend; property: "expanded"; value: popup.visible }
     Binding { target: Island.Cfg; property: "lang"; value: Plasmoid.configuration.islandLanguage }
     Binding { target: Island.Cfg; property: "showClock"; value: Plasmoid.configuration.showClock }
+    Binding { target: Island.Cfg; property: "showWorkspaces"; value: Plasmoid.configuration.showWorkspaces }
+    Binding { target: Island.Cfg; property: "showWeather"; value: Plasmoid.configuration.showWeather }
+    Binding { target: Island.Cfg; property: "showNetwork"; value: Plasmoid.configuration.showNetwork }
+    Binding { target: Island.Cfg; property: "showVolume"; value: Plasmoid.configuration.showVolume }
+    Binding { target: Island.Cfg; property: "showBattery"; value: Plasmoid.configuration.showBattery }
+    Binding { target: Island.Cfg; property: "showMini"; value: Plasmoid.configuration.showMiniPlayer }
     Binding { target: Island.Weather; property: "panelConfig"; value: Plasmoid.configuration }
     Binding { target: Island.Cfg; property: "weatherCity"; value: Plasmoid.configuration.islandWeatherCity }
     Binding { target: Island.Cfg; property: "colorFondo"; value: root.lightMode ? "#EEEDE9" : "#000000" }

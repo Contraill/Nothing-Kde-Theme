@@ -15,11 +15,6 @@ KCM.SimpleKCM {
     property alias cfg_launcherWidthPercent: launcherWidthPercent.value
     property alias cfg_launcherHeightPercent: launcherHeightPercent.value
     property alias cfg_taskAreaMaxPercent: taskAreaMaxPercent.value
-    property alias cfg_wifiHeightPercent: wifiHeightPercent.value
-    property alias cfg_bluetoothHeightPercent: bluetoothHeightPercent.value
-    property alias cfg_audioHeightPercent: audioHeightPercent.value
-    property alias cfg_displayHeightPercent: displayHeightPercent.value
-    property alias cfg_powerDetailHeightPercent: powerDetailHeightPercent.value
     property alias cfg_taskPreviewWidthPercent: taskPreviewWidthPercent.value
     property alias cfg_taskPreviewHeightPercent: taskPreviewHeightPercent.value
     property alias cfg_panelOpacity: panelOpacity.value
@@ -79,7 +74,6 @@ KCM.SimpleKCM {
             text: Island.Cfg.turkish ? "Masaüstü ve kilit ekranı duvar kâğıdını temayla değiştir" : "Switch desktop and lock-screen wallpapers with the theme"
         }
 
-
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
             Kirigami.FormData.label: i18nc("@title:group", "Panel geometry") // qmllint disable unqualified
@@ -113,36 +107,6 @@ KCM.SimpleKCM {
             id: taskAreaMaxPercent
             Kirigami.FormData.label: i18nc("@label", "Task area maximum width:") // qmllint disable unqualified
             from: 18; to: 60
-        }
-
-        PercentSpin {
-            id: wifiHeightPercent
-            Kirigami.FormData.label: i18nc("@label", "Wi-Fi detail height:") // qmllint disable unqualified
-            from: 20; to: 60
-        }
-
-        PercentSpin {
-            id: bluetoothHeightPercent
-            Kirigami.FormData.label: i18nc("@label", "Bluetooth detail height:") // qmllint disable unqualified
-            from: 20; to: 60
-        }
-
-        PercentSpin {
-            id: audioHeightPercent
-            Kirigami.FormData.label: i18nc("@label", "Audio detail height:") // qmllint disable unqualified
-            from: 24; to: 70
-        }
-
-        PercentSpin {
-            id: displayHeightPercent
-            Kirigami.FormData.label: i18nc("@label", "Brightness detail height:") // qmllint disable unqualified
-            from: 20; to: 55
-        }
-
-        PercentSpin {
-            id: powerDetailHeightPercent
-            Kirigami.FormData.label: i18nc("@label", "Power detail height:") // qmllint disable unqualified
-            from: 22; to: 60
         }
 
         PercentSpin {
