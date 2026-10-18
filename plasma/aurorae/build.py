@@ -22,7 +22,8 @@ def config_ui(entries):
                               ('TitleAlignment','Title alignment',['Left','Center']),
                               ('ActiveAccentBorder','Active accent border',None),
                               ('Shadow','Shadow',['Off','Subtle','Normal','Strong'])],
-        'Controls': [('ButtonSize','Button size',['Compact','Normal','Large']),
+        'Controls': [('ButtonStyle','Button style',['Line','Dots','Traffic lights']),
+                     ('ButtonSize','Button size',['Compact','Normal','Large']),
                      ('ButtonSpacing','Button spacing',['Tight','Normal','Wide']),
                      ('InactiveButtons','Inactive window buttons',['Normal','Dimmed'])]}
     ns={'k':'http://www.kde.org/standards/kcfg/1.0'}

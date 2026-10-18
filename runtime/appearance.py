@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import importlib.util
 
 sys.dont_write_bytecode = True
@@ -128,6 +129,20 @@ def notify(style=False):
     run('dbus-send', '--session', '--type=signal', '/KGlobalSettings',
         'org.kde.KGlobalSettings.notifyChange', 'int32:' + ('2' if style else '0'), 'int32:0', check=False)
     run('qdbus6', 'org.kde.KWin', '/KWin', 'org.kde.KWin.reconfigure', check=False)
+
+
+def reload_decoration():
+    """KWin keeps a decoration's QML in memory while any window uses it, so new
+    files load only after every Glassy decoration is gone: switch away and back."""
+    if read(LIBRARY) != 'org.kde.kwin.aurorae' or read(THEME) != 'org.glassy.decoration': return
+    reconfigure = ('qdbus6', 'org.kde.KWin', '/KWin', 'org.kde.KWin.reconfigure')
+    try:
+        write(LIBRARY, 'org.kde.breeze')
+        run(*reconfigure, check=False)
+        time.sleep(4)  # KWin tears decorations down asynchronously.
+    finally:
+        write(LIBRARY, 'org.kde.kwin.aurorae')
+        run(*reconfigure, check=False)
 
 
 def dependencies(state, qt5=False):
@@ -304,12 +319,15 @@ def install(state, qt5=False):
                 for path in (ROOT / 'plasma/aurorae/org.glassy.decoration').rglob('*') if path.is_file() and path.name != 'config.ui']
     sources += [(ROOT / 'runtime' / name, DATA / 'nothing-plasma/bin' / name)
                 for name in ('appearance.py', 'appearance_render.py', 'glassy_settings.py')]
-    for source, target in sources: owned_file(state, target, source.read_bytes())
+    decoration_changed = False
+    for source, target in sources:
+        changed = owned_file(state, target, source.read_bytes())
+        decoration_changed |= changed and target.is_relative_to(DECO)
     spec = importlib.util.spec_from_file_location('glassy_decoration_build', ROOT / 'plasma/aurorae/build.py')
     builder = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(builder)
     for name, data in builder.assets(ROOT / 'plasma/aurorae/org.glassy.decoration').items():
-        owned_file(state, DECO / name, data)
+        decoration_changed |= owned_file(state, DECO / name, data)
     manifest = {str(target) for source, target in sources}
     manifest.update(str(DECO / name) for name in builder.assets(ROOT / 'plasma/aurorae/org.glassy.decoration'))
     for name, item in list(state.get('files', {}).items()):
@@ -332,6 +350,8 @@ def install(state, qt5=False):
     install_settings_tool(state)
     if before != tuple(read(key) for key in (STYLE, LIBRARY, THEME, KVTHEME, BLUR)):
         notify(style=True)
+    elif decoration_changed:
+        reload_decoration()
     print('Glassy application style + decoration installed. Existing dependencies and unrelated appearance settings retained.')
     print('Palette, accent and Glassy setting changes reload live in running KDE applications; none are restarted.')
 

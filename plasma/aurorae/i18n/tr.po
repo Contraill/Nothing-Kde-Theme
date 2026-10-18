@@ -174,3 +174,15 @@ msgstr "Her zaman opak uygulamalar:"
 
 msgid "Comma-separated application names (as in their process name). Kvantum keeps their windows opaque."
 msgstr "Virgülle ayrılmış uygulama adları (süreç adlarıyla). Kvantum bu pencereleri opak tutar."
+
+msgid "Button style:"
+msgstr "Düğme stili:"
+
+msgid "Line"
+msgstr "Çizgi"
+
+msgid "Dots"
+msgstr "Nokta"
+
+msgid "Traffic lights"
+msgstr "Trafik ışıkları"

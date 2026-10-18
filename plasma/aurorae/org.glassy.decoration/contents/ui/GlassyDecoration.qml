@@ -186,7 +186,7 @@ Decoration {
         opacity: 0
     }
     component Button: GlassButton {
-        ink: root.ink; hoverColor: root.ink
+        ink: root.ink; hoverColor: root.ink; glyphStyle: root.settings.ButtonStyle
         opacity: !decoration.client.active && root.settings.InactiveButtons === 1 && !hovered ? .55 : 1
         width: root.buttonExtent; height: root.buttonExtent
     }

@@ -178,6 +178,16 @@ class AppearanceTests(unittest.TestCase):
         config = glassy_settings.configure((ROOT / 'assets/kvantum/Glassy/Glassy.kvconfig').read_text(), values)
         self.assertIn('opaque=vlc,krita\n', config)
 
+    def test_button_styles_and_decoration_reload(self):
+        button = (ROOT / 'plasma/aurorae/org.glassy.decoration/contents/ui/GlassButton.qml').read_text()
+        self.assertIn('property int glyphStyle: 0', button)
+        self.assertIn('root.glyphStyle === 2', button)
+        schema = (ROOT / 'plasma/aurorae/org.glassy.decoration/contents/config/main.xml').read_text()
+        self.assertIn('<entry name="ButtonStyle" type="Int"><default>0</default><min>0</min><max>2</max></entry>', schema)
+        # KWin keeps decoration QML cached; updated files need a switch away and back.
+        source = (ROOT / 'runtime/appearance.py').read_text()
+        self.assertIn('elif decoration_changed:\n        reload_decoration()', source)
+
     def test_decoration_translations_have_no_class_context(self):
         # KLocalizedTranslator matches msgctxt against the disambiguation, not the
         # ui class name, so "GlassyConfig" contexts were never translated.
