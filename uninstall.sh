@@ -63,6 +63,7 @@ fi
 restore_notification_skin
 # Give the volume/mute OSD back to Plasma (the island drew it).
 bash "$ROOT/runtime/nothing-control.sh" audio-osd plasma >/dev/null 2>&1 || true
+python3 "$ROOT/runtime/sounds.py" remove >/dev/null 2>&1 || true
 # The passwordless camera helper lives outside the home directory.
 if [[ -e /usr/local/libexec/nothing-kde-privacy ]]; then
   pkexec /usr/bin/bash "$ROOT/runtime/privacy-system.sh" remove ||

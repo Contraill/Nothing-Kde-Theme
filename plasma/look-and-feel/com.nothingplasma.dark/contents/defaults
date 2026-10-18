@@ -10,3 +10,6 @@ theme=org.glassy.decoration
 
 [plasmarc][Theme]
 name=NothingPlasmaDark
+
+[kdeglobals][Sounds]
+Theme=nothing-kde

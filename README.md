@@ -70,6 +70,27 @@ translucency rather than fake blur or an external effect
 Existing panels are retained. `--apply-layout` creates a backup first and removes only
 retired Nothing side panels.
 
+## Sounds
+
+The **Nothing KDE** sound theme is a set of short digital dots synthesised by
+`assets/sounds/build-sounds.py` (original work, no recordings). Installing selects it when no
+other sound theme was chosen, and the Nothing global themes select it too; change it under
+**System Settings → System Sounds**. Events it does not cover fall back to the freedesktop
+theme.
+
+Your own recordings (for example from a Nothing phone's Glyph Composer) can replace any event
+on your machine only. Name each file after the event (`message-new-instant.wav`) or an alias
+(`notification`, `alarm`, `ringtone`, `charging`, `unplug`, `connect`, `disconnect`, `error`,
+`warning`, `startup`, `shutdown`, `volume`, …) and run:
+
+```sh
+./install.sh --sounds import ~/Recordings/glyph   # builds "Nothing KDE (personal)" and selects it
+./install.sh --sounds use nothing                 # or personal | default
+```
+
+The recordings are converted into `~/.local/share/sounds/nothing-kde-personal` and never
+copied into the project; missing events fall back to the bundled theme.
+
 ## Glassy
 
 The bundle includes the reusable **Glassy** Kvantum theme and native **Glassy** Aurorae

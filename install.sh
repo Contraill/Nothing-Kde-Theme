@@ -22,6 +22,7 @@ case "${1:-}" in
   --apply-layout) APPLY_LAYOUT=1 ;;
   --widgets-only) exec bash "$ROOT/widgets/install.sh" ;;
   --accent-links) shift; exec python3 "$ROOT/runtime/accent-links.py" "$@" ;;
+  --sounds) shift; exec python3 "$ROOT/runtime/sounds.py" "$@" ;;
   --privacy-helper)
     [[ "${2:-}" == install || "${2:-}" == remove ]] || { echo 'usage: --privacy-helper install|remove' >&2; exit 2; }
     exec pkexec /usr/bin/bash "$ROOT/runtime/privacy-system.sh" "$2" ;;
@@ -30,7 +31,7 @@ case "${1:-}" in
   --kitty-theme) shift; exec python3 "$ROOT/runtime/kitty-theme.py" "$@" ;;
   --login-wallpaper) shift; exec pkexec /usr/bin/python3 -I "$ROOT/runtime/login-wallpaper.py" "$@" ;;
   --notifications-only) shift; exec "$ROOT/notification-skin/install-native.sh" "${NOTIFICATION_ARGS[@]}" "$@" ;;
-  --help|-h) printf 'Usage: %s [--apply-layout | --panel-only | --widgets-only | --accent-links ACTION | --privacy-helper install|remove | --kitty-theme ACTION | --login-wallpaper dark|light|remove | --dolphin ACTION | --appearance ACTION [--qt5] | --notifications-only] [--restart-plasma] [--force-notifications]\n--force-notifications bypasses only the notification compatibility check, not validation or rollback.\n' "$0"; exit 0 ;;
+  --help|-h) printf 'Usage: %s [--apply-layout | --panel-only | --widgets-only | --accent-links ACTION | --privacy-helper install|remove | --sounds ACTION | --kitty-theme ACTION | --login-wallpaper dark|light|remove | --dolphin ACTION | --appearance ACTION [--qt5] | --notifications-only] [--restart-plasma] [--force-notifications]\n--force-notifications bypasses only the notification compatibility check, not validation or rollback.\n' "$0"; exit 0 ;;
   *) printf 'Unknown option: %s. Use --help.\n' "$1" >&2; exit 2 ;;
 esac
 
@@ -210,6 +211,7 @@ if (( PANEL_ONLY )); then
 fi
 
 bash "$ROOT/widgets/install.sh"
+python3 "$ROOT/runtime/sounds.py" install
 
 mkdir -p \
   "$DATA_HOME/plasma/desktoptheme" \

@@ -10,7 +10,7 @@
       <default>-1</default>
     </entry>
     <entry name="location" type="String">
-      <default>Villupuram</default>
+      <default>Famagusta|35.12489,33.94135</default>
     </entry>
     <entry name="temperatureUnit" type="Int">
       <default>0</default>
