@@ -50,7 +50,7 @@ restore_notification_skin() {
 plasma_eval 'for (const pid of panelIds) { const p=panelById(pid); if (!p) continue; if (p.type === "com.nothingplasma.panel") { p.remove(); continue; } const ws=p.widgets("com.nothingplasma.island"); for (const w of ws) w.remove(); }' || true
 
 if command -v kpackagetool6 >/dev/null 2>&1; then
-  for id in com.nothingplasma.panel com.nothingplasma.launcherbridge com.nothingplasma.notificationbridge com.nothingplasma.island org.nothingkde.widget.battery org.nothingkde.widget.clock-analog org.nothingkde.widget.clock-digital org.nothingkde.widget.clock-digital-large org.nothingkde.widget.date org.nothingkde.widget.media org.nothingkde.widget.photo org.nothingkde.widget.weather; do
+  for id in com.nothingplasma.panel com.nothingplasma.launcherbridge com.nothingplasma.notificationbridge com.nothingplasma.island org.nothingkde.widget.battery org.nothingkde.widget.clock-analog org.nothingkde.widget.clock-digital org.nothingkde.widget.clock-digital-large org.nothingkde.widget.date org.nothingkde.widget.media org.nothingkde.widget.note org.nothingkde.widget.phone org.nothingkde.widget.photo org.nothingkde.widget.pomodoro org.nothingkde.widget.system org.nothingkde.widget.weather; do
     if kpackagetool6 --type Plasma/Applet --list 2>/dev/null | grep -Fq "$id"; then
       kpackagetool6 --type Plasma/Applet --remove "$id" >/dev/null 2>&1 || true
     fi

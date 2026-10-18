@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "Utilities",
+    "Description": "Pomodoro focus and break timer with a dot ring.",
+    "EnabledByDefault": true,
+    "Icon": "chronometer",
+    "Id": "org.nothingkde.widget.pomodoro",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Focus Timer",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Odak Zamanlayıcı"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

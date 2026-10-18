@@ -27,6 +27,12 @@ msgstr "Görünüm"
 msgid "Automatically creates a circle (if square) or pill shape (if rectangular). When disabled, uses standard rounded corners."
 msgstr "Kare alanda daire, dikdörtgende hap biçimi oluşturur. Kapalıyken standart yuvarlatılmış köşeler kullanılır."
 
+msgid "BREAK"
+msgstr "MOLA"
+
+msgid "Back to focus."
+msgstr "Odaklanma zamanı."
+
 msgid "Basic Settings"
 msgstr "Temel ayarlar"
 
@@ -39,8 +45,20 @@ msgstr "Çerçeve ayarları"
 msgid "Border Size:"
 msgstr "Çerçeve kalınlığı:"
 
+msgid "Break (minutes):"
+msgstr "Mola (dakika):"
+
+msgid "Break is over"
+msgstr "Mola bitti"
+
 msgid "Browse..."
 msgstr "Göz at..."
+
+msgid "CHARGING"
+msgstr "ŞARJ OLUYOR"
+
+msgid "CPU"
+msgstr "CPU"
 
 msgid "Celsius (°C)"
 msgstr "Santigrat (°C)"
@@ -135,6 +153,9 @@ msgstr "Şehir adı ve isteğe bağlı ülke girin (ör. 'İstanbul, Türkiye').
 msgid "Enter the city name to display on the widget."
 msgstr "Widget üzerinde gösterilecek şehir adını girin."
 
+msgid "FOCUS"
+msgstr "ODAK"
+
 msgid "FRI"
 msgstr "CUM"
 
@@ -149,6 +170,12 @@ msgstr "Sığdır (tamamını göster)"
 
 msgid "Fit Mode:"
 msgstr "Sığdırma biçimi:"
+
+msgid "Focus (minutes):"
+msgstr "Odak (dakika):"
+
+msgid "Focus finished"
+msgstr "Odak süresi bitti"
 
 msgid "Fog"
 msgstr "Sisli"
@@ -204,6 +231,12 @@ msgstr "Görsel sığdırma"
 msgid "Image Source"
 msgstr "Görsel kaynağı"
 
+msgid "Install KDE Connect to see your phone here."
+msgstr "Telefonunu burada görmek için KDE Bağlan'ı kur."
+
+msgid "LONG BREAK"
+msgstr "UZUN MOLA"
+
 msgid "Laptop"
 msgstr "Dizüstü"
 
@@ -228,6 +261,12 @@ msgstr "Konum bulunamadı"
 msgid "Location:"
 msgstr "Konum:"
 
+msgid "Long break (minutes):"
+msgstr "Uzun mola (dakika):"
+
+msgid "MEMORY"
+msgstr "BELLEK"
+
 msgid "MON"
 msgstr "PZT"
 
@@ -236,6 +275,9 @@ msgstr "Genellikle açık"
 
 msgid "Minimalist"
 msgstr "Sade"
+
+msgid "NOTE"
+msgstr "NOT"
 
 msgid "NOTE: Segmented fonts don't have separator (:)"
 msgstr "NOT: Parçalı yazı tiplerinde ayırıcı (:) bulunmaz"
@@ -246,14 +288,26 @@ msgstr "Görsel yok"
 msgid "No devices found in history"
 msgstr "Geçmişte cihaz bulunamadı"
 
+msgid "No phone connected"
+msgstr "Bağlı telefon yok"
+
+msgid "Open KDE Connect"
+msgstr "KDE Bağlan'ı aç"
+
 msgid "Overcast"
 msgstr "Kapalı"
 
 msgid "PC"
 msgstr "PC"
 
+msgid "Pair a phone"
+msgstr "Telefon eşle"
+
 msgid "Partly Cloudy"
 msgstr "Parçalı bulutlu"
+
+msgid "Pause"
+msgstr "Duraklat"
 
 msgid "Pill Shape"
 msgstr "Hap biçimi"
@@ -273,8 +327,17 @@ msgstr "Sağanak"
 msgid "Replace Nothing's red accent with your KDE system highlight color while keeping the Nothing aesthetic."
 msgstr "Nothing görünümünü koruyarak kırmızı vurgu yerine KDE sistem vurgu rengini kullanır."
 
+msgid "Reset"
+msgstr "Sıfırla"
+
 msgid "Right-click to configure"
 msgstr "Ayarlamak için sağ tıklayın"
+
+msgid "Ring the phone"
+msgstr "Telefonu çaldır"
+
+msgid "Rounds before a long break:"
+msgstr "Uzun moladan önceki tur:"
 
 msgid "SAT"
 msgstr "CMT"
@@ -321,6 +384,9 @@ msgstr "Tarihi göster"
 msgid "Show time in 24-hour format (e.g., 14:30) instead of 12-hour format (e.g., 2:30)"
 msgstr "Saati 12 saat biçimi (ör. 2:30) yerine 24 saat biçiminde (ör. 14:30) gösterir"
 
+msgid "Skip"
+msgstr "Atla"
+
 msgid "Slight Rain"
 msgstr "Hafif yağmur"
 
@@ -341,6 +407,9 @@ msgstr "Kar"
 
 msgid "Snow Grains"
 msgstr "Kar taneleri"
+
+msgid "Start"
+msgstr "Başlat"
 
 msgid "Stretch"
 msgstr "Uzat"
@@ -375,6 +444,9 @@ msgstr "Dolu ve gök gürültülü fırtına"
 msgid "Time Zone:"
 msgstr "Saat dilimi:"
 
+msgid "Time for a break."
+msgstr "Mola zamanı."
+
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
@@ -404,6 +476,9 @@ msgstr "ÇAR"
 
 msgid "World Clock"
 msgstr "Dünya saati"
+
+msgid "Write something…"
+msgstr "Bir şeyler yaz…"
 
 msgid "can be changed later in configuration"
 msgstr "daha sonra ayarlardan değiştirilebilir"

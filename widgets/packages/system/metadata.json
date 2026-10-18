@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "System Information",
+    "Description": "CPU and memory as dot rings, with temperature and network speed.",
+    "EnabledByDefault": true,
+    "Icon": "utilities-system-monitor",
+    "Id": "org.nothingkde.widget.system",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — System Monitor",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Sistem İzleyici"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

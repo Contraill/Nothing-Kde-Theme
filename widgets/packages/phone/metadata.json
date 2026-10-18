@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "System Information",
+    "Description": "Battery of the phone paired with KDE Connect, with ring and open actions.",
+    "EnabledByDefault": true,
+    "Icon": "smartphone",
+    "Id": "org.nothingkde.widget.phone",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Phone",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Telefon"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "Utilities",
+    "Description": "A sticky note that saves as you type.",
+    "EnabledByDefault": true,
+    "Icon": "knotes",
+    "Id": "org.nothingkde.widget.note",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Note",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Not"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

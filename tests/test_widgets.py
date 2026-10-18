@@ -12,8 +12,15 @@ PACKAGES = ROOT / 'widgets/packages'
 
 
 class WidgetTests(unittest.TestCase):
-    def test_eight_desktop_only_packages(self):
-        self.assertEqual(len(list(PACKAGES.iterdir())), 8)
+    def test_desktop_only_packages(self):
+        # Every package is installed and removed by name.
+        install = (ROOT / 'widgets/install.sh').read_text()
+        uninstall = (ROOT / 'uninstall.sh').read_text()
+        names = sorted(p.name for p in PACKAGES.iterdir())
+        self.assertEqual(len(names), 12)
+        self.assertIn('for name in ' + ' '.join(names) + '; do', install)
+        for name in names:
+            self.assertIn('org.nothingkde.widget.' + name, uninstall)
         for package in PACKAGES.iterdir():
             metadata = json.loads((package / 'metadata.json').read_text())
             self.assertEqual(metadata['X-Plasma-FormFactors'], ['planar'])
@@ -25,6 +32,15 @@ class WidgetTests(unittest.TestCase):
                 text = qml.read_text()
                 for removed in ('compactRepresentation:', 'Plasmoid.formFactor', 'plasmoid.configuration', 'evaluateScript', 'systemctl'):
                     self.assertNotIn(removed, text, str(qml))
+
+    def test_widget_explorer_previews_and_recolourable_icons(self):
+        for package in PACKAGES.iterdir():
+            # Plasma's Add Widgets view reads the package's "screenshot" file.
+            self.assertTrue((package / 'contents/screenshot.png').is_file(), package.name)
+            for svg in package.rglob('*.svg'):
+                text = svg.read_text()
+                # isMask icons only take the theme colour through the stylesheet class.
+                self.assertNotRegex(text, r'fill="(white|#fff|#ffffff)"', str(svg))
 
     def test_default_mode_and_accent_follow_kde(self):
         for package in PACKAGES.iterdir():
