@@ -20,8 +20,12 @@ in Turkish and English; no custom daemon is required.
 Requires Plasma 6.7, Qt 6.10+, Bash, Python 3, `kpackagetool6`, `qdbus6`, and KDE
 package/configuration tools.
 
-Optional backends used by related controls: NetworkManager (`nmcli`), PipeWire (`wpctl`,
-`pactl`), BlueZ, PowerDevil, `brightnessctl`, `upower`, and `powerprofilesctl`.
+Island controls use Plasma's own components, so they behave like Plasma's applets:
+plasma-nm (Wi-Fi, hotspot, airplane mode), plasma-pa (volume, microphone, recording
+indicator), bluez-qt (Bluetooth), PowerDevil (battery, every display's brightness, keyboard
+backlight), libksysguard (CPU/RAM/GPU) and plasma-workspace (notifications, calendar).
+KDE Connect is optional (phone battery) and `powerprofilesctl` switches power profiles.
+`install.sh` warns when a component is missing.
 
 ```sh
 git clone https://github.com/Contraill/Nothing-Kde-Theme.git
@@ -97,27 +101,32 @@ connect `sync` to that theme's color change path. There is no separate daemon.
 Glassy targets Qt Widgets. System Settings' Qt Quick pages, GTK applications, and Electron
 content are outside Kvantum's scope and may remain opaque.
 
-**Important:** Qt palettes update live in running applications, but cached Kvantum surfaces
-and SVG control colors do not all update live yet. Eleven unnecessary color overrides were
-removed, and restarting applications is not treated as a final solution. See the
-[live-palette audit](assets/kvantum/LIVE-PALETTE.md) and
-[Glassy integration notes](assets/kvantum/README.md).
+Kvantum surfaces update live. Kvantum caches its SVG, so a palette change is rendered into
+the inactive one of two identical Glassy style slots (`kvantum` / `kvantum-dark`) and KDE is
+switched to it; running Qt applications reload the style without being restarted. See the
+[live-palette notes](assets/kvantum/LIVE-PALETTE.md) and
+[Glassy integration notes](assets/kvantum/README.md). Only when Glassy runs under another
+style name does a light/dark switch show one notification that open applications may need
+reopening.
 
-On an actual light/dark transition, if running Kvantum applications are detected, one
-deduplicated native notification explains that some open applications may need to be reopened.
-Startup and accent-only updates stay silent. No application is restarted automatically.
+The window decoration offers three button styles (line, dots, traffic lights) and an
+**opaque applications** list for programs that need a solid frame (Krita, OBS, Shotcut and
+Kvantum's defaults out of the box). Updating the decoration reloads it in KWin.
 
 ## Optional integrations
 
 ```sh
 ./install.sh --dolphin apply
 ./install.sh --dolphin restore
-./install.sh --accent-links enable fastfetch   # starship | spaceship | fastfetch
+./install.sh --accent-links enable fastfetch   # starship | spaceship | fastfetch | gtk
 ./install.sh --accent-links disable all
 ```
 
 Accent links can also be managed from the island's settings. Starship/Fish and Spaceship/Zsh
 need a new terminal after first enabling the integration; Fastfetch updates on its next run.
+`gtk` gives libadwaita (GTK 4) applications the exact KDE accent instead of the nearest
+Adwaita color; it writes a marked block into `~/.config/gtk-4.0/gtk.css`, which
+kde-gtk-config leaves in place, and applies to newly opened windows.
 
 Starship uses contrast-aware segment foregrounds and KDE palette text. The original prompt
 layout/configuration is preserved, and linked colors update on the next prompt render.
@@ -126,6 +135,11 @@ Expand the island and left-click the gear for island settings; right-click it fo
 Settings. The island can switch Light/Dark mode and provides a visual color picker or manual
 HEX input for the accent. The persistent accent source is KDE `General/AccentColor`; startup
 and mode switching preserve it. Closing the picker discards unapplied changes.
+
+**Automatic at sunrise / sunset** turns on Plasma's own automatic Global Theme switching with
+the Nothing Light and Dark packages; the times come from Plasma's day/night settings
+(location or fixed times). When Plasma switches, the island finishes the change for Kvantum,
+wallpapers and the other panels. Choosing Light or Dark by hand turns it off.
 
 If Kitty is installed, the integration manages Kitty's official
 `light-theme.auto.conf`, `dark-theme.auto.conf`, and `no-preference-theme.auto.conf` files.
@@ -234,6 +248,23 @@ Store-only recovery helper:
 ~/.local/share/plasma/plasmoids/com.nothingplasma.panel/contents/tools/privacy.py
 ```
 
+## Island and dock
+
+The compact island shows workspaces, weather, the clock, media, and live activities: file
+transfer progress, a microphone-in-use dot and the phone's battery from KDE Connect. Volume,
+mute and microphone changes briefly replace the clock (Plasma's own audio OSD is turned off
+while this is enabled). Workspaces, weather, clock, player, network, volume, battery and
+phone can each be hidden in island settings.
+
+The expanded island's cards open detail pages with the chevron or a right-click: Wi-Fi
+(join, forget, share as QR code, hotspot, airplane mode), Bluetooth (pair, connect, battery),
+output and input device selection with both volumes and a live microphone level, and
+brightness for every display plus the keyboard. Hovering the battery shows the remaining time and battery health.
+
+Notifications support actions, inline replies and grouping by application. Do Not Disturb
+stays on until it is turned off. The calendar marks holidays (Plasma's holiday regions) and,
+optionally, moon phases.
+
 Click the island weather area to choose a city or refresh the data. Open-Meteo receives the
 city search/coordinates and your IP; no API key is needed.
 [Weather data](https://open-meteo.com/) uses CC BY 4.0. The selected location is stored in
@@ -246,6 +277,13 @@ The island's appearance settings include **Show system tray** and **Configure tr
 The latter opens KDE's native per-application visibility settings and remains available when
 the entire tray is hidden. These choices persist in Plasma configuration; updating Nothing
 does not reset an existing tray. Application icons appear between the player and battery.
+
+Meta+1 … Meta+9 open or cycle the dock's applications, the mouse wheel cycles an icon's
+windows, and dropping files on an icon opens them with that application. Icons show unread
+notification badges (following Plasma's task-manager badge settings), a progress ring for
+running transfers and a window count. Launcher settings can limit the dock to the current
+desktop or screen. The launcher's top row lists the most used applications, and typing
+anywhere starts a search.
 
 Drag dock icons to preview a new order; releasing commits it once. Releasing above or below
 the dock cancels the move. Right-click menus include actions supplied by the application's
