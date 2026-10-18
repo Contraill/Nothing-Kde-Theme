@@ -297,8 +297,11 @@ PlasmoidItem {
             // Build a flat device list: main battery (if present) + BT devices
             // Devices flow into a 2x2 grid: top-left, top-right, bottom-left, bottom-right
             readonly property int deviceCount: (root.showMainBattery ? 1 : 0) + root.bluetoothDevices.length
-            readonly property real cellWidth: (width - 40) / 2
-            readonly property real cellHeight: (height - 40) / 2
+            // One device fills the card, two sit side by side, more use the 2x2 grid.
+            readonly property int columns: deviceCount > 1 ? 2 : 1
+            readonly property int rows: deviceCount > 2 ? 2 : 1
+            readonly property real cellWidth: (width - 30 - (columns - 1) * 10) / columns
+            readonly property real cellHeight: (height - 30 - (rows - 1) * 10) / rows
 
             // Helper to get device info by slot index
             function slotDevice(slot) {
@@ -315,12 +318,10 @@ PlasmoidItem {
             }
 
             // Grid positions
-            readonly property var gridPositions: [
-                { x: 15, y: 15 },                              // top-left
-                { x: 15 + cellWidth + 10, y: 15 },             // top-right
-                { x: 15, y: 15 + cellHeight + 10 },            // bottom-left
-                { x: 15 + cellWidth + 10, y: 15 + cellHeight + 10 } // bottom-right
-            ]
+            readonly property var gridPositions: [0, 1, 2, 3].map(slot => ({
+                x: 15 + (slot % columns) * (cellWidth + 10),
+                y: 15 + Math.floor(slot / columns) * (cellHeight + 10)
+            }))
 
             // Slot 0 - top left
             Item {
