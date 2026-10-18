@@ -6,7 +6,7 @@
 
 Sources (SIL OFL 1.1, no Reserved Font Name), from github.com/google/fonts:
   bitcount  ofl/bitcountsingle  weight 375, stylistic set 2 baked in (5x7 digits and
-                                capitals instead of 5x6), rows spread 1.18x, colon centred (in use)
+                                capitals instead of 5x6), rows spread 1.1x, colon centred (in use)
   doto      ofl/doto            round heavy dots; its ":" "." ";" use five-dot
                                 crosses and "%" small rings, which read as "※"
                                 at panel sizes, so they get single dots
@@ -19,7 +19,7 @@ from fontTools.varLib import instancer
 
 FAMILY = 'Nothing Dots'
 # Row pitch over column pitch for bitcount: taller digits with round dots.
-ROW_STRETCH = 1.18
+ROW_STRETCH = 1.1
 FONTS = {
     'bitcount': {'wght': 375, 'ELSH': 0, 'ELXP': 0, 'slnt': 0, 'CRSV': 0},
     'doto': {'ROND': 100, 'wght': 900},
