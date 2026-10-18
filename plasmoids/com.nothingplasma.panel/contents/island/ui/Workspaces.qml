@@ -1,5 +1,6 @@
 import QtQuick
 import org.kde.taskmanager as TaskManager
+import org.kde.plasma.workspace.dbus as DBus
 import "."
 Item {
     id: root
@@ -10,7 +11,11 @@ Item {
     function activate(id) {
         if (!id)
             return;
-        Exec.run('qdbus6 org.kde.KWin /VirtualDesktopManager org.kde.KWin.VirtualDesktopManager.current ' + Exec.quote(id));
+        if (Backend.preview) return;
+        // Set KWin's property over D-Bus directly instead of spawning qdbus6.
+        DBus.SessionBus.asyncCall({service: "org.kde.KWin", path: "/VirtualDesktopManager",
+            iface: "org.freedesktop.DBus.Properties", member: "Set", signature: "(ssv)",
+            arguments: ["org.kde.KWin.VirtualDesktopManager", "current", new DBus.variant(String(id))]});
     }
 
     function step(delta) {
