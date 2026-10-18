@@ -206,6 +206,7 @@ fi
 # Make both Nothing scheme files reflect the user's live KDE accent so the
 # System Settings preview and the panels use the same color from first install.
 "$DATA_HOME/nothing-plasma/bin/nothing-control.sh" accent init >/dev/null 2>&1 || true
+"$DATA_HOME/nothing-plasma/bin/nothing-control.sh" cleanup-shortcuts >/dev/null 2>&1 || true
 if (( ! PANEL_ONLY )); then python3 "$ROOT/runtime/kitty-theme.py" install; fi
 
 if command -v kbuildsycoca6 >/dev/null 2>&1; then

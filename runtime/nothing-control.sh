@@ -410,6 +410,23 @@ retire_legacy_inhibitors() {
   done
 }
 
+cleanup_widget_shortcuts() {
+  # "activate widget N" shortcuts outlive their applets. Dead ones keep holding
+  # keys (old Nothing launchers held Alt+F1), so drop entries whose applet or
+  # containment id no longer exists. Shortcuts of live widgets are untouched.
+  command -v busctl >/dev/null 2>&1 || return 0
+  command -v qdbus6 >/dev/null 2>&1 || return 0
+  local appletsrc="$CONFIG_HOME/plasma-org.kde.plasma.desktop-appletsrc" names name id
+  [[ -f "$appletsrc" ]] || return 0
+  names="$(qdbus6 org.kde.kglobalaccel /component/plasmashell org.kde.kglobalaccel.Component.shortcutNames 2>/dev/null)" || return 0
+  while IFS= read -r name; do
+    [[ "$name" =~ ^activate\ widget\ ([0-9]+)$ ]] || continue
+    id="${BASH_REMATCH[1]}"
+    grep -qE "^\[Containments\]\[$id\]$|\]\[Applets\]\[$id\]$" "$appletsrc" && continue
+    busctl --user call org.kde.kglobalaccel /kglobalaccel org.kde.KGlobalAccel unregister ss plasmashell "$name" >/dev/null 2>&1 || true
+  done <<< "$names"
+}
+
 gpu_power() {
   # One line per GPU: PCI vendor, boot_vga (1 = integrated/primary) and runtime
   # PM state. Reading sysfs never wakes a suspended discrete GPU.
@@ -470,6 +487,9 @@ case "${1:-}" in
   gpu-power)
     gpu_power
     ;;
+  cleanup-shortcuts)
+    cleanup_widget_shortcuts
+    ;;
   *)
     cat >&2 <<'USAGE'
 usage:
@@ -481,6 +501,7 @@ usage:
   nothing-control.sh lockscreen-wallpaper <dark|light>
   nothing-control.sh retire-inhibitors
   nothing-control.sh gpu-power
+  nothing-control.sh cleanup-shortcuts
 USAGE
     exit 2
     ;;
