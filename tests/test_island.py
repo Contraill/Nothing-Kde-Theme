@@ -59,6 +59,14 @@ class IslandTests(unittest.TestCase):
         self.assertIn('root.model.reply(', notifs)
         self.assertNotIn('NM.Server.inhibited =', notifs)
 
+    def test_coffee_mode_survives_shell_restarts(self):
+        coffee = (UI / 'Coffee.qml').read_text()
+        self.assertIn('BatteryMonitor.InhibitionControl', coffee)
+        self.assertIn('root.panelConfig.coffeeMode = enabled', coffee)
+        self.assertIn('(root.panelConfig?.coffeeMode ?? false) && !root.active', coffee)
+        self.assertIn('Binding { target: Island.Coffee; property: "panelConfig"', (UI.parent.parent / 'ui/TopPanel.qml').read_text())
+        self.assertIn('Coffee.toggle()', (UI / 'QuickActions.qml').read_text())
+
     def test_fonts_and_attribution_are_bundled(self):
         base = UI.parent
         for file in ('LICENSE', 'NOTICE.md', 'fonts/OFL-1.1.txt', 'fonts/Apache-2.0.txt',

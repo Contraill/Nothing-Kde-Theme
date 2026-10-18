@@ -1,13 +1,11 @@
 import QtQuick
 import org.kde.kcmutils as KCMUtils
-import org.kde.plasma.private.batterymonitor as BatteryMonitor
 import "."
 Row {
     id: root
     spacing: 8
 
-    readonly property bool coffee: inhibition.isManuallyInhibited
-    BatteryMonitor.InhibitionControl { id: inhibition }
+    readonly property bool coffee: Coffee.active
     signal requestNotifs
     signal requestPower
     signal requestSettings
@@ -100,9 +98,7 @@ Row {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: {
-                if (Backend.preview) return;
-                if (root.coffee) inhibition.uninhibit();
-                else inhibition.inhibit("Nothing KDE · " + Cfg.t("COFFEE MODE"));
+                Coffee.toggle();
             }
         }
     }

@@ -36,6 +36,8 @@ Item {
     Binding { target: Island.Backend; property: "appletItem"; value: root.appletItem }
     Binding { target: Island.Backend; property: "stats"; value: stats }
     Binding { target: Island.Backend; property: "expanded"; value: popup.visible }
+    // Creating the singleton here restores coffee mode at shell start.
+    Binding { target: Island.Coffee; property: "panelConfig"; value: Plasmoid.configuration }
     Binding { target: Island.Cfg; property: "lang"; value: Plasmoid.configuration.islandLanguage }
     Binding { target: Island.Cfg; property: "showClock"; value: Plasmoid.configuration.showClock }
     Binding { target: Island.Cfg; property: "showWorkspaces"; value: Plasmoid.configuration.showWorkspaces }
