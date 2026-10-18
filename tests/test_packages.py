@@ -111,7 +111,7 @@ class PackageTests(unittest.TestCase):
                 with zipfile.ZipFile(archive) as package:
                     plugin = json.loads(package.read('metadata.json'))['KPlugin']['Id']
                     if plugin.endswith('.photo'):
-                        self.assertIn('contents/default/nothing.png', package.namelist())
+                        self.assertIn('contents/default/halftone.png', package.namelist())
                         self.assertNotIn('contents/default/sample.jpeg', package.namelist())
                 for action, target in (('--install', str(archive)), ('--upgrade', str(archive)), ('--remove', plugin)):
                     result = subprocess.run(['kpackagetool6', '--type', 'Plasma/Applet', action, target],

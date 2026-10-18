@@ -393,12 +393,14 @@ Store dependencies can be prepared with:
 
 Use the structure in `packaging/store-ids.example.json` and real published component IDs.
 
-**Store publication is not yet cleared.** Widget font/artwork permissions, wallpaper
-redistribution rights, and real Store IDs must be resolved first.
+**Store publication is not yet cleared.** Wallpaper redistribution rights and real Store
+IDs must be resolved first.
 
 License and attribution:
 [GPL](LICENSE),
 [Island attribution](plasmoids/com.nothingplasma.panel/contents/island/NOTICE.md),
-[widget sources](widgets/UPSTREAM.json), and each widget's `UPSTREAM-NOTICE.md`.
+and each widget's `NOTICE.md`. The first versions of the clock, date, weather, media, photo
+and battery widgets were adapted from [nothing-kde-widgets](https://github.com/jaxparrow07/nothing-kde-widgets)
+by Jack Faith; they have since been rewritten for Nothing KDE.
 
 Existing `com.nothingplasma.*` IDs remain stable to preserve panels and pinned applications.

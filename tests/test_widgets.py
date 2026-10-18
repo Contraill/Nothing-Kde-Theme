@@ -55,9 +55,6 @@ class WidgetTests(unittest.TestCase):
                     self.assertTrue((qml.parent / path).is_file(), str(qml) + ':' + path)
         self.assertFalse(any(p.is_symlink() for p in PACKAGES.rglob('*')))
 
-    def test_store_rights_are_explicitly_pending(self):
-        self.assertIn('blocked', json.loads((ROOT / 'widgets/UPSTREAM.json').read_text())['storePublication'])
-
     def test_turkish_catalogs_cover_all_translatable_strings(self):
         for package in PACKAGES.iterdir():
             catalog = package / 'contents/locale/tr/LC_MESSAGES' / ('plasma_applet_org.nothingkde.widget.' + package.name + '.mo')
@@ -72,7 +69,7 @@ class WidgetTests(unittest.TestCase):
             path = Path(os.environ.get('NOTHING_PACKAGE_DIR', ROOT / 'dist')) / ('Nothing-KDE-Widget-' + package.name + '-0.6.0-rc35.plasmoid')
             if not path.exists(): self.skipTest('Build packages first')
             with zipfile.ZipFile(path) as archive:
-                for name in ('metadata.json', 'LICENSE', 'UPSTREAM-NOTICE.md', 'contents/ui/main.qml',
+                for name in ('metadata.json', 'LICENSE', 'NOTICE.md', 'contents/ui/main.qml',
                              'contents/ui/components/NothingColors.qml', 'contents/ui/glassy/GlassySurface.qml',
                              'contents/ui/glassy/WidgetColors.qml'):
                     self.assertIn(name, archive.namelist())

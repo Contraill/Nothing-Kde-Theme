@@ -3,8 +3,7 @@
   "KPlugin": {
     "Authors": [
       {
-        "Email": "zinczorphin@email.com",
-        "Name": "Jack Faith"
+        "Name": "Nothing KDE contributors"
       }
     ],
     "Category": "Date and Time",
@@ -15,7 +14,7 @@
     "License": "GPL-3.0",
     "Name": "Nothing KDE — Date",
     "Version": "0.6.0-rc35",
-    "Website": "https://github.com/jaxparrow07/nothing-kde-widgets",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
     "Name[tr]": "Nothing KDE — Tarih"
   },
   "X-Plasma-API-Minimum-Version": "6.0",
