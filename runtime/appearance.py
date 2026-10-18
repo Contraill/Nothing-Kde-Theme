@@ -31,6 +31,11 @@ THEME = ('kwinrc', 'org.kde.kdecoration2', 'theme')
 SCHEME = ('kdeglobals', 'General', 'ColorScheme')
 KVTHEME = ('Kvantum/kvantum.kvconfig', 'General', 'theme')
 BLUR = ('kwinrc', 'Plugins', 'blurEnabled')
+# Kvantum builds its surfaces once per style object, and KDE's platform plugin
+# recreates the style only when the style *name* changes. Kvantum's two style
+# keys load different files from the same theme folder, so every sync writes the
+# inactive slot and flips the name: running applications reload live.
+SLOTS = {'kvantum': 'Glassy', 'kvantum-dark': 'GlassyDark'}
 
 
 def run(*args, check=True):
@@ -151,16 +156,43 @@ def dependencies(state, qt5=False):
         save(state)
 
 
+def slot_current(slot, svg, config):
+    files = [(KV / (slot + '.svg'), svg), (KV / (slot + '.kvconfig'), config)]
+    return all(path.is_file() and path.read_bytes() == (data.encode() if isinstance(data, str) else data)
+               for path, data in files)
+
+
+def flip_style(state, value):
+    """Owned switch between the two Kvantum slots; rollback keeps the original style."""
+    keys = state.setdefault('keys', [])
+    item = next((item for item in keys if item['key'] == list(STYLE)), None)
+    if item is None:
+        item = {'key': list(STYLE), 'before': read(STYLE)}
+        keys.append(item)
+    item['after'] = value
+    save(state)
+    write(STYLE, value)
+
+
 def sync(state):
     if not state.get('enabled') or read(KVTHEME) != 'Glassy': return
     p = palette()
     options = glassy_settings()
-    owned_file(state, KV / 'Glassy.svg', render(p, options))
-    owned_file(state, KV / 'Glassy.kvconfig', config_text(p, options))
-    # Palette changes can concern only omitted roles (e.g. link/text colors).
-    # Deliver the native notification even when both assets are byte-identical.
-    # This updates QApplication's palette, not Kvantum's cached standardPalette.
-    notify()
+    svg, config = render(p, options), config_text(p, options)
+    style = read(STYLE)
+    if style not in SLOTS or slot_current(SLOTS[style], svg, config):
+        # Another widget style, or nothing changed for the active slot: refresh
+        # the default slot and deliver the palette notification (text/link roles).
+        if style not in SLOTS:
+            owned_file(state, KV / 'Glassy.svg', svg)
+            owned_file(state, KV / 'Glassy.kvconfig', config)
+        notify()
+        return
+    target = next(name for name in SLOTS if name != style)
+    owned_file(state, KV / (SLOTS[target] + '.svg'), svg)
+    owned_file(state, KV / (SLOTS[target] + '.kvconfig'), config)
+    flip_style(state, target)
+    notify(style=True)
 
 
 def config_text(p, options=None):
@@ -203,6 +235,8 @@ def notify_cached_apps(state, previous, current):
     transition = [session, previous, current]
     notice = state.setdefault('palette_notice', {})
     if notice.get('transition') == transition: return
+    # Glassy reloads live through the slot flip; nothing needs reopening.
+    if read(STYLE) in SLOTS: return
     old_session = notice.get('session')
     notice['transition'] = transition
     if read(KVTHEME) != 'Glassy' or not running_kvantum_apps() or not shutil.which('notify-send'): return
@@ -299,7 +333,7 @@ def install(state, qt5=False):
     if before != tuple(read(key) for key in (STYLE, LIBRARY, THEME, KVTHEME, BLUR)):
         notify(style=True)
     print('Glassy application style + decoration installed. Existing dependencies and unrelated appearance settings retained.')
-    print('Native palette updates enabled; cached Kvantum surfaces still limit full live switching. No applications are restarted.')
+    print('Palette, accent and Glassy setting changes reload live in running KDE applications; none are restarted.')
 
 
 def restore(state, remove=False):

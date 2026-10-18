@@ -39,6 +39,47 @@ class AppearanceTests(unittest.TestCase):
             app.sync({'enabled':True})
             notify.assert_called_once_with()
 
+    def _sync_with_style(self, style, kv, state):
+        values = {app.KVTHEME: 'Glassy', app.STYLE: style}
+        writes = []
+        with patch.object(app, 'KV', kv), patch.object(app, 'read', side_effect=lambda key: values[tuple(key)]), \
+             patch.object(app, 'write', side_effect=lambda key, value: (writes.append((tuple(key), value)), values.__setitem__(tuple(key), value))), \
+             patch.object(app, 'palette', return_value={}), patch.object(app, 'glassy_settings', return_value={}), \
+             patch.object(app, 'render', return_value='<svg id="new"/>'), patch.object(app, 'config_text', return_value='[General]\n'), \
+             patch.object(app, 'save'), patch.object(app, 'notify') as notify:
+            app.sync(state)
+        return writes, notify
+
+    def test_changed_palette_loads_through_the_other_kvantum_slot(self):
+        with tempfile.TemporaryDirectory() as td:
+            kv = Path(td); state = {'enabled': True}
+            writes, notify = self._sync_with_style('kvantum', kv, state)
+            self.assertEqual((kv / 'GlassyDark.svg').read_text(), '<svg id="new"/>')
+            self.assertEqual(writes, [(app.STYLE, 'kvantum-dark')])
+            notify.assert_called_once_with(style=True)
+            # Ownership keeps the original style for rollback.
+            self.assertEqual(state['keys'][0], {'key': list(app.STYLE), 'before': 'kvantum', 'after': 'kvantum-dark'})
+            # The next change flips back into the light slot.
+            (kv / 'GlassyDark.svg').write_text('stale')
+            state['files'][str(kv / 'GlassyDark.svg')]['after'] = app.digest(b'stale')
+            writes, notify = self._sync_with_style('kvantum-dark', kv, state)
+            self.assertEqual(writes, [(app.STYLE, 'kvantum')])
+
+    def test_unchanged_slot_only_refreshes_the_palette(self):
+        with tempfile.TemporaryDirectory() as td:
+            kv = Path(td)
+            (kv / 'Glassy.svg').write_text('<svg id="new"/>'); (kv / 'Glassy.kvconfig').write_text('[General]\n')
+            writes, notify = self._sync_with_style('kvantum', kv, {'enabled': True})
+            self.assertEqual(writes, [])
+            notify.assert_called_once_with()
+
+    def test_restore_returns_from_the_dark_slot(self):
+        state = {'keys': [{'key': list(app.STYLE), 'before': 'Breeze', 'after': 'kvantum-dark'}]}
+        with patch.object(app, 'read', return_value='kvantum-dark'), patch.object(app, 'write') as write, \
+             patch.object(app, 'save'), patch.object(app, 'notify'):
+            app.restore(state)
+            write.assert_called_once_with(list(app.STYLE), 'Breeze')
+
     def test_svg_uses_only_supplied_palette_and_valid_ids(self):
         palette = dict(window='#101112', text='#f0f1f2', base='#202122', button='#303132',
                        highlight='#806ee7', highlight_text='#fafafa')

@@ -1,5 +1,27 @@
 # Glassy: live palette audit
 
+## 2026-10-18: live switching solved through Kvantum's two style keys
+
+Kvantum registers two style keys, `kvantum` and `kvantum-dark`. The second loads
+`<Theme>Dark.kvconfig`/`.svg` from the same theme folder. KDE's platform plugin
+recreates the application style on a `StyleChanged` notification only when the
+configured style **name** differs from the running one (`khintssettings.cpp`), and
+a new Kvantum style object reads its theme files from scratch.
+
+`appearance.py sync` therefore writes changed surfaces into the inactive slot
+(`Glassy.*` or `GlassyDark.*`) and flips `[KDE] widgetStyle` between the two keys.
+Light/dark switches, accent-only changes and Glassy setting changes all reload in
+running KDE applications. Verified with a Qt Widgets probe (button surface
+`#dcdcdc → #232323 → #dcdcdc`, then a rewritten SVG picked up on the way back) and
+with a real Dolphin process that kept its PID through dark → light → dark.
+Ownership/rollback treats both keys as Glassy's own selection.
+
+Applications that do not use KDE's platform plugin are unaffected, as before.
+
+---
+
+The audit below predates this change and is kept for its measurements.
+
 2026-09-14 · Plasma 6.7.5 / Wayland · Kvantum 1.1.8 / Qt 6.11.
 
 This is **not** a report claiming that full live switching has been solved.
