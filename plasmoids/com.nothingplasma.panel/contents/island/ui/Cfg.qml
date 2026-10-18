@@ -406,7 +406,8 @@ QtObject {
         "WIFI HARDWARE OFF": ["Wi-Fi donanım anahtarıyla kapalı", "Wi-Fi is off by its hardware switch"],
         "NOT CONNECTED": ["BAĞLI DEĞİL", "NOT CONNECTED"],
         "NO OTHER NETWORKS": ["Başka ağ bulunamadı", "No other networks found"],
-        "NO NEARBY DEVICES": ["Yakında cihaz bulunamadı", "No nearby devices found"]
+        "NO NEARBY DEVICES": ["Yakında cihaz bulunamadı", "No nearby devices found"],
+        "GPU ASLEEP": ["UYKUDA", "ASLEEP"]
 })
 
     function t(clave) {

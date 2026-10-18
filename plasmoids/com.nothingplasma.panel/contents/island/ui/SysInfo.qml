@@ -10,5 +10,7 @@ QtObject {
     readonly property string memShort: memText
     readonly property int gpu: stats?.gpuPercent ?? -1
     readonly property int gpuTemp: stats?.gpuTemperature ?? -1
-    readonly property bool gpuAvailable: gpu >= 0
+    readonly property bool gpuAvailable: stats?.gpuAvailable ?? false
+    // A suspended discrete GPU is left asleep and reported as such.
+    readonly property bool gpuAsleep: stats?.gpuAsleep ?? false
 }

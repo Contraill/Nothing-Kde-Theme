@@ -144,9 +144,10 @@ Column {
     Meter {
         icon: "developer_board"
         label: "GPU"
-        value: SysInfo.gpu / 100
-        temp: SysInfo.gpuAvailable ? SysInfo.gpuTemp : -1
-        valorAncho: root.anchoValor
+        value: SysInfo.gpuAsleep ? 0 : SysInfo.gpu / 100
+        temp: SysInfo.gpuAvailable && !SysInfo.gpuAsleep ? SysInfo.gpuTemp : -1
+        valorAncho: SysInfo.gpuAsleep ? 66 : root.anchoValor
+        valorTexto: SysInfo.gpuAsleep ? Cfg.t("GPU ASLEEP") : ""
         accent: SysInfo.gpu > 85 ? Theme.error : Theme.secondary
         visible: SysInfo.gpuAvailable
     }

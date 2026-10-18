@@ -410,42 +410,17 @@ retire_legacy_inhibitors() {
   done
 }
 
-system_stats() {
-  local total idle mem_total mem_avail mem_pct disk_pct rx tx temp gpu gpu_temp
-  read -r _ u n sy id wa irq sirq st _ < /proc/stat
-  total=$((u+n+sy+id+wa+irq+sirq+st))
-  idle=$((id+wa))
-
-  mem_total="$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)"
-  mem_avail="$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)"
-  if [[ -n "$mem_total" && "$mem_total" -gt 0 ]]; then
-    mem_pct=$(( (mem_total - mem_avail) * 100 / mem_total ))
-  else
-    mem_pct=0
-  fi
-
-  disk_pct="$(df -P / 2>/dev/null | awk 'NR==2 {gsub(/%/,"",$5); print $5}')"
-  read -r rx tx < <(awk -F: 'NR>2 {name=$1; gsub(/[[:space:]]/,"",name); if (name != "lo") {split($2,a,/ +/); rx+=a[2]; tx+=a[10]}} END {print rx+0, tx+0}' /proc/net/dev)
-
-  temp=-1
-  for f in /sys/class/thermal/thermal_zone*/temp; do
-    [[ -r "$f" ]] || continue
-    temp="$(cat "$f" 2>/dev/null || echo -1)"
-    [[ "$temp" =~ ^[0-9]+$ ]] || temp=-1
-    if [[ "$temp" -gt 1000 ]]; then temp=$((temp / 1000)); fi
-    [[ "$temp" -ge 0 ]] && break
+gpu_power() {
+  # One line per GPU: PCI vendor, boot_vga (1 = integrated/primary) and runtime
+  # PM state. Reading sysfs never wakes a suspended discrete GPU.
+  local card vendor boot state
+  for card in /sys/class/drm/card*; do
+    [[ "${card##*/}" =~ ^card[0-9]+$ && -r "$card/device/vendor" ]] || continue
+    vendor="$(<"$card/device/vendor")"
+    boot="$(cat "$card/device/boot_vga" 2>/dev/null || echo 0)"
+    state="$(cat "$card/device/power/runtime_status" 2>/dev/null || echo unsupported)"
+    printf '%s %s %s\n' "$vendor" "$boot" "$state"
   done
-
-  gpu=-1
-  gpu_temp=-1
-  if command -v nvidia-smi >/dev/null 2>&1; then
-    IFS=',' read -r gpu gpu_temp < <(nvidia-smi --query-gpu=utilization.gpu,temperature.gpu --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' ' || true)
-    [[ "$gpu" =~ ^[0-9]+$ ]] || gpu=-1
-    [[ "$gpu_temp" =~ ^[0-9]+$ ]] || gpu_temp=-1
-  fi
-
-  printf '%s|%s|%s|%s|%s|%s|%s|%s|%s\n' \
-    "$total" "$idle" "${mem_pct:-0}" "${disk_pct:-0}" "${rx:-0}" "${tx:-0}" "${temp:-1}" "${gpu:-1}" "${gpu_temp:-1}"
 }
 
 case "${1:-}" in
@@ -492,8 +467,8 @@ case "${1:-}" in
   retire-inhibitors)
     retire_legacy_inhibitors
     ;;
-  stats)
-    system_stats
+  gpu-power)
+    gpu_power
     ;;
   *)
     cat >&2 <<'USAGE'
@@ -505,7 +480,7 @@ usage:
   nothing-control.sh wallpaper <dark|light>
   nothing-control.sh lockscreen-wallpaper <dark|light>
   nothing-control.sh retire-inhibitors
-  nothing-control.sh stats
+  nothing-control.sh gpu-power
 USAGE
     exit 2
     ;;
