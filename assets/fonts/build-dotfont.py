@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
-"""Build "Doto Nothing" from Google Fonts' variable Doto (SIL OFL 1.1).
+"""Build the theme's dot-matrix face, "Nothing Dots", from a variable font.
 
-Source: https://github.com/google/fonts/raw/main/ofl/doto/Doto%5BROND,wght%5D.ttf
-Doto declares no Reserved Font Name; the family is still renamed so a system
-Doto never shadows the bundled one.
+  build-dotfont.py bitcount BitcountSingle[CRSV,ELSH,ELXP,slnt,wght].ttf NothingDots.ttf
+  build-dotfont.py doto Doto[ROND,wght].ttf NothingDots.ttf
 
-  - a static instance with round, heavy dots (ROND 100, wght 900), close to
-    the dot-matrix look the theme had before
-  - Doto draws the dots of ":" "." ";" as five-dot crosses and "%" from small
-    rings, which read as "※" at panel sizes; they get single dots instead
+Sources (SIL OFL 1.1, no Reserved Font Name), from github.com/google/fonts:
+  bitcount  ofl/bitcountsingle  the Light instance (in use)
+  doto      ofl/doto            round heavy dots; its ":" "." ";" use five-dot
+                                crosses and "%" small rings, which read as "※"
+                                at panel sizes, so they get single dots
+The family is renamed so a system copy of the source never shadows it.
 """
 import sys
 from fontTools.ttLib import TTFont
 from fontTools.ttLib.tables._g_l_y_f import Glyph, GlyphCoordinates
 from fontTools.varLib import instancer
 
-FAMILY = 'Doto Nothing'
+FAMILY = 'Nothing Dots'
+FONTS = {
+    'bitcount': {'wght': 300, 'ELSH': 0, 'ELXP': 0, 'slnt': 0, 'CRSV': 0},
+    'doto': {'ROND': 100, 'wght': 900},
+}
 
 
 # 5x7 dot patterns, top row first; one column/row is 100 units, row 0 is the baseline.
@@ -90,29 +95,29 @@ def rename(font):
     name.setName('Regular', 2, 3, 1, 0x409)
     name.setName(FAMILY, 4, 3, 1, 0x409)
     name.setName(FAMILY.replace(' ', '') + '-Regular', 6, 3, 1, 0x409)
-    name.setName('Modified by Nothing KDE: round heavy static instance, single-dot colon.', 5, 3, 1, 0x409)
+    name.setName('Static instance built by Nothing KDE (assets/fonts/build-dotfont.py).', 5, 3, 1, 0x409)
     font['OS/2'].usWeightClass = 400
     font['OS/2'].fsSelection = (font['OS/2'].fsSelection & ~0b1100001) | 0b1000000  # REGULAR
     font['head'].macStyle = 0
 
 
-def main(source, target):
-    font = instancer.instantiateVariableFont(TTFont(source), {'ROND': 100, 'wght': 900})
+def main(kind, source, target):
+    font = instancer.instantiateVariableFont(TTFont(source), FONTS[kind])
     for table in ('STAT', 'HVAR', 'MVAR', 'avar', 'fvar', 'gvar'):
         if table in font: del font[table]
-    for name in ('period', 'semicolon'):
-        collapse_crosses(font, name)
-    draw_patterns(font)
+    if kind == 'doto':
+        for name in ('period', 'semicolon'):
+            collapse_crosses(font, name)
+        draw_patterns(font)
     rename(font)
     font.save(target)
     check = TTFont(target)
-    assert check['glyf']['colon'].numberOfContours == 2
-    assert check['glyf']['period'].numberOfContours == 1
     assert 'fvar' not in check
+    assert all(ord(c) in check.getBestCmap() for c in '0123456789:%.çğıöşüÇĞİÖŞÜ')
     print('wrote', target)
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.exit('usage: build-doto.py Doto[ROND,wght].ttf DotoNothing.ttf')
-    main(sys.argv[1], sys.argv[2])
+    if len(sys.argv) != 4 or sys.argv[1] not in FONTS:
+        sys.exit('usage: build-dotfont.py bitcount|doto SOURCE.ttf NothingDots.ttf')
+    main(*sys.argv[1:])

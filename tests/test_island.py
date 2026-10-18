@@ -113,11 +113,11 @@ class IslandTests(unittest.TestCase):
         base = UI.parent
         for file in ('LICENSE', 'NOTICE.md', 'fonts/OFL-1.1.txt', 'fonts/Apache-2.0.txt',
                      'fonts/SpaceGrotesk.ttf', 'fonts/MaterialSymbolsRounded.ttf',
-                     'fonts/DotoNothing.ttf', 'fonts/Doto-OFL.txt'):
+                     'fonts/NothingDots.ttf', 'fonts/NothingDots-OFL.txt'):
             self.assertTrue((base / file).is_file(), file)
         # One build of the dot font, shared by the panel and the desktop widgets.
-        widget_font = ROOT / 'widgets/shared/fonts/DotoNothing.ttf'
-        self.assertEqual((base / 'fonts/DotoNothing.ttf').read_bytes(), widget_font.read_bytes())
+        widget_font = ROOT / 'widgets/shared/fonts/NothingDots.ttf'
+        self.assertEqual((base / 'fonts/NothingDots.ttf').read_bytes(), widget_font.read_bytes())
         self.assertEqual(list(ROOT.glob('**/ndot*')), [])
 
     def test_no_side_panel_sources_or_state(self):
