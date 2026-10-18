@@ -12,8 +12,20 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%1 h %2 min"
+msgstr "%1 sa %2 dk"
+
+msgid "%1 left"
+msgstr "%1 kaldı"
+
+msgid "%1 min"
+msgstr "%1 dk"
+
 msgid "24-hour clock"
 msgstr "24 saat"
+
+msgid "A city, or label|latitude,longitude"
+msgstr "Bir şehir ya da ad|enlem,boylam"
 
 msgid "Add Mapping"
 msgstr "Eşleştirme ekle"
@@ -36,11 +48,17 @@ msgstr "MOLA"
 msgid "Back to focus."
 msgstr "Odaklanma zamanı."
 
+msgid "Bars"
+msgstr "Çubuklar"
+
 msgid "Basic Settings"
 msgstr "Temel ayarlar"
 
 msgid "Black and white"
 msgstr "Siyah beyaz"
+
+msgid "Block"
+msgstr "Blok"
 
 msgid "Bluetooth devices that have been connected to this system"
 msgstr "Bu sisteme daha önce bağlanmış Bluetooth cihazları"
@@ -81,14 +99,23 @@ msgstr "Kapaklı kart"
 msgid "Celsius (°C)"
 msgstr "Santigrat (°C)"
 
+msgid "Charging"
+msgstr "Şarj oluyor"
+
 msgid "Choose Style"
 msgstr "Görünüm seç"
+
+msgid "Choose a city in the settings"
+msgstr "Ayarlardan bir şehir seçin"
 
 msgid "Choose a style"
 msgstr "Bir stil seç"
 
 msgid "Choose between Celsius and Fahrenheit for temperature display."
 msgstr "Sıcaklığın gösterileceği Santigrat veya Fahrenhayt birimini seçin."
+
+msgid "Circle"
+msgstr "Daire"
 
 msgid "Circle Pages"
 msgstr "Dairesel sayfalar"
@@ -99,11 +126,20 @@ msgstr "Dairesel"
 msgid "City Name:"
 msgstr "Şehir adı:"
 
+msgid "City not found"
+msgstr "Şehir bulunamadı"
+
+msgid "City:"
+msgstr "Şehir:"
+
 msgid "Classic"
 msgstr "Klasik"
 
 msgid "Clear"
 msgstr "Açık"
+
+msgid "Cloudy"
+msgstr "Bulutlu"
 
 msgid "Convert the image to black and white (grayscale)"
 msgstr "Görseli siyah beyaza (gri tonlara) dönüştürür"
@@ -120,6 +156,9 @@ msgstr "Kırp: Çerçeveyi doldurur, görselin bir kısmını kesebilir\nSığd�
 msgid "Custom Device Icons"
 msgstr "Özel cihaz simgeleri"
 
+msgid "DISK"
+msgstr "DİSK"
+
 msgid "Dark"
 msgstr "Karanlık"
 
@@ -135,6 +174,9 @@ msgstr "Yoğun çisenti"
 msgid "Depositing Rime Fog"
 msgstr "Kırağılı sis"
 
+msgid "Desktop"
+msgstr "Masaüstü"
+
 msgid "Desktop PC"
 msgstr "Masaüstü bilgisayar"
 
@@ -149,6 +191,9 @@ msgstr "Cihaz türü:"
 
 msgid "Device name pattern"
 msgstr "Cihaz adı kalıbı"
+
+msgid "Devices"
+msgstr "Aygıtlar"
 
 msgid "Digital Clock"
 msgstr "Dijital saat"
@@ -231,6 +276,9 @@ msgstr "Sistemi izle, KDE açık/koyu düzenine uyar; vurgu rengi Nothing kırm�
 msgid "Font Style:"
 msgstr "Yazı tipi:"
 
+msgid "Forecasts by Open-Meteo (open-meteo.com, CC BY 4.0); the city name or coordinates are sent there."
+msgstr "Tahminler Open-Meteo'dan (open-meteo.com, CC BY 4.0); şehir adı ya da koordinatlar oraya gönderilir."
+
 msgid "Freezing Drizzle"
 msgstr "Dondurucu çisenti"
 
@@ -239,6 +287,12 @@ msgstr "Dondurucu yağmur"
 
 msgid "Full"
 msgstr "Tam"
+
+msgid "Full in %1"
+msgstr "%1 içinde dolar"
+
+msgid "Fully charged"
+msgstr "Tam dolu"
 
 msgid "General"
 msgstr "Genel"
@@ -315,6 +369,9 @@ msgstr "Hafif dondurucu yağmur"
 msgid "Loading..."
 msgstr "Yükleniyor..."
 
+msgid "Loading…"
+msgstr "Yükleniyor…"
+
 msgid "Location not found"
 msgstr "Konum bulunamadı"
 
@@ -342,6 +399,9 @@ msgstr "Sade"
 msgid "Month as dots"
 msgstr "Noktalarla ay"
 
+msgid "Mostly clear"
+msgstr "Çoğunlukla açık"
+
 msgid "NOTE"
 msgstr "NOT"
 
@@ -356,6 +416,9 @@ msgstr "Sonraki ay"
 
 msgid "No Image"
 msgstr "Görsel yok"
+
+msgid "No batteries"
+msgstr "Pil yok"
 
 msgid "No devices found in history"
 msgstr "Geçmişte cihaz bulunamadı"
@@ -384,6 +447,9 @@ msgstr "Telefon eşle"
 msgid "Partly Cloudy"
 msgstr "Parçalı bulutlu"
 
+msgid "Partly cloudy"
+msgstr "Parçalı bulutlu"
+
 msgid "Pause"
 msgstr "Duraklat"
 
@@ -393,11 +459,17 @@ msgstr "Hap"
 msgid "Pill Shape"
 msgstr "Hap biçimi"
 
+msgid "Pill and circles"
+msgstr "Hap ve daireler"
+
 msgid "Pill with the month's progress"
 msgstr "Ayın ilerlemesiyle hap"
 
 msgid "Play"
 msgstr "Oynat"
+
+msgid "Plugged in, not charging"
+msgstr "Takılı, şarj olmuyor"
 
 msgid "Previous"
 msgstr "Önceki"
@@ -426,8 +498,14 @@ msgstr "Sıfırla"
 msgid "Right-click to configure"
 msgstr "Ayarlamak için sağ tıklayın"
 
+msgid "Ring"
+msgstr "Halka"
+
 msgid "Ring the phone"
 msgstr "Telefonu çaldır"
+
+msgid "Rings"
+msgstr "Halkalar"
 
 msgid "Round frame"
 msgstr "Yuvarlak çerçeve"
@@ -486,6 +564,9 @@ msgstr "Tarihi göster"
 msgid "Show time in 24-hour format (e.g., 14:30) instead of 12-hour format (e.g., 2:30)"
 msgstr "Saati 12 saat biçimi (ör. 2:30) yerine 24 saat biçiminde (ör. 14:30) gösterir"
 
+msgid "Showers"
+msgstr "Sağanak"
+
 msgid "Skip"
 msgstr "Atla"
 
@@ -509,6 +590,9 @@ msgstr "Kar"
 
 msgid "Snow Grains"
 msgstr "Kar taneleri"
+
+msgid "Snow showers"
+msgstr "Kar sağanağı"
 
 msgid "Softer colour"
 msgstr "Daha yumuşak renk"
@@ -546,6 +630,12 @@ msgstr "Tema"
 msgid "Theme:"
 msgstr "Tema:"
 
+msgid "This computer"
+msgstr "Bu bilgisayar"
+
+msgid "This computer is a:"
+msgstr "Bu bilgisayar:"
+
 msgid "Thunderstorm"
 msgstr "Gök gürültülü fırtına"
 
@@ -560,6 +650,9 @@ msgstr "Mola zamanı."
 
 msgid "Two-tone dots"
 msgstr "İki tonlu noktalar"
+
+msgid "Unit:"
+msgstr "Birim:"
 
 msgid "Unknown"
 msgstr "Bilinmiyor"
@@ -587,6 +680,9 @@ msgstr "Şiddetli sağanak"
 
 msgid "WED"
 msgstr "ÇAR"
+
+msgid "Weather is unavailable"
+msgstr "Hava durumu alınamıyor"
 
 msgid "World Clock"
 msgstr "Dünya saati"

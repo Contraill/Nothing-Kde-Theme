@@ -6,6 +6,7 @@
   <kcfgfile name=""/>
 
   <group name="General">
+    <!-- -1 asks on first use; 0 full, 1 pill and circles, 2 circle, 3 pill -->
     <entry name="widgetVariant" type="Int">
       <default>-1</default>
     </entry>
