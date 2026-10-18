@@ -272,7 +272,7 @@ Grid {
             width: parent.width - soundLabel.width - soundChevron.width - 32
             horizontalAlignment: Text.AlignRight
             text: Audio.description
-            color: Theme.outline
+            color: Theme.fgDim
             font.family: Theme.font
             font.pixelSize: Theme.labelSmall
             elide: Text.ElideLeft
@@ -285,7 +285,7 @@ Grid {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 9
             text: Audio.muted ? "volume_off" : "volume_up"
-            color: Audio.muted ? Theme.outline : Audio.boosted ? Theme.alert : Theme.fgVariant
+            color: Audio.muted ? Theme.fgFaint : Audio.boosted ? Theme.alert : Theme.fgVariant
             font.family: Theme.fontIcons
             font.pixelSize: 16
 

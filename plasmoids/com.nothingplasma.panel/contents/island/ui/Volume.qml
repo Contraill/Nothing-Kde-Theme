@@ -22,7 +22,7 @@ MouseArea {
         Text {
             anchors.verticalCenter: parent.verticalCenter
             text: root.muted || root.percent === 0 ? Icons.volMute : root.percent > 50 ? Icons.volHigh : Icons.volLow
-            color: root.muted ? Theme.outline : root.percent > 100 ? Theme.alert : Theme.fg
+            color: root.muted ? Theme.fgFaint : root.percent > 100 ? Theme.alert : Theme.fg
             font.family: Theme.fontIcons
             font.pixelSize: 18
         }

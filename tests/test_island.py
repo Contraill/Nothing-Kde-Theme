@@ -91,6 +91,16 @@ class IslandTests(unittest.TestCase):
             self.assertEqual(status('false', 'com.nothingplasma.light', 'com.nothingplasma.dark'), 'off')
         self.assertIn('auto-theme off', (ROOT / 'uninstall.sh').read_text())
 
+    def test_player_switcher_skips_proxies_and_text_is_readable(self):
+        media = (UI / 'Media.qml').read_text()
+        self.assertIn('objectName === "playerctld"', media)
+        self.assertIn('!row.multiplexer && !row.proxy', media)
+        self.assertIn('Media.controls(modelData)', (UI / 'MediaCard.qml').read_text())
+        # outline is a border tone; text directly followed by it is unreadable.
+        for file in UI.glob('*.qml'):
+            self.assertNotRegex(file.read_text(), r'\n\s*text: [^\n]*\n\s*color: Theme\.outline\n', str(file))
+        self.assertIn('color: Theme.fgDim', (UI / 'StatusPills.qml').read_text().split('text: Audio.description', 1)[1].split('\n')[1])
+
     def test_coffee_mode_survives_shell_restarts(self):
         coffee = (UI / 'Coffee.qml').read_text()
         self.assertIn('BatteryMonitor.InhibitionControl', coffee)

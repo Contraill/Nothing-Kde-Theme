@@ -508,7 +508,7 @@ Item {
                         anchors.rightMargin: 10
                         anchors.verticalCenter: parent.verticalCenter
                         text: "expand_more"
-                        color: cr.abierto || detMa.containsMouse ? Theme.fg : Theme.outline
+                        color: cr.abierto || detMa.containsMouse ? Theme.fg : Theme.fgFaint
                         font.family: Theme.fontIcons
                         font.pixelSize: 18
 
@@ -850,7 +850,7 @@ Item {
                                 bottomPadding: 8
                                 text: (popup.mode === "wifi" ? Net.scanning : Net.btDiscovering) ? Cfg.t("Searching…")
                                     : popup.mode === "wifi" ? Cfg.t("NO OTHER NETWORKS") : Cfg.t("NO NEARBY DEVICES")
-                                color: Theme.outline
+                                color: Theme.fgDim
                                 font.family: Theme.font
                                 font.pixelSize: Theme.bodySmall
                             }
@@ -884,7 +884,7 @@ Item {
                 topPadding: 10
                 bottomPadding: 10
                 text: popup.mode === "wifi" ? (Net.wifiHardwareEnabled ? Cfg.t("Wi-Fi off") : Cfg.t("WIFI HARDWARE OFF")) : Cfg.t("Bluetooth off")
-                color: Theme.outline
+                color: Theme.fgDim
                 font.family: Theme.font
                 font.pixelSize: Theme.bodySmall
             }

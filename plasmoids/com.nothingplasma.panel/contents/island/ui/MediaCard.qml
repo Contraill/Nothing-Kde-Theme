@@ -49,7 +49,9 @@ Item {
         return m + ":" + (s < 10 ? "0" : "") + s;
     }
 
-    implicitHeight: 118
+    // Room for the player switcher when more than one application plays media.
+    readonly property int pickerHeight: Media.players.length > 1 ? 32 : 0
+    implicitHeight: 118 + pickerHeight
     Kirigami.ImageColors {
         id: paleta
         source: artImg.status === Image.Ready ? artImg : null
@@ -221,6 +223,7 @@ Item {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.margins: 10
+            anchors.topMargin: 10 + root.pickerHeight
             width: 46
             height: 46
             Rectangle {
@@ -451,41 +454,79 @@ Item {
             font.weight: Font.Bold
         }
 
-        // Player picker, shown only when more than one application plays media.
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 4
-            spacing: 4
-            visible: Media.players.length > 1
-            Repeater {
-                model: Media.players
-                Rectangle {
-                    id: pick
-                    required property var modelData
-                    readonly property bool selected: Media.currentIndex === modelData.index
-                    width: 22
-                    height: 22
-                    radius: 11
-                    color: pick.selected ? Qt.alpha(Theme.fg, 0.18) : pickMa.containsMouse ? Qt.alpha(Theme.fg, Theme.stateHover) : "transparent"
-                    Accessible.role: Accessible.RadioButton
-                    Accessible.name: pick.modelData.identity
-                    Accessible.checked: pick.selected
-                    Kirigami.Icon {
-                        anchors.centerIn: parent
-                        width: 15
-                        height: 15
-                        source: pick.modelData.icon
-                        fallback: "media-playback-start"
-                        opacity: pick.selected ? 1 : 0.55
-                    }
-                    MouseArea {
-                        id: pickMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        // Clicking the pinned player again returns to automatic selection.
-                        onClicked: Media.select(pick.selected ? 0 : pick.modelData.index)
+        // Player switcher: the filled chip is the player the card controls.
+        // Clicking another one pins it; clicking the pinned one follows the active player again.
+        Flickable {
+            id: picker
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.margins: 10
+            height: 24
+            visible: root.pickerHeight > 0
+            contentWidth: pickerRow.width
+            clip: true
+            interactive: contentWidth > width
+            boundsBehavior: Flickable.StopAtBounds
+            Row {
+                id: pickerRow
+                spacing: 6
+                Repeater {
+                    model: Media.players
+                    Rectangle {
+                        id: pick
+                        required property var modelData
+                        readonly property bool selected: Media.controls(modelData)
+                        readonly property bool pinned: Media.currentIndex === modelData.index
+                        width: pickContent.implicitWidth + 20
+                        height: 24
+                        radius: height / 2
+                        color: pick.selected ? Theme.inverted : pickMa.containsMouse ? Theme.surfaceHigh : Qt.alpha(Theme.fg, 0.08)
+                        Accessible.role: Accessible.RadioButton
+                        Accessible.name: pick.modelData.identity
+                        Accessible.checked: pick.selected
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: Theme.durShort
+                            }
+                        }
+                        Row {
+                            id: pickContent
+                            anchors.centerIn: parent
+                            spacing: 6
+                            Kirigami.Icon {
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: 14
+                                height: 14
+                                source: pick.modelData.icon
+                                fallback: "applications-multimedia"
+                            }
+                            Text {
+                                anchors.verticalCenter: parent.verticalCenter
+                                width: Math.min(implicitWidth, 120)
+                                // Application names keep their own spelling.
+                                text: pick.modelData.identity
+                                color: pick.selected ? Theme.invertedFg : Theme.fgDim
+                                font.family: Theme.font
+                                font.pixelSize: Theme.labelMedium
+                                elide: Text.ElideRight
+                            }
+                            Text {
+                                anchors.verticalCenter: parent.verticalCenter
+                                visible: pick.pinned
+                                text: "keep"
+                                color: pick.selected ? Theme.invertedFg : Theme.fgDim
+                                font.family: Theme.fontIcons
+                                font.pixelSize: 12
+                            }
+                        }
+                        MouseArea {
+                            id: pickMa
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: Media.select(pick.pinned ? 0 : pick.modelData.index)
+                        }
                     }
                 }
             }

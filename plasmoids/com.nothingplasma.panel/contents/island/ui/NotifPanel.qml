@@ -201,7 +201,7 @@ Item {
 
         Text {
             text: popup.notificationCount + (Cfg.turkish ? " BİLDİRİM" : " NOTIFICATIONS")
-            color: Theme.outline
+            color: Theme.fgDim
             font.family: Theme.font
             font.pixelSize: Theme.labelSmall
             font.weight: Font.Medium
@@ -258,7 +258,7 @@ Item {
                         anchors.verticalCenter: parent.verticalCenter
                         text: (nrow.model.applicationName || "") + " · " + (nrow.model.groupChildrenCount ?? 0)
                         textFormat: Text.PlainText
-                        color: Theme.outline
+                        color: Theme.fgDim
                         font.family: Theme.font
                         font.pixelSize: Theme.labelSmall
                         font.weight: Font.Medium
@@ -272,7 +272,7 @@ Item {
                         anchors.rightMargin: 10
                         anchors.verticalCenter: parent.verticalCenter
                         text: "clear_all"
-                        color: groupClearMa.containsMouse ? Theme.fg : Theme.outline
+                        color: groupClearMa.containsMouse ? Theme.fg : Theme.fgFaint
                         font.family: Theme.fontIcons
                         font.pixelSize: 16
                         Accessible.role: Accessible.Button
@@ -340,7 +340,7 @@ Item {
                                 anchors.right: parent.right
                                 anchors.verticalCenter: summaryText.verticalCenter
                                 text: Notifs.timeText(nrow.model.updated ?? nrow.model.created)
-                                color: Theme.outline
+                                color: Theme.fgDim
                                 font.family: Theme.font
                                 font.pixelSize: Theme.labelSmall
                             }
@@ -428,7 +428,7 @@ Item {
                         anchors.top: parent.top
                         anchors.topMargin: 12
                         text: "close"
-                        color: dismissMa.containsMouse ? Theme.fg : Theme.outline
+                        color: dismissMa.containsMouse ? Theme.fg : Theme.fgFaint
                         font.family: Theme.fontIcons
                         font.pixelSize: 16
                         Accessible.role: Accessible.Button

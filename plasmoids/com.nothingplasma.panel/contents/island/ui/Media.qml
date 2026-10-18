@@ -15,8 +15,11 @@ QtObject {
             required property var model
             required property int index
             readonly property bool multiplexer: model.isMultiplexer === true
+            // playerctld re-exports whichever player is active; it is not a player itself.
+            readonly property bool proxy: model.container?.objectName === "playerctld"
             readonly property string identity: model.identity ?? ""
             readonly property string icon: model.desktopEntry || model.iconName || ""
+            readonly property int pid: model.container?.instancePid ?? 0
         }
     }
     // Real players; row 0 is Plasma's "follow the active player" multiplexer.
@@ -24,9 +27,13 @@ QtObject {
         const list = [];
         for (let i = 0; i < rows.count; ++i)
             list.push(rows.objectAt(i));
-        return list.filter(row => row && !row.multiplexer);
+        return list.filter(row => row && !row.multiplexer && !row.proxy);
     }
     readonly property int currentIndex: model.currentIndex
+    // The player actually being controlled, also while following the active one.
+    function controls(row) {
+        return !!row && !!root.player && row.pid === (root.player.instancePid ?? -1);
+    }
 
     function select(index) {
         if (!Backend.preview) root.model.currentIndex = index;
