@@ -17,7 +17,8 @@ KItemModels.KSortFilterProxyModel {
     function trigger(row, action, argument) {
         const filtered = root.mapToSource(root.index(row, 0));
         const source = visibleApps.mapToSource(filtered);
-        if (source.valid && root.inputModel) return root.inputModel.trigger(source.row, action, argument);
+        // QModelIndex.valid/row exist at runtime; qmllint has no type data for them.
+        if (source.valid && root.inputModel) return root.inputModel.trigger(source.row, action, argument); // qmllint disable missing-property
         return false;
     }
     onHiddenAppsChanged: visibleApps.invalidateFilter()

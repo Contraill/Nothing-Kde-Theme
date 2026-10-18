@@ -66,7 +66,9 @@ class DockTests(unittest.TestCase):
         native = (UI / 'components/NativeWindowThumbnail.qml').read_text()
         self.assertIn('ScreencastingRequest', native)
         self.assertIn('uuid: String(root.windowId)', native)
-        self.assertIn('winId: Number(root.windowId) || 0', native)
+        # Plasma 6 has no PlasmaCore.WindowThumbnail; naming it broke the whole file.
+        self.assertNotIn('PlasmaCore.WindowThumbnail {', native)
+        self.assertIn('active: root.waylandId', native)
 
     def test_all_dock_strings_have_tr_en_translations(self):
         cfg = (UI.parent / 'island/ui/Cfg.qml').read_text()

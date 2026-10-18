@@ -1,6 +1,8 @@
 import importlib.util
 from pathlib import Path
 import tempfile
+from unittest import mock
+import os
 import tomllib
 import unittest
 from unittest.mock import patch
@@ -128,7 +130,9 @@ error_symbol = "[❯](bold red)"
             self.assertFalse((links.root / 'backups').exists())
 
     def test_starship_round_trip_preserves_original_and_running_shell_path(self):
-        with tempfile.TemporaryDirectory() as td:
+        # The developer's own linked prompt exports STARSHIP_CONFIG; isolate it.
+        environment = {k: v for k, v in os.environ.items() if k != 'STARSHIP_CONFIG'}
+        with mock.patch.dict(os.environ, environment, clear=True), tempfile.TemporaryDirectory() as td:
             home = Path(td); config = home / '.config'
             (config / 'fish').mkdir(parents=True)
             source = config / 'starship.toml'

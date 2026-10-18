@@ -306,8 +306,8 @@ if 'property var searchModel' in launcher_page or 'searchResultsModel' in bottom
     raise SystemExit('Launcher search must not cache a stale RunnerModel submodel')
 if 'root.runnerModel.modelForRow(0)' not in launcher_page:
     raise SystemExit('Launcher search must bind directly to the active Kicker RunnerModel result model')
-if 'runners: ["services"]' not in bottom:
-    raise SystemExit('Application launcher search must use the services runner')
+if 'runners: ["krunner_services"' not in bottom or 'krunner_webshortcuts' in bottom or 'browsertabs' in bottom:
+    raise SystemExit('Launcher search must name its runners explicitly, starting with applications, without web or browser runners')
 
 for token in (
     'Math.min(Island.Theme.expandedWidth, root.availableWidth - 24)',
@@ -518,6 +518,29 @@ if [[ -n "$QMLLINT" ]]; then
       printf '%s\n' "$out" >> "$tmp"
     fi
   done < <(find "$ROOT/plasmoids" -path '*/contents/*' -name '*.qml' -print0)
+
+  # qmllint cannot see two things this project verifies itself instead:
+  # Plasmoid.configuration members (checked against the package's main.xml, so a
+  # misspelled key still fails) and singletons linted on their own (checked
+  # against the directory's qmldir).
+  python3 - "$tmp" <<'PYLINT'
+import pathlib, re, sys
+log = pathlib.Path(sys.argv[1])
+kept = []
+for line in log.read_text().splitlines():
+    config = re.match(r'Warning: (.+?/contents/).*Member "(\w+)" not found on type "KConfigPropertyMap" \[missing-property\]', line)
+    if config:
+        schema = pathlib.Path(config.group(1), 'config/main.xml')
+        if schema.is_file() and f'name="{config.group(2)}"' in schema.read_text():
+            continue
+    single = re.match(r'Warning: (.+)/(\w+)\.qml:: Type (\w+) not declared as singleton in qmldir but using pragma Singleton \[import\]', line)
+    if single:
+        qmldir = pathlib.Path(single.group(1), 'qmldir')
+        if qmldir.is_file() and re.search(rf'^singleton {single.group(3)} (\S+ )?{single.group(2)}\.qml$', qmldir.read_text(), re.M):
+            continue
+    kept.append(line)
+log.write_text('\n'.join(kept) + ('\n' if kept else ''))
+PYLINT
 
   # These diagnostics indicate code that is likely to fail at load/runtime.
   if grep -Eq '(^Error:|\[(syntax|import|missing-property|unresolved-type|unresolved-alias|required-property|uncreatable-type)\])' "$tmp"; then
