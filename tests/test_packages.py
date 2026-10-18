@@ -65,7 +65,7 @@ class PackageTests(unittest.TestCase):
             self.assertNotIn('nothing-kde/notification-skin/apply.py', package.namelist())
             self.assertNotIn('nothing-kde/theme-state/nothing-plasma.state.json', package.namelist())
             for name in ('dolphin/manage.py', 'dolphin/profile.json', 'dolphin/style.qss', 'runtime/jsonc_edit.py',
-                         'widgets/packages/date/contents/ui/components/DatePages.qml'):
+                         'widgets/packages/date/contents/ui/components/DatePage.qml'):
                 self.assertIn('nothing-kde/' + name, package.namelist())
 
     def test_checksums_match(self):

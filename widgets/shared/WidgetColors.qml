@@ -23,6 +23,8 @@ QtObject {
     readonly property color textPlaceholder: textMuted
     readonly property color accent: useSystemAccent ? Kirigami.Theme.focusColor : "#ff4444"
     readonly property color accentSecondHand: useSystemAccent ? Kirigami.Theme.focusColor : "#D71921"
+    // Readable ink on an accent fill.
+    readonly property color accentText: (0.2126 * accent.r + 0.7152 * accent.g + 0.0722 * accent.b) > 0.6 ? "#111111" : "#ffffff"
     readonly property color warning: Kirigami.Theme.neutralTextColor
     readonly property color error: Kirigami.Theme.negativeTextColor
     readonly property color divider: alpha(textPrimary, 0.12)

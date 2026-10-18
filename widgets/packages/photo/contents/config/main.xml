@@ -7,7 +7,7 @@
 
   <group name="Image">
     <entry name="imagePath" type="String">
-      <default>default/nothing.png</default>
+      <default>default/halftone.png</default>
     </entry>
     <entry name="borderEnabled" type="Bool">
       <default>false</default>

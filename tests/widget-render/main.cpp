@@ -57,9 +57,13 @@ int main(int argc, char **argv)
     if (!item) return 5;
     QQuickWindow window;
     window.setColor(QColor("#242424"));
-    window.resize(400, 400);
+    // NOTHING_RENDER_SIZE=WxH renders at the applet's own shape (pills, bars).
+    QSize size(400, 400);
+    const auto requested = qEnvironmentVariable("NOTHING_RENDER_SIZE").split(QLatin1Char('x'));
+    if (requested.size() == 2) size = QSize(requested[0].toInt(), requested[1].toInt());
+    window.resize(size);
     item->setParentItem(window.contentItem());
-    item->setSize(QSizeF(400, 400));
+    item->setSize(QSizeF(size));
     item->setExpanded(true);
     window.show();
     if (argc == 4 && QString::fromLocal8Bit(argv[3]) == "--calendar") {

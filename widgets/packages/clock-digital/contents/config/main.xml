@@ -6,6 +6,7 @@
   <kcfgfile name=""/>
 
   <group name="General">
+    <!-- -1 asks on first use; 0 stacked, 1 world clock, 2 pill -->
     <entry name="widgetVariant" type="Int">
       <default>-1</default>
     </entry>
@@ -19,10 +20,10 @@
       <default>true</default>
     </entry>
     <entry name="cityName" type="String">
-      <default>Austin</default>
+      <default>London</default>
     </entry>
     <entry name="timeZone" type="String">
-      <default>America/Chicago</default>
+      <default>Europe/London</default>
     </entry>
   </group>
 </kcfg>

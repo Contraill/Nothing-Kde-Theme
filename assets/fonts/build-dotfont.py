@@ -2,6 +2,7 @@
 """Build the theme's dot-matrix face, "Nothing Dots", from a variable font.
 
   build-dotfont.py bitcount BitcountSingle[CRSV,ELSH,ELXP,slnt,wght].ttf NothingDots.ttf
+  build-dotfont.py bitcount BitcountSingle[...].ttf NothingDotsLight.ttf 290   # big displays
   build-dotfont.py doto Doto[ROND,wght].ttf NothingDots.ttf
 
 Sources (SIL OFL 1.1, no Reserved Font Name), from github.com/google/fonts:
@@ -106,12 +107,16 @@ def bake_single_substitution(font, tag):
     del font['GSUB']
 
 
-def centre_colon(font, rows):
-    """Bitcount's colon is two element components; place them on the given rows."""
+def centre_colon(font, rows, advance=300):
+    """Bitcount's colon is two element components; place them on the given
+    rows, in a narrower cell so a clock's colon sits close to its digits."""
     colon = font['glyf']['colon']
     assert colon.isComposite() and len(colon.components) == len(rows)
     for component, row in zip(colon.components, rows):
+        component.x = (advance - 100) // 2
         component.y = 100 * row
+    colon.recalcBounds(font['glyf'])
+    font['hmtx']['colon'] = (advance, colon.xMin)
 
 
 def stretch_rows(font, factor):
@@ -142,25 +147,26 @@ def centre_line_box(font):
     os2.usWinAscent, os2.usWinDescent = ascent, descent
 
 
-def rename(font):
+def rename(font, family=FAMILY):
     name = font['name']
     for record in list(name.names):
         if record.nameID in (1, 4, 6, 16, 17, 21, 22, 25):
             name.removeNames(nameID=record.nameID)
-    name.setName(FAMILY, 1, 3, 1, 0x409)
+    name.setName(family, 1, 3, 1, 0x409)
     # The only face is marked bold: QML asks the dot font for Font.Bold in many
     # places, and synthetic bolding would swell the dots until they touch.
     name.setName('Bold', 2, 3, 1, 0x409)
-    name.setName(FAMILY, 4, 3, 1, 0x409)
-    name.setName(FAMILY.replace(' ', '') + '-Bold', 6, 3, 1, 0x409)
+    name.setName(family, 4, 3, 1, 0x409)
+    name.setName(family.replace(' ', '') + '-Bold', 6, 3, 1, 0x409)
     name.setName('Static instance built by Nothing KDE (assets/fonts/build-dotfont.py).', 5, 3, 1, 0x409)
     font['OS/2'].usWeightClass = 700
     font['OS/2'].fsSelection = (font['OS/2'].fsSelection & ~0b1100001) | 0b0100000  # BOLD
     font['head'].macStyle = 1
 
 
-def main(kind, source, target):
-    font = instancer.instantiateVariableFont(TTFont(source), FONTS[kind])
+def main(kind, source, target, weight=None):
+    axes = dict(FONTS[kind], **({'wght': float(weight)} if weight else {}))
+    font = instancer.instantiateVariableFont(TTFont(source), axes)
     for table in ('STAT', 'HVAR', 'MVAR', 'avar', 'fvar', 'gvar'):
         if table in font: del font[table]
     if kind == 'doto':
@@ -172,7 +178,9 @@ def main(kind, source, target):
         centre_colon(font, (2, 4))
         stretch_rows(font, ROW_STRETCH)
     centre_line_box(font)
-    rename(font)
+    rename(font, FAMILY + (' Light' if weight else ''))
+    # Keep the source's timestamp so the same input builds the same bytes.
+    font.recalcTimestamp = False
     font.save(target)
     check = TTFont(target)
     assert 'fvar' not in check
@@ -181,6 +189,6 @@ def main(kind, source, target):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4 or sys.argv[1] not in FONTS:
-        sys.exit('usage: build-dotfont.py bitcount|doto SOURCE.ttf NothingDots.ttf')
+    if len(sys.argv) not in (4, 5) or sys.argv[1] not in FONTS:
+        sys.exit('usage: build-dotfont.py bitcount|doto SOURCE.ttf OUTPUT.ttf [WEIGHT]')
     main(*sys.argv[1:])

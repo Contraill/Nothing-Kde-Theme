@@ -3,13 +3,8 @@ import org.kde.plasma.configuration
 
 ConfigModel {
     ConfigCategory {
-        name: i18n("Image")
+        name: i18n("General")
         icon: "preferences-desktop-wallpaper"
-        source: "config/ConfigImage.qml"
-    }
-    ConfigCategory {
-        name: i18n("Appearance")
-        icon: "preferences-desktop-theme-global"
-        source: "config/ConfigAppearance.qml"
+        source: "config/ConfigGeneral.qml"
     }
 }

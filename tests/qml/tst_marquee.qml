@@ -6,35 +6,34 @@ Item {
     width: 400; height: 100
     Component {
         id: factory
-        Media.MarqueeText { width: 100; height: 50; initialPause: 20; endPause: 20; scrollSpeed: 2 }
+        Media.Marquee { width: 100; height: 50; pause: 20; speed: 1 }
     }
     TestCase {
-        name: "MarqueeSizing"
+        name: "Marquee"
         when: windowShown
-        property var page
-        property var label
-        function init() { page = factory.createObject(parent); label = page.children[0]; }
-        function cleanup() { page.destroy(); }
-        function test_text_and_container_resize() {
-            page.text = "Long enough track title to require scrolling";
-            tryVerify(() => label.x < 0);
-            page.width = 2000;
-            tryCompare(label, "x", 0);
-            wait(100); compare(label.x, 0);
-            page.width = 100;
-            tryVerify(() => label.x < 0);
-            page.text = "Short";
-            tryCompare(label, "x", 0);
-            wait(100); compare(label.x, 0);
+        property var marquee
+        function init() { marquee = factory.createObject(parent); }
+        function cleanup() { marquee.destroy(); }
+        function test_scrolls_only_while_the_text_overflows() {
+            marquee.text = "Long enough track title to require scrolling";
+            tryVerify(() => marquee.label.x < 0);
+            marquee.width = 2000;
+            tryCompare(marquee.label, "x", 0);
+            wait(100); compare(marquee.label.x, 0);
+            marquee.width = 100;
+            tryVerify(() => marquee.label.x < 0);
+            marquee.text = "Short";
+            tryCompare(marquee.label, "x", 0);
+            wait(100); compare(marquee.label.x, 0);
         }
-        function test_font_metrics_restart_scrolling() {
-            page.width = 150; page.fontSize = 10; page.text = "Track title";
-            wait(100); compare(label.x, 0);
-            page.fontSize = 40;
-            tryVerify(() => label.x < 0);
-            page.fontSize = 10;
-            tryCompare(label, "x", 0);
-            wait(100); compare(label.x, 0);
+        function test_font_size_restarts_scrolling() {
+            marquee.width = 150; marquee.fontSize = 10; marquee.text = "Track title";
+            wait(100); compare(marquee.label.x, 0);
+            marquee.fontSize = 40;
+            tryVerify(() => marquee.label.x < 0);
+            marquee.fontSize = 10;
+            tryCompare(marquee.label, "x", 0);
+            wait(100); compare(marquee.label.x, 0);
         }
     }
 }

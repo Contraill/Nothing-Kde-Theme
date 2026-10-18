@@ -83,8 +83,10 @@ def widget_catalogs(check):
     for po in sorted((ROOT / 'po/widgets').glob('*.po')):
         msgfmt_check(po)
         language, entries = po.stem, {msgid: text for (_, msgid), text in parse(po).items()}
+        # widgets/shared is copied into every package when it is staged.
+        shared = list((ROOT / 'widgets/shared').rglob('*.qml'))
         for package in sorted(WIDGETS.iterdir()):
-            strings = {json.loads(match) for qml in package.rglob('*.qml') for match in
+            strings = {json.loads(match) for qml in list(package.rglob('*.qml')) + shared for match in
                        re.findall(r'\bi18n\(\s*("(?:\\.|[^"\\])*")', qml.read_text())}
             problems += [f'{po.name}: missing {s!r} ({package.name})' for s in sorted(strings - entries.keys())]
             if check: continue

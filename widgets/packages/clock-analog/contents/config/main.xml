@@ -6,6 +6,7 @@
   <kcfgfile name=""/>
 
   <group name="Appearance">
+    <!-- -1 asks on first use; 0 classic, 1 minimal, 2 dots -->
     <entry name="widgetVariant" type="Int">
       <default>-1</default>
     </entry>
