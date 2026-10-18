@@ -21,7 +21,7 @@ Row {
         text: Qt.formatDateTime(clock.now, Cfg.fmtHora)
         color: Theme.fg
         font.family: Theme.fontDots
-        font.pixelSize: 18
+        font.pixelSize: 17
         font.weight: Font.Bold
     }
 
