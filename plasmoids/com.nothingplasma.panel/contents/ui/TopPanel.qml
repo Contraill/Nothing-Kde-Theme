@@ -58,6 +58,10 @@ Item {
     }
     Binding { target: Island.Backend; property: "trayHost"; value: tray }
     Components.SystemStats { id: stats; active: popup.visible }
+    Connections {
+        target: Island.Backend
+        function onDismissRequested() { popup.closePopup(); }
+    }
 
     function toggleMenu(): void {
         if (popup.visible) popup.closePopup();

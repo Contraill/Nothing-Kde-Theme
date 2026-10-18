@@ -407,7 +407,11 @@ QtObject {
         "NOT CONNECTED": ["BAĞLI DEĞİL", "NOT CONNECTED"],
         "NO OTHER NETWORKS": ["Başka ağ bulunamadı", "No other networks found"],
         "NO NEARBY DEVICES": ["Yakında cihaz bulunamadı", "No nearby devices found"],
-        "GPU ASLEEP": ["UYKUDA", "ASLEEP"]
+        "GPU ASLEEP": ["UYKUDA", "ASLEEP"],
+        "DO NOT DISTURB": ["RAHATSIZ ETME", "DO NOT DISTURB"],
+        "REPLY": ["Yanıtla", "Reply"],
+        "NOW": ["şimdi", "now"],
+        "MIN": ["dk", "min"]
 })
 
     function t(clave) {

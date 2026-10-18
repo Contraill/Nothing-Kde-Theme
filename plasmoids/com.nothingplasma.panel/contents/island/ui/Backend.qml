@@ -7,4 +7,6 @@ QtObject {
     property var stats: null
     property bool preview: false
     property bool expanded: false
+    // Ask the panel to close the expanded island (e.g. after opening an app).
+    signal dismissRequested()
 }

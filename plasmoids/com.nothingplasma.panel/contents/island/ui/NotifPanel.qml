@@ -7,9 +7,48 @@ Item {
 
     signal closed
 
+    component NotifChip: Rectangle {
+        id: chip
+        property string label: ""
+        property bool active: false
+        signal triggered
+        width: chipText.implicitWidth + 20
+        height: 26
+        radius: height / 2
+        color: chip.active ? Theme.inverted : chipMa.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
+        Accessible.role: Accessible.Button
+        Accessible.name: chip.label
+        Accessible.onPressAction: chip.triggered()
+        Text {
+            id: chipText
+            anchors.centerIn: parent
+            text: chip.label
+            textFormat: Text.PlainText
+            color: chip.active ? Theme.invertedFg : Theme.fg
+            font.family: Theme.font
+            font.pixelSize: Theme.labelSmall
+            font.weight: Font.Medium
+        }
+        MouseArea {
+            id: chipMa
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: chip.triggered()
+        }
+    }
+
     implicitHeight: col.implicitHeight + 44
 
     readonly property int count: Notifs.count
+    readonly property int notificationCount: Notifs.notificationCount
+
+    Timer {
+        interval: 60000
+        repeat: true
+        running: true
+        onTriggered: Notifs.clock++
+    }
 
     Column {
         id: col
@@ -92,7 +131,7 @@ Item {
                     anchors.left: muteIcon.right
                     anchors.leftMargin: 10
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Notifs.muted ? Cfg.t("MUTED") : Cfg.t("MUTE")
+                    text: Cfg.t("DO NOT DISTURB")
                     color: Notifs.muted ? Theme.invertedFg : Theme.fg
                     font.family: Theme.font
                     font.pixelSize: Theme.bodySmall
@@ -105,6 +144,9 @@ Item {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
+                    Accessible.role: Accessible.CheckBox
+                    Accessible.name: Cfg.t("DO NOT DISTURB")
+                    Accessible.checked: Notifs.muted
                     onClicked: Notifs.toggleMute()
                 }
             }
@@ -157,7 +199,7 @@ Item {
         }
 
         Text {
-            text: popup.count + (Cfg.turkish ? " BİLDİRİM" : " NOTIFICATIONS")
+            text: popup.notificationCount + (Cfg.turkish ? " BİLDİRİM" : " NOTIFICATIONS")
             color: Theme.outline
             font.family: Theme.font
             font.pixelSize: Theme.labelSmall
@@ -175,14 +217,21 @@ Item {
                 Rectangle {
                     id: nrow
                     required property int index
-                    required property string summary
-                    required property string body
-                    required property string applicationIconName
+                    required property var model
+                    readonly property bool isGroup: model.isGroup === true
+                    readonly property bool inGroup: model.isInGroup === true
+                    readonly property var actionNames: model.actionNames ?? []
+                    readonly property var actionLabels: model.actionLabels ?? []
+                    readonly property bool canOpen: model.hasDefaultAction === true
+                    readonly property bool canReply: model.hasReplyAction === true
+                    property bool replying: false
+                    // The application's icon, else the icon the notification itself sent.
+                    readonly property string iconSource: model.applicationIconName || model.iconName || ""
 
                     width: col.width
-                    height: 56
+                    height: isGroup ? 30 : body.implicitHeight + 16
                     radius: Theme.shapeMd
-                    color: nrowMa.containsMouse ? Qt.alpha(Theme.fg, Theme.stateHover) : Qt.alpha(Theme.fg, 0)
+                    color: !isGroup && nrowMa.containsMouse ? Qt.alpha(Theme.fg, Theme.stateHover) : Qt.alpha(Theme.fg, 0)
 
                     Behavior on color {
                         ColorAnimation {
@@ -190,20 +239,68 @@ Item {
                         }
                     }
 
-                    Kirigami.Icon {
-                        id: nicon
+                    MouseArea {
+                        id: nrowMa
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        enabled: !nrow.isGroup
+                        cursorShape: nrow.canOpen ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: Notifs.activate(nrow.index)
+                    }
+
+                    // Group header: application name, count and "clear group".
+                    Text {
+                        visible: nrow.isGroup
                         anchors.left: parent.left
                         anchors.leftMargin: 10
+                        anchors.right: groupClear.left
                         anchors.verticalCenter: parent.verticalCenter
+                        text: (nrow.model.applicationName || "") + " · " + (nrow.model.groupChildrenCount ?? 0)
+                        textFormat: Text.PlainText
+                        color: Theme.outline
+                        font.family: Theme.font
+                        font.pixelSize: Theme.labelSmall
+                        font.weight: Font.Medium
+                        font.letterSpacing: 0.6
+                        elide: Text.ElideRight
+                    }
+                    Text {
+                        id: groupClear
+                        visible: nrow.isGroup
+                        anchors.right: parent.right
+                        anchors.rightMargin: 10
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "clear_all"
+                        color: groupClearMa.containsMouse ? Theme.fg : Theme.outline
+                        font.family: Theme.fontIcons
+                        font.pixelSize: 16
+                        Accessible.role: Accessible.Button
+                        Accessible.name: Cfg.t("CLEAR")
+                        MouseArea {
+                            id: groupClearMa
+                            anchors.fill: parent
+                            anchors.margins: -6
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: Notifs.dismissAt(nrow.index)
+                        }
+                    }
+
+                    Kirigami.Icon {
+                        id: nicon
+                        visible: !nrow.isGroup && nrow.iconSource !== ""
+                        anchors.left: parent.left
+                        anchors.leftMargin: nrow.inGroup ? 18 : 10
+                        anchors.top: parent.top
+                        anchors.topMargin: 10
                         implicitWidth: 26
                         implicitHeight: 26
-                        source: nrow.applicationIconName
-                        visible: nrow.applicationIconName !== ""
+                        source: nrow.iconSource
                     }
 
                     Text {
                         anchors.centerIn: nicon
-                        visible: !nicon.visible
+                        visible: !nrow.isGroup && !nicon.visible
                         text: "notifications"
                         color: Theme.fgFaint
                         font.family: Theme.fontIcons
@@ -211,43 +308,130 @@ Item {
                     }
 
                     Column {
+                        id: body
+                        visible: !nrow.isGroup
                         anchors.left: nicon.right
                         anchors.leftMargin: 10
                         anchors.right: ndismiss.left
                         anchors.rightMargin: 6
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 1
+                        anchors.top: parent.top
+                        anchors.topMargin: 8
+                        spacing: 2
 
-                        Text {
+                        Item {
                             width: parent.width
-                            text: nrow.summary
-                            color: Theme.fg
-                            font.family: Theme.font
-                            font.pixelSize: Theme.bodySmall
-                            font.weight: Font.Medium
-                            elide: Text.ElideRight
+                            height: summaryText.implicitHeight
+                            Text {
+                                id: summaryText
+                                anchors.left: parent.left
+                                anchors.right: timeText.left
+                                anchors.rightMargin: 6
+                                text: nrow.model.summary ?? ""
+                                textFormat: Text.PlainText
+                                color: Theme.fg
+                                font.family: Theme.font
+                                font.pixelSize: Theme.bodySmall
+                                font.weight: Font.Medium
+                                elide: Text.ElideRight
+                            }
+                            Text {
+                                id: timeText
+                                anchors.right: parent.right
+                                anchors.verticalCenter: summaryText.verticalCenter
+                                text: Notifs.timeText(nrow.model.updated ?? nrow.model.created)
+                                color: Theme.outline
+                                font.family: Theme.font
+                                font.pixelSize: Theme.labelSmall
+                            }
                         }
 
                         Text {
                             width: parent.width
-                            text: nrow.body
+                            text: nrow.model.body ?? ""
+                            // Notification bodies may carry the basic markup of the spec.
+                            textFormat: Text.StyledText
                             color: Theme.fgVariant
                             font.family: Theme.font
                             font.pixelSize: Theme.labelSmall
+                            wrapMode: Text.Wrap
+                            maximumLineCount: 2
                             elide: Text.ElideRight
                             visible: text !== ""
+                        }
+
+                        Flow {
+                            width: parent.width
+                            spacing: 6
+                            topPadding: 4
+                            visible: actionRepeater.count > 0 || nrow.canReply
+
+                            Repeater {
+                                id: actionRepeater
+                                model: Math.min(3, nrow.actionNames.length)
+                                NotifChip {
+                                    required property int index
+                                    label: nrow.actionLabels[index] ?? ""
+                                    onTriggered: Notifs.invokeAction(nrow.index, nrow.actionNames[index])
+                                }
+                            }
+                            NotifChip {
+                                visible: nrow.canReply
+                                label: nrow.model.replyActionLabel || Cfg.t("REPLY")
+                                active: nrow.replying
+                                onTriggered: nrow.replying = !nrow.replying
+                            }
+                        }
+
+                        Rectangle {
+                            width: parent.width
+                            height: 32
+                            radius: Theme.shapeSm
+                            color: Theme.surfaceAlt
+                            visible: nrow.replying
+                            onVisibleChanged: if (visible) replyInput.forceActiveFocus()
+
+                            TextInput {
+                                id: replyInput
+                                anchors.fill: parent
+                                anchors.leftMargin: 10
+                                anchors.rightMargin: 10
+                                verticalAlignment: TextInput.AlignVCenter
+                                color: Theme.fg
+                                font.family: Theme.font
+                                font.pixelSize: Theme.bodySmall
+                                selectByMouse: true
+                                clip: true
+                                onAccepted: {
+                                    Notifs.reply(nrow.index, text);
+                                    text = "";
+                                    nrow.replying = false;
+                                }
+                                Keys.onEscapePressed: nrow.replying = false
+
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    visible: replyInput.text === ""
+                                    text: nrow.model.replyPlaceholderText || Cfg.t("REPLY")
+                                    color: Theme.fgFaint
+                                    font: replyInput.font
+                                }
+                            }
                         }
                     }
 
                     Text {
                         id: ndismiss
+                        visible: !nrow.isGroup
                         anchors.right: parent.right
                         anchors.rightMargin: 10
-                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.top: parent.top
+                        anchors.topMargin: 12
                         text: "close"
                         color: dismissMa.containsMouse ? Theme.fg : Theme.outline
                         font.family: Theme.fontIcons
                         font.pixelSize: 16
+                        Accessible.role: Accessible.Button
+                        Accessible.name: Cfg.t("CLOSE")
 
                         MouseArea {
                             id: dismissMa
@@ -257,13 +441,6 @@ Item {
                             cursorShape: Qt.PointingHandCursor
                             onClicked: Notifs.dismissAt(nrow.index)
                         }
-                    }
-
-                    MouseArea {
-                        id: nrowMa
-                        anchors.fill: parent
-                        anchors.rightMargin: 30
-                        hoverEnabled: true
                     }
                 }
             }

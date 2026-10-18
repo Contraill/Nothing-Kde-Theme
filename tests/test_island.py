@@ -52,6 +52,11 @@ class IslandTests(unittest.TestCase):
         self.assertNotIn('refreshAudio', (ROOT / 'plasmoids/com.nothingplasma.panel/contents/ui/TopPanel.qml').read_text())
         notifs = (UI / 'Notifs.qml').read_text()
         self.assertIn('settings.notificationsInhibitedUntil', notifs)
+        # Do Not Disturb stays on until turned off (Plasma's own one-year convention).
+        self.assertIn('until.setFullYear(until.getFullYear() + 1)', notifs)
+        self.assertNotIn('60 * 60 * 1000', notifs)
+        self.assertIn('invokeDefaultAction(root.model.index(row, 0), NM.Notifications.Close)', notifs)
+        self.assertIn('root.model.reply(', notifs)
         self.assertNotIn('NM.Server.inhibited =', notifs)
 
     def test_fonts_and_attribution_are_bundled(self):
