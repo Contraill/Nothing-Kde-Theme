@@ -182,8 +182,8 @@ dark_layout = pathlib.Path(sys.argv[6]).read_text()
 light_layout = pathlib.Path(sys.argv[7]).read_text()
 if 'groupMode: TaskManager.TasksModel.GroupApplications' not in bottom or 'groupInline: false' not in bottom:
     raise SystemExit('bottom task model must group same-application windows as a tree')
-if 'separateLaunchers: false' not in bottom:
-    raise SystemExit('bottom task model must merge pinned launchers with running tasks')
+if 'separateLaunchers: true' not in bottom or 'launchInPlace: true' not in bottom:
+    raise SystemExit('bottom task model must keep running pinned apps in their launcher slot')
 if 'TaskPreviewContent' not in tasks or 'TaskManager.AbstractTasksModel.WinIdList' not in (pathlib.Path(sys.argv[2]).parent / 'TaskPreviewContent.qml').read_text():
     raise SystemExit('grouped tasks must expose hover window previews')
 if 'CLOSE ALL WINDOWS' not in tasks or 'PIN DOCK' not in tasks:
@@ -404,7 +404,7 @@ PY8
 
 # RC15: modifier-only Meta/Start uses PlasmaShell's native launcher-provider
 # path, not a normal plasmoid global shortcut. Exactly one hidden provider is
-# installed into the bottom panel and relays activation to its containment.
+# installed into the bottom panel; its containment listens to its activation.
 python3 - <<'PY14' \
   "$ROOT/plasmoids/com.nothingplasma.launcherbridge/metadata.json" \
   "$ROOT/plasmoids/com.nothingplasma.launcherbridge/contents/ui/main.qml" \
@@ -434,8 +434,10 @@ if 'org.kde.plasma.launchermenu' not in meta.get('X-Plasma-Provides', []):
     raise SystemExit('Native Meta launcher bridge must advertise org.kde.plasma.launchermenu')
 if meta.get('NoDisplay') is not True:
     raise SystemExit('Native Meta launcher bridge must stay hidden from Add Widgets')
-if 'Plasmoid.onActivated:' not in bridge or 'Plasmoid.containment.activated()' not in bridge:
-    raise SystemExit('Native Meta launcher bridge must relay PlasmaShell activation to its owning containment')
+if 'Plasmoid.containment.activated()' in bridge or 'preferredRepresentation: fullRepresentation' not in bridge:
+    raise SystemExit('Native Meta launcher bridge must stay inert; re-activating the containment activates the panel window')
+if 'applet.pluginName === "com.nothingplasma.launcherbridge"' not in main or 'target: root.launcherBridge' not in main:
+    raise SystemExit('Panel root must listen to the Meta launcher bridge activation')
 if 'Plasmoid.onActivated: root.shortcutEpoch += 1' not in main:
     raise SystemExit('Panel root must consume activation on the real containment')
 if 'onShortcutEpochChanged:' not in bottom or 'root.toggleLauncher()' not in bottom:

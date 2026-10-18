@@ -205,6 +205,7 @@ sync_accent_from_kde() {
   patch_nothing_color_schemes "$hex"
   mkdir -p "$DATA_HOME/nothing-plasma"
   printf '%s\n' "$hex" > "$DATA_HOME/nothing-plasma/accent"
+  sync_panel_accent "$hex"
   sync_accent_links "$hex"
   printf '%s\n' "$hex"
 }

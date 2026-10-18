@@ -34,6 +34,18 @@ ContainmentItem {
     // a typed epoch and bind it into the statically known role components.
     Plasmoid.onActivated: root.shortcutEpoch += 1
 
+    // The Meta key activates the invisible launcher bridge applet.
+    readonly property var launcherBridge: {
+        for (const applet of Containment.applets) {
+            if (applet.pluginName === "com.nothingplasma.launcherbridge") return applet
+        }
+        return null
+    }
+    Connections {
+        target: root.launcherBridge
+        function onActivated() { root.shortcutEpoch += 1 }
+    }
+
     implicitWidth: roleMetrics.requestedWidth
     implicitHeight: roleMetrics.requestedHeight
 

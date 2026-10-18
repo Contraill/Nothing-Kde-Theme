@@ -93,8 +93,9 @@ Item {
         groupingWindowTasksThreshold: -1
         // A pinned launcher and its running windows occupy one task slot.
         // This mirrors Plasma's normal taskbar behavior and prevents duplicate
-        // icons for the same application.
-        separateLaunchers: false
+        // icons for the same application. Mixed (false) mode appends windows
+        // that open after the launcher list loads, scrambling the pinned order.
+        separateLaunchers: true
         launchInPlace: true
         hideActivatedLaunchers: true
         taskReorderingEnabled: true
@@ -208,6 +209,10 @@ Item {
                 Layout.preferredWidth: root.buttonWidth
                 Layout.preferredHeight: root.controlHeight
                 Accessible.name: Island.Cfg.t("APPLICATIONS")
+                // A clicked button keeps focus; when the launcher popup closes
+                // its keyboard focus returns to the panel and Plasma paints the
+                // blue panel focus indicator over the focused item.
+                focusPolicy: Qt.TabFocus
                 background: Rectangle {
                     radius: height / 2
                     color: launcherPopup.visible || launcherSettingsPopup.visible ? Island.Theme.inverted : launcherButton.hovered ? Island.Theme.surfaceHigh : "transparent"
@@ -237,7 +242,9 @@ Item {
                 Layout.preferredHeight: root.controlHeight
                 maximumWidth: root.taskAreaLimit
                 tasksModel: taskSourceModel
-                accentColor: root.accentColor
+                // highlightColor is KDE's selection tone (accent blended into the
+                // background); dock marks show the chosen accent itself.
+                accentColor: Plasmoid.configuration.accentColor
                 uiScale: root.uiScale
                 previewWidthPercent: Plasmoid.configuration.taskPreviewWidthPercent
                 previewHeightPercent: Plasmoid.configuration.taskPreviewHeightPercent
@@ -253,6 +260,7 @@ Item {
                 Layout.preferredWidth: 24 * root.uiScale
                 Layout.preferredHeight: root.controlHeight
                 Accessible.name: Island.Cfg.t("SHOW DESKTOP")
+                focusPolicy: Qt.TabFocus
                 onClicked: KWindowSystem.KWindowSystem.showingDesktop = !KWindowSystem.KWindowSystem.showingDesktop
                 background: Rectangle { radius: 12; color: desktopButton.hovered ? Island.Theme.surfaceHigh : "transparent" }
                 contentItem: Text {

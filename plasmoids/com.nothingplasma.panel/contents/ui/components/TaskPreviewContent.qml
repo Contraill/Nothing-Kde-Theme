@@ -14,7 +14,7 @@ FocusScope {
     required property int childCount
     required property var fallbackIcon
     required property string appName
-    property string workspaceNames: ""
+    property var desktopInfo: null
     property bool grouped: true
     property color accentColor: Island.Theme.fg
     property real uiScale: 1
@@ -25,7 +25,7 @@ FocusScope {
     readonly property int safeCount: Math.max(1, childCount)
     readonly property int visibleCardCount: Math.min(3, root.safeCount)
     implicitWidth: Math.min(Screen.width - 24, visibleCardCount * 232 + 28)
-    implicitHeight: 224 + (workspaceNames ? 26 : 0)
+    implicitHeight: 224
 
     function childIndex(row) { return tasksModel ? (grouped ? tasksModel.makeModelIndex(rootRow, row) : tasksModel.makeModelIndex(rootRow)) : null; }
     // Only explicit popup opening calls this; hover previews never steal focus.
@@ -54,16 +54,6 @@ FocusScope {
         anchors.fill: parent
         anchors.margins: 14
         spacing: 12
-        Text {
-            visible: root.workspaceNames.length > 0
-            Layout.fillWidth: true
-            text: root.workspaceNames
-            textFormat: Text.PlainText
-            font.family: Island.Theme.font
-            font.pixelSize: 11
-            color: Island.Theme.fgDim
-            elide: Text.ElideRight
-        }
         RowLayout {
             Layout.fillWidth: true
             Text {
@@ -104,7 +94,17 @@ FocusScope {
                 readonly property bool minimized: { root.revision; return root.childData(index, TaskManager.AbstractTasksModel.IsMinimized) === true; }
                 width: (previews.width - 8 * (root.visibleCardCount - 1)) / root.visibleCardCount
                 height: previews.height - 6
-                Accessible.name: title
+                TaskWorkspaces {
+                    id: cardWorkspaces
+                    tasksModel: root.tasksModel
+                    row: root.rootRow
+                    grouped: root.grouped
+                    child: card.index
+                    childCount: root.childCount
+                    desktopInfo: root.desktopInfo
+                }
+                readonly property string elsewhere: cardWorkspaces.otherNames.join(", ")
+                Accessible.name: title + (elsewhere ? " · " + elsewhere : "")
                 onClicked: { previews.currentIndex = index; root.activate(index); }
                 background: Rectangle {
                     radius: Island.Theme.shapeMd
@@ -118,6 +118,7 @@ FocusScope {
                         anchors.top: parent.top; anchors.bottom: titleRow.top
                         anchors.margins: 6
                         clip: true
+                        opacity: card.elsewhere ? 0.6 : 1
                         Kirigami.Icon {
                             anchors.centerIn: parent
                             width: 42; height: 42
@@ -127,6 +128,28 @@ FocusScope {
                             anchors.fill: parent
                             active: !Island.Backend.preview && root.visible && (root.Window.window?.visible ?? false) && card.winId !== null && !card.minimized
                             Component.onCompleted: setSource("NativeWindowThumbnail.qml", {windowId: Qt.binding(() => card.winId)})
+                        }
+                    }
+                    Rectangle {
+                        objectName: "previewWorkspaceChip"
+                        visible: card.elsewhere.length > 0
+                        anchors.left: parent.left; anchors.top: parent.top
+                        anchors.margins: 10
+                        width: Math.min(parent.width - 20, chipText.implicitWidth + 14)
+                        height: 20; radius: 10
+                        color: root.accentColor
+                        Text {
+                            id: chipText
+                            anchors.fill: parent
+                            anchors.leftMargin: 7; anchors.rightMargin: 7
+                            text: card.elsewhere
+                            textFormat: Text.PlainText
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                            font.family: Island.Theme.font
+                            font.pixelSize: 10
+                            font.weight: Font.Medium
+                            color: root.accentColor.hslLightness > 0.58 ? "#111111" : "#ffffff"
                         }
                     }
                     RowLayout {

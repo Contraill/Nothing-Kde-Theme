@@ -26,7 +26,7 @@ Item {
     Components.TaskWorkspaces { id: state; tasksModel: tasks; desktopInfo: info; row: 0 }
     TestCase {
         name: "TaskWorkspaces"
-        function init() { info.currentDesktop="a"; info.desktopNames=["Main","Work","Chat"]; state.grouped=false; state.childCount=1; }
+        function init() { info.currentDesktop="a"; info.desktopNames=["Main","Work","Chat"]; state.grouped=false; state.childCount=1; state.child=-1; }
         function setWindows(windows) { tasks.windows=windows; tasks.dataChanged(); }
         function test_other_current_all_and_launcher() {
             setWindows([{window:true,all:false,desktops:["b"]}]);
@@ -42,6 +42,13 @@ Item {
             info.desktopNames=["Main","Development","Chat"];
             compare(state.otherNames,["Development","Chat"]);
             info.currentDesktop="b"; compare(state.otherNames,["Main","Chat"]);
+        }
+        function test_single_group_member() {
+            state.grouped=true; state.childCount=3;
+            setWindows([{window:true,desktops:["a"]},{window:true,desktops:["b","c"]},{window:true,desktops:["c"]}]);
+            state.child=0; compare(state.otherNames,[]);
+            state.child=1; compare(state.otherNames,["Work","Chat"]);
+            state.child=2; compare(state.otherNames,["Chat"]);
         }
     }
 }

@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
@@ -20,11 +21,14 @@ PlasmoidItem {
     Layout.preferredHeight: 0
     Layout.maximumHeight: 0
     Plasmoid.status: PlasmaCore.Types.HiddenStatus
+    // Plasma expands every activated applet. In compact mode that paints the
+    // blue active-tab frame over the dock and opens an empty popup that steals
+    // focus from the real launcher, so stay in an inert full representation.
+    fullRepresentation: Item {}
+    preferredRepresentation: fullRepresentation
 
     // PlasmaShell emits activated() on the applet that advertises
-    // org.kde.plasma.launchermenu. Relay that same activation to the owning
-    // bottom containment, whose root already owns all launcher dispatch.
-    Plasmoid.onActivated: {
-        if (Plasmoid.containment) Plasmoid.containment.activated()
-    }
+    // org.kde.plasma.launchermenu. The owning bottom containment listens to
+    // this applet directly; re-emitting activated() on the containment made
+    // Plasma activate the panel window, which closed the launcher popup.
 }

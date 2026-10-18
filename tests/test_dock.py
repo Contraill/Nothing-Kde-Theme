@@ -24,7 +24,7 @@ class DockTests(unittest.TestCase):
     def test_dock_keeps_native_pinning_and_tree_grouping(self):
         text = (UI / 'BottomPanel.qml').read_text()
         for token in ('TaskManager.TasksModel.GroupApplications', 'groupInline: false',
-                      'separateLaunchers: false', 'taskReorderingEnabled: true',
+                      'separateLaunchers: true', 'taskReorderingEnabled: true',
                       'Plasmoid.configuration.pinnedLaunchers = taskSourceModel.launcherList',
                       'filterByVirtualDesktop: false', 'KWindowSystem.showingDesktop'):
             self.assertIn(token, text)

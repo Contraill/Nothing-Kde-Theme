@@ -4,6 +4,17 @@ A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, eight de
 Glassy application styling, and optional application accent integrations. The UI is localized
 in Turkish and English; no custom daemon is required.
 
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/desktop.png" alt="Nothing KDE desktop with the top island, desktop widgets and bottom dock"></td>
+    <td width="50%"><img src="docs/screenshots/control-center.png" alt="Expanded island with network, audio, brightness, media, power profile and system stats"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Desktop: island, widgets and dock (dots mark apps open on another virtual desktop)</sub></td>
+    <td align="center"><sub>Expanded island: connectivity, media, power profiles and system stats</sub></td>
+  </tr>
+</table>
+
 ## Install
 
 Requires Plasma 6.7, Qt 6.10+, Bash, Python 3, `kpackagetool6`, `qdbus6`, and KDE
@@ -239,8 +250,9 @@ does not reset an existing tray. Application icons appear between the player and
 Drag dock icons to preview a new order; releasing commits it once. Releasing above or below
 the dock cancels the move. Right-click menus include actions supplied by the application's
 desktop entry, when available (for example Steam's Big Picture action).
-An icon with windows on another workspace has a small dot; hover to see the workspace
-names in the window preview. Windows shown on all workspaces are not marked. Right-click
+An icon with windows on another workspace has an accent-colored dot. In the window preview,
+each window on another workspace is dimmed and labeled with that workspace's name. Windows
+shown on all workspaces are not marked. Right-click
 the launcher's settings button to open KDE System Settings; left-click opens launcher settings.
 
 With automatic wallpaper enabled, Nothing reapplies its light/dark pair after panel startup,

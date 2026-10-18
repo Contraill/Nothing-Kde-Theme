@@ -7,6 +7,8 @@ QtObject {
     property int row: -1
     property bool grouped: false
     property int childCount: 1
+    // >= 0 limits the result to one grouped window (preview cards).
+    property int child: -1
     property var desktopInfo
     property int revision: 0
     readonly property var otherNames: {
@@ -17,8 +19,10 @@ QtObject {
         const names = info.desktopNames || [];
         const current = String(info.currentDesktop);
         let found = [];
-        for (let child = 0; child < (grouped ? childCount : 1); ++child) {
-            const index = grouped ? tasksModel.makeModelIndex(row, child) : tasksModel.makeModelIndex(row);
+        const first = grouped && child >= 0 ? child : 0;
+        const last = grouped ? (child >= 0 ? child + 1 : childCount) : 1;
+        for (let c = first; c < last; ++c) {
+            const index = grouped ? tasksModel.makeModelIndex(row, c) : tasksModel.makeModelIndex(row);
             if (!index || !tasksModel.data(index, TaskManager.AbstractTasksModel.IsWindow)
                 || tasksModel.data(index, TaskManager.AbstractTasksModel.IsOnAllVirtualDesktops)) continue;
             const desktops = tasksModel.data(index, TaskManager.AbstractTasksModel.VirtualDesktops) || [];

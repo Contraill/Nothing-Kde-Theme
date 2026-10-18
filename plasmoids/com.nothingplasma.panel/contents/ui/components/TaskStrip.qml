@@ -168,12 +168,16 @@ Item {
                 Behavior on color { ColorAnimation { duration: Island.Theme.durShort } }
                 Rectangle {
                     objectName: "otherWorkspaceDot"
+                    z: 1
                     anchors.left: parent.left
                     anchors.top: parent.top
-                    anchors.margins: 6 * root.uiScale
-                    width: 5 * root.uiScale; height: width; radius: width / 2
+                    anchors.margins: 3 * root.uiScale
+                    width: 9 * root.uiScale; height: width; radius: width / 2
                     visible: workspaces.otherNames.length > 0
                     color: root.accentColor
+                    // Ring keeps the dot readable over icons that share the accent hue.
+                    border.width: 2 * root.uiScale
+                    border.color: Island.Theme.surface
                 }
                 Kirigami.Icon {
                     anchors.centerIn: parent
@@ -226,7 +230,8 @@ Item {
                     grouped: task.isGroup
                     fallbackIcon: task.model.decoration
                     appName: task.appName
-                    workspaceNames: workspaces.otherNames.join(", ")
+                    desktopInfo: root.desktopInfo
+                    accentColor: root.accentColor
                     uiScale: root.uiScale
                     previewWidthPercent: root.previewWidthPercent
                     previewHeightPercent: root.previewHeightPercent
@@ -381,6 +386,8 @@ Item {
                 fallbackIcon: root.selectedIcon
                 appName: root.selectedName
                 grouped: true
+                desktopInfo: root.desktopInfo
+                accentColor: root.accentColor
                 onWindowActivated: chooser.closePopup()
             }
         }
