@@ -18,7 +18,9 @@ from jsonc_edit import Document
 
 BEGIN = '# >>> Nothing KDE accent >>>'
 END = '# <<< Nothing KDE accent <<<'
-TARGETS = ('starship', 'spaceship', 'fastfetch')
+CSS_BEGIN = '/* >>> Nothing KDE accent >>> */'
+CSS_END = '/* <<< Nothing KDE accent <<< */'
+TARGETS = ('starship', 'spaceship', 'fastfetch', 'gtk')
 
 
 def accent(value):
@@ -52,12 +54,12 @@ def atomic(path, text):
         if os.path.exists(temporary): os.unlink(temporary)
 
 
-def block(text, content=None):
-    if text.count(BEGIN) != text.count(END) or text.count(BEGIN) > 1:
+def block(text, content=None, begin=BEGIN, end=END):
+    if text.count(begin) != text.count(end) or text.count(begin) > 1:
         raise ValueError('Incomplete or duplicate Nothing KDE block; no changes made')
-    text = re.sub(re.escape(BEGIN) + r'\n[\s\S]*?' + re.escape(END) + r'\n?', '', text)
+    text = re.sub(re.escape(begin) + r'\n[\s\S]*?' + re.escape(end) + r'\n?', '', text)
     if content is not None:
-        text += ('' if not text or text.endswith('\n') else '\n') + BEGIN + '\n' + content + '\n' + END + '\n'
+        text += ('' if not text or text.endswith('\n') else '\n') + begin + '\n' + content + '\n' + end + '\n'
     return text
 
 
@@ -262,11 +264,11 @@ class Links:
 
     def save(self): atomic(self.state_file, json.dumps(self.state, indent=2) + '\n')
 
-    def edit(self, path, content):
+    def edit(self, path, content, begin=BEGIN, end=END):
         previous = path.read_text() if path.exists() else ''
         backup = self.root / 'backups' / str(path.relative_to(self.home))
         if not backup.exists(): atomic(backup, previous)
-        atomic(path, block(previous, content))
+        atomic(path, block(previous, content, begin, end))
 
     def retire_kitty(self):
         """Remove only our old include; never create a backup or recolor Kitty."""
@@ -392,6 +394,18 @@ _nothing_kde_spaceship_accent
         atomic(journal_path, json.dumps(journal, indent=2) + '\n')
         atomic(path, text)
 
+    def gtk(self, enabled, color):
+        """libadwaita reads accent variables from the user stylesheet, which
+        kde-gtk-config keeps (it only appends its own @import lines)."""
+        path = self.config / 'gtk-4.0/gtk.css'
+        if not enabled:
+            if path.exists(): self.edit(path, None, CSS_BEGIN, CSS_END)
+            return
+        foreground = readable_foreground(color, {'white': '#FFFFFF', 'black': '#000000'}, '#FFFFFF')
+        css = (':root { --accent-bg-color: ' + color + '; --accent-fg-color: ' + foreground + '; }\n'
+               '@define-color accent_bg_color ' + color + ';\n@define-color accent_fg_color ' + foreground + ';')
+        self.edit(path, css, CSS_BEGIN, CSS_END)
+
     def set(self, target, enabled, color):
         getattr(self, target)(enabled, color)
         self.state[target] = enabled
@@ -408,7 +422,8 @@ _nothing_kde_spaceship_accent
         return {'enabled': {target: bool(self.state.get(target)) for target in TARGETS},
                 'available': {'starship': (self.config / 'starship.toml').exists() and (self.config / 'fish').is_dir(),
                               'fastfetch': any((self.config / ('fastfetch/config.' + ext)).exists() for ext in ('jsonc', 'json')),
-                              'spaceship': spaceship_found},
+                              'spaceship': spaceship_found,
+                              'gtk': (self.config / 'gtk-4.0').is_dir()},
                 'limine': 'export-only; enrolled boot configuration requires manual review'}
 
 
@@ -457,7 +472,7 @@ def main():
             if args.action == 'sync': links.sync(color)
             else:
                 targets = TARGETS if args.action == 'disable' and args.target == 'all' else (args.target,)
-                if any(t not in TARGETS for t in targets): parser.error('Select starship, spaceship or fastfetch')
+                if any(t not in TARGETS for t in targets): parser.error('Select starship, spaceship, fastfetch or gtk')
                 for target in targets:
                     if args.action != 'disable' or links.state.get(target): links.set(target, args.action == 'enable', color)
         print(json.dumps(links.status()))

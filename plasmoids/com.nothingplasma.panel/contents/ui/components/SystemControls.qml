@@ -32,7 +32,7 @@ Item {
         })
     }
     function setAccentLink(target, enabled) {
-        if (root.linksBusy || ["starship", "spaceship", "fastfetch"].indexOf(target) < 0) return
+        if (root.linksBusy || ["starship", "spaceship", "fastfetch", "gtk"].indexOf(target) < 0) return
         root.linksBusy = true
         root.linksError = ""
         exec.run(root.accentLinksCommand((enabled ? "enable " : "disable ") + target), function(r) {

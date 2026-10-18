@@ -176,4 +176,19 @@ error_symbol = "[❯](bold red)"
             self.assertFalse(links.root.exists())
 
 
+    def test_gtk_block_follows_accent_and_keeps_kde_imports(self):
+        with tempfile.TemporaryDirectory() as td:
+            home = Path(td); config = home / '.config'; css = config / 'gtk-4.0/gtk.css'
+            css.parent.mkdir(parents=True); css.write_text("@import 'colors.css';")
+            links = module.Links(config, home)
+            self.assertTrue(links.status()['available']['gtk'])
+            links.set('gtk', True, '#109DD9'); links.sync('#D71921')
+            text = css.read_text()
+            self.assertTrue(text.startswith("@import 'colors.css';\n/* >>> Nothing KDE accent >>> */"))
+            self.assertIn('--accent-bg-color: #D71921;', text)
+            self.assertNotIn('#109DD9', text)
+            self.assertNotIn('# >>>', text)
+            links.set('gtk', False, '#D71921')
+            self.assertEqual(css.read_text(), "@import 'colors.css';\n")
+
 if __name__ == '__main__': unittest.main()

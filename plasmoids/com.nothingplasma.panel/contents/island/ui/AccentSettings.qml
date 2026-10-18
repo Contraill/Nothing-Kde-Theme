@@ -304,7 +304,7 @@ ColumnLayout {
     RowLayout {
         Layout.fillWidth: true
         Repeater {
-            model: ["starship", "spaceship", "fastfetch"]
+            model: ["starship", "spaceship", "fastfetch", "gtk"]
             QQC2.AbstractButton {
                 id: linkButton
                 required property string modelData
