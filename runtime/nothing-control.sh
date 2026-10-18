@@ -207,7 +207,19 @@ sync_accent_from_kde() {
   printf '%s\n' "$hex" > "$DATA_HOME/nothing-plasma/accent"
   sync_panel_accent "$hex"
   sync_accent_links "$hex"
+  sync_boot_accent "$hex"
   printf '%s\n' "$hex"
+}
+
+sync_boot_accent() {
+  # The boot animation (install.sh --boot-splash) lives in the initramfs; its
+  # root helper may redraw it without a password, and does nothing when the
+  # accent is unchanged. It rebuilds the initramfs in the background.
+  local hex="${1#\#}" theme=/usr/share/plymouth/themes/nothing-kde/accent
+  [[ -x /usr/local/libexec/nothing-kde-boot && -r "$theme" ]] || return 0
+  [[ "$(cat "$theme")" != "${hex^^}" ]] || return 0
+  command -v pkexec >/dev/null 2>&1 || return 0
+  pkexec /usr/local/libexec/nothing-kde-boot accent "${hex^^}" >/dev/null 2>&1 || true
 }
 
 sync_accent_links() {

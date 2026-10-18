@@ -35,7 +35,7 @@ cd Nothing-Kde-Theme
 ./install.sh --widgets-only   # desktop widgets only
 ```
 
-Choose **Nothing KDE Dark** or **Nothing KDE Light** in System Settings. Add the desktop
+Choose **Nothing KDE** (dark) or **Nothing KDE Light** in System Settings. Add the desktop
 widgets through **Add Widgets**: clocks (analog, digital and world, large), date and calendar,
 weather, media, photo, devices and battery, and the Nothing KDE originals: **System Monitor**
 (CPU and memory dot rings, temperature, network speed), **Note** (saves as you type), **Focus
@@ -69,6 +69,24 @@ translucency rather than fake blur or an external effect
 
 Existing panels are retained. `--apply-layout` creates a backup first and removes only
 retired Nothing side panels.
+
+## Splash and boot animation
+
+Both show the same ring of dots: a comet in the KDE accent circles, then the ring fills.
+The Plasma splash is a single entry, **Nothing KDE**, used by the light and dark themes and
+drawn in the active colours.
+
+The boot animation is a Plymouth theme drawn by `runtime/bootsplash.py` (no foreign
+images). Installing needs the administrator password once:
+
+```sh
+./install.sh --boot-splash install   # or remove; rebuilds the initramfs
+```
+
+It installs a root-owned helper and a polkit rule that lets the active session recolour the
+boot animation, and nothing else, without a password: when the KDE accent changes, the
+island redraws it and rebuilds the initramfs in the background with the distribution's own
+`plymouth-set-default-theme -R`. Removing restores the previous Plymouth theme.
 
 ## Sounds
 

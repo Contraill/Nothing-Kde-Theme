@@ -64,6 +64,11 @@ restore_notification_skin
 # Give the volume/mute OSD back to Plasma (the island drew it).
 bash "$ROOT/runtime/nothing-control.sh" audio-osd plasma >/dev/null 2>&1 || true
 python3 "$ROOT/runtime/sounds.py" remove >/dev/null 2>&1 || true
+# The boot animation is in the initramfs; removing it rebuilds that with the previous theme.
+if [[ -e /usr/local/libexec/nothing-kde-boot ]]; then
+  pkexec /usr/local/libexec/nothing-kde-boot remove ||
+    printf 'Remove the boot animation later with: pkexec /usr/local/libexec/nothing-kde-boot remove\n' >&2
+fi
 # The passwordless camera helper lives outside the home directory.
 if [[ -e /usr/local/libexec/nothing-kde-privacy ]]; then
   pkexec /usr/bin/bash "$ROOT/runtime/privacy-system.sh" remove ||
