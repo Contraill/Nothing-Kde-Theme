@@ -128,6 +128,20 @@ def stretch_rows(font, factor):
             setattr(font[table], field, round(getattr(font[table], field) * factor))
 
 
+def centre_line_box(font):
+    """Shifts the line box so digits sit in its middle: QML centres a Text by
+    its line box, and the stock metrics left the clock riding high."""
+    zero = font['glyf'][font.getBestCmap()[ord('0')]]
+    zero.recalcBounds(font['glyf'])
+    middle = (zero.yMin + zero.yMax) / 2
+    os2, hhea = font['OS/2'], font['hhea']
+    height = os2.sTypoAscender - os2.sTypoDescender + os2.sTypoLineGap
+    ascent, descent = round(middle + height / 2), round(height / 2 - middle)
+    hhea.ascent, hhea.descent, hhea.lineGap = ascent, -descent, 0
+    os2.sTypoAscender, os2.sTypoDescender, os2.sTypoLineGap = ascent, -descent, 0
+    os2.usWinAscent, os2.usWinDescent = ascent, descent
+
+
 def rename(font):
     name = font['name']
     for record in list(name.names):
@@ -157,6 +171,7 @@ def main(kind, source, target):
         bake_single_substitution(font, 'ss02')
         centre_colon(font, (2, 4))
         stretch_rows(font, ROW_STRETCH)
+    centre_line_box(font)
     rename(font)
     font.save(target)
     check = TTFont(target)
