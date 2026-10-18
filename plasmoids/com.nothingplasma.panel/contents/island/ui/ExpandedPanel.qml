@@ -11,7 +11,7 @@ Item {
     readonly property bool notifying: Notifs.current !== null
 
     function openOverlay(name) {
-        if (name === "keyboard" && !(Backend.controls?.keyboardBrightnessAvailable ?? false)) return;
+        if (name === "brightness" && !(Backend.controls?.brightnessDetailsAvailable ?? false)) return;
         overlay = name;
     }
     function closeOverlay() {
@@ -20,8 +20,8 @@ Item {
     Connections {
         target: Backend.controls
         ignoreUnknownSignals: true
-        function onKeyboardBrightnessAvailableChanged() {
-            if (root.overlay === "keyboard" && !Backend.controls.keyboardBrightnessAvailable) root.closeOverlay();
+        function onBrightnessDetailsAvailableChanged() {
+            if (root.overlay === "brightness" && !Backend.controls.brightnessDetailsAvailable) root.closeOverlay();
         }
     }
 
@@ -410,8 +410,8 @@ Item {
                                 return connComp;
                             if (root.overlay === "audio")
                                 return audioComp;
-                            if (root.overlay === "keyboard" && (Backend.controls?.keyboardBrightnessAvailable ?? false))
-                                return keyboardComp;
+                            if (root.overlay === "brightness" && (Backend.controls?.brightnessDetailsAvailable ?? false))
+                                return brightnessComp;
                             if (root.overlay === "notif")
                                 return notifComp;
                             if (root.overlay === "cal")
@@ -441,8 +441,8 @@ Item {
                     }
 
                     Component {
-                        id: keyboardComp
-                        KeyboardBrightnessPanel { onClosed: root.closeOverlay() }
+                        id: brightnessComp
+                        BrightnessPanel { onClosed: root.closeOverlay() }
                     }
 
                     Component {

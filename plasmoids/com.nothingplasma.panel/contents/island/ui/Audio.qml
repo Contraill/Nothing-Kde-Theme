@@ -1,24 +1,57 @@
 pragma Singleton
 import QtQuick
+import org.kde.plasma.private.volume as PA
+import "."
+
+// Plasma's own PulseAudio bindings: devices notify changes, nothing is polled.
 QtObject {
     id: root
-    readonly property var controls: Backend.controls
-    readonly property real maxVolume: 1.0
-    readonly property real volume: (controls?.volume ?? 0) / 100
-    readonly property bool muted: controls?.muted ?? false
+    // PulseAudio's 100 % (PA_VOLUME_NORM).
+    readonly property real normalVolume: 65536
+    readonly property PA.GlobalConfig config: PA.GlobalConfig {}
+    readonly property PA.SinkModel sinkModel: PA.SinkModel {}
+    readonly property PA.SourceModel sourceModel: PA.SourceModel {}
+
+    readonly property var sink: Backend.preview ? null : PA.PreferredDevice.sink
+    readonly property var source: Backend.preview ? null : PA.PreferredDevice.source
+
+    readonly property real maxVolume: config.raiseMaximumVolume ? 1.5 : 1.0
+    readonly property real volume: sink ? sink.volume / normalVolume : 0
+    readonly property bool muted: sink?.muted ?? false
     readonly property int percent: Math.round(volume * 100)
-    readonly property bool boosted: false
-    property bool holding: false
-    property int watchers: 0
-    readonly property string defaultSink: String(controls?.defaultAudioOutputId ?? -1)
-    readonly property string defaultSource: String(controls?.defaultAudioInputId ?? -1)
-    readonly property var sinks: (controls?.audioOutputs ?? []).map(d => ({name: String(d.id), description: d.name}))
-    readonly property var sources: (controls?.audioInputs ?? []).map(d => ({name: String(d.id), description: d.name}))
-    readonly property string description: sinks.find(d => d.name === defaultSink)?.description ?? ""
-    function refreshDevices() { if (controls) controls.refreshAudio(); }
-    function setVolume(v) { if (controls) controls.setOutputVolume(Math.max(0, Math.min(1, v)) * 100); }
-    function step(delta) { setVolume(volume + delta); }
-    function toggleMute() { if (controls) controls.toggleOutputMute(); }
-    function setDefaultSink(name) { if (controls) controls.setDefaultAudioOutput(Number(name)); }
-    function setDefaultSource(name) { if (controls) controls.setDefaultAudioInput(Number(name)); }
+    readonly property bool boosted: volume > 1
+    readonly property string description: sink?.description ?? ""
+
+    readonly property bool inputAvailable: source !== null
+    readonly property real inputVolume: source ? source.volume / normalVolume : 0
+    readonly property bool inputMuted: source?.muted ?? false
+    readonly property int inputPercent: Math.round(inputVolume * 100)
+
+    property real wheelRemainder: 0
+
+    function writeVolume(device, value) {
+        if (!device || !device.volumeWritable) return;
+        const v = Math.max(0, Math.min(root.maxVolume, value));
+        device.volume = Math.round(v * root.normalVolume);
+        // Like Plasma's applet: choosing a level is an explicit request to hear it.
+        if (v > 0 && device.muted) device.muted = false;
+    }
+    function setVolume(v) { root.writeVolume(root.sink, v); }
+    function setInputVolume(v) { root.writeVolume(root.source, v); }
+    function step(direction) {
+        const stepSize = (root.config.volumeStep > 0 ? root.config.volumeStep : 5) / 100;
+        root.setVolume(Math.round((root.volume + direction * stepSize) / stepSize) * stepSize);
+    }
+    // Touchpads deliver many small deltas; one notch (120) is one step.
+    function wheel(event) {
+        root.wheelRemainder += event.angleDelta.y;
+        while (Math.abs(root.wheelRemainder) >= 120) {
+            const direction = root.wheelRemainder > 0 ? 1 : -1;
+            root.wheelRemainder -= direction * 120;
+            root.step(direction);
+        }
+    }
+    function toggleMute() { if (root.sink) root.sink.muted = !root.sink.muted; }
+    function toggleInputMute() { if (root.source) root.source.muted = !root.source.muted; }
+    function setDefault(device) { if (device && !Backend.preview) device.default = true; }
 }

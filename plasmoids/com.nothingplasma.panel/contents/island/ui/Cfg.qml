@@ -388,7 +388,13 @@ QtObject {
         "SYSTEM LANGUAGE": ["Sistem dili", "System language"],
         "ISLAND LANGUAGE": ["Ada dili:", "Island language:"],
         "WEATHER CITY": ["Hava durumu şehri:", "Weather city:"],
-        "AUTO CITY": ["Şehir adı girin", "Enter a city name"]
+        "AUTO CITY": ["Şehir adı girin", "Enter a city name"],
+        "UNMUTE": ["Sesi aç", "Unmute"],
+        "MUTE MICROPHONE": ["Mikrofonu sessize al", "Mute microphone"],
+        "UNMUTE MICROPHONE": ["Mikrofonu aç", "Unmute microphone"],
+        "MICROPHONE MUTED": ["Mikrofon sessizde", "Microphone muted"],
+        "DISPLAYS AND KEYBOARD": ["EKRANLAR VE KLAVYE", "DISPLAYS AND KEYBOARD"],
+        "BRIGHTNESS RIGHT CLICK": ["Tüm ekranlar ve klavye ışığı için sağ tıklayın", "Right-click for every display and keyboard lighting"]
 })
 
     function t(clave) {

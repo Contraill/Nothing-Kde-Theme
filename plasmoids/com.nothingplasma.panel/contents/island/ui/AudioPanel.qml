@@ -1,4 +1,5 @@
 import QtQuick
+import org.kde.plasma.private.volume as PA
 import "."
 Item {
     id: popup
@@ -7,16 +8,14 @@ Item {
 
     implicitHeight: col.implicitHeight + 44
 
-    readonly property var sinks: Audio.sinks
-    readonly property var sources: Audio.sources
-    Component.onCompleted: {
-        Audio.watchers++;
-        Audio.refreshDevices();
+    // Live microphone level; the monitoring stream exists only while this panel is open.
+    PA.VolumeMonitor {
+        id: inputLevel
+        target: Audio.source
     }
-    Component.onDestruction: Audio.watchers--
 
     function label(node): string {
-        return node?.description ?? node?.name ?? Cfg.t("Unknown");
+        return node?.description || node?.name || Cfg.t("Unknown");
     }
 
     Column {
@@ -106,57 +105,80 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 36
                 horizontalAlignment: Text.AlignRight
-                text: volCard.muted ? "0" : Math.round(volCard.vol * 100)
-                color: volCard.vol > 1 && !volCard.muted ? Theme.alert : Theme.fg
+                text: Math.round(volTrack.shown * 100)
+                color: volCard.muted ? Theme.outline : volTrack.shown > 1 ? Theme.alert : Theme.fg
                 font.family: Theme.fontDots
                 font.pixelSize: 17
                 font.weight: Font.Bold
             }
 
-            Rectangle {
-                id: track
+            VolumeTrack {
+                id: volTrack
                 anchors.left: volIcon.right
                 anchors.leftMargin: 12
                 anchors.right: volNum.left
                 anchors.rightMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
-                height: 6
-                radius: 3
-                color: Theme.surfaceHigh
+                value: volCard.vol
+                maxValue: volCard.maxVolume
+                muted: volCard.muted
+                accessibleName: Cfg.t("OUTPUT")
+                onMoved: value => Audio.setVolume(value)
+            }
+        }
+        Rectangle {
+            id: micCard
+            visible: Audio.inputAvailable
+            width: parent.width
+            height: 56
+            radius: Theme.shapeLg
+            color: Theme.surfaceAlt
 
-                Rectangle {
-                    width: track.width * (volCard.muted ? 0 : Math.min(volCard.vol, 1) / volCard.maxVolume)
-                    height: parent.height
-                    radius: parent.radius
-                    color: Theme.fg
-                }
-                Rectangle {
-                    anchors.right: parent.right
-                    width: track.width * (volCard.muted ? 0 : Math.max(volCard.vol - 1, 0) / volCard.maxVolume)
-                    height: parent.height
-                    radius: parent.radius
-                    color: Theme.alert
-                }
+            MicToggle {
+                id: micMute
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                anchors.verticalCenter: parent.verticalCenter
+                size: 30
+            }
 
-                MouseArea {
-                    anchors.fill: parent
-                    anchors.margins: -8
-                    cursorShape: Qt.PointingHandCursor
+            Text {
+                id: micNum
+                anchors.right: parent.right
+                anchors.rightMargin: 14
+                anchors.verticalCenter: parent.verticalCenter
+                width: 36
+                horizontalAlignment: Text.AlignRight
+                text: Math.round(micTrack.shown * 100)
+                color: Audio.inputMuted ? Theme.outline : Theme.fg
+                font.family: Theme.fontDots
+                font.pixelSize: 17
+                font.weight: Font.Bold
+            }
 
-                    function apply(mx) {
-                        Audio.setVolume((mx / track.width) * volCard.maxVolume);
-                    }
-
-                    onPressed: mouse => {
-                        Audio.holding = true;
-                        apply(mouse.x);
-                    }
-                    onPositionChanged: mouse => {
-                        if (pressed)
-                            apply(mouse.x);
-                    }
-                    onReleased: Audio.holding = false
-                }
+            VolumeTrack {
+                id: micTrack
+                anchors.left: micMute.right
+                anchors.leftMargin: 8
+                anchors.right: micNum.left
+                anchors.rightMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+                value: Audio.inputVolume
+                maxValue: Audio.maxVolume
+                muted: Audio.inputMuted
+                accessibleName: Cfg.t("MICROPHONE")
+                onMoved: value => Audio.setInputVolume(value)
+            }
+            // What the microphone hears right now, under its level control.
+            Rectangle {
+                anchors.left: micTrack.left
+                anchors.top: micTrack.bottom
+                anchors.topMargin: 4
+                width: micTrack.width * Math.min(1, inputLevel.volume) / micTrack.maxValue
+                height: 2
+                radius: 1
+                visible: inputLevel.available && !Audio.inputMuted
+                color: Theme.primary
             }
         }
         component DeviceRow: Rectangle {
@@ -164,7 +186,7 @@ Item {
             property var node: null
             property bool isOutput: true
 
-            readonly property bool current: dr.isOutput ? Audio.defaultSink === dr.node?.name : Audio.defaultSource === dr.node?.name
+            readonly property bool current: dr.node !== null && dr.node === (dr.isOutput ? Audio.sink : Audio.source)
 
             width: col.width
             height: 42
@@ -184,9 +206,12 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 text: {
                     const n = (dr.node?.name ?? "").toLowerCase();
-                    if (n.includes("bluez"))
+                    const form = String(dr.node?.formFactor ?? "");
+                    if (form === "headset" || form === "hands-free")
+                        return "headset_mic";
+                    if (form === "headphone" || n.includes("bluez"))
                         return "headphones";
-                    if (n.includes("hdmi"))
+                    if (form === "tv" || n.includes("hdmi"))
                         return "tv";
                     return dr.isOutput ? "speaker" : "mic";
                 }
@@ -226,14 +251,7 @@ Item {
                 anchors.fill: parent
                 hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
-                onClicked: {
-                    if (!dr.node)
-                        return;
-                    if (dr.isOutput)
-                        Audio.setDefaultSink(dr.node.name);
-                    else
-                        Audio.setDefaultSource(dr.node.name);
-                }
+                onClicked: Audio.setDefault(dr.node)
             }
         }
 
@@ -253,18 +271,19 @@ Item {
             spacing: 2
 
             Repeater {
-                model: popup.sinks
+                id: sinkRows
+                model: Audio.sinkModel
 
                 DeviceRow {
-                    required property var modelData
-                    node: modelData
+                    required property var model
+                    node: model.PulseObject
                     isOutput: true
                 }
             }
 
             Text {
                 width: parent.width
-                visible: popup.sinks.length === 0
+                visible: sinkRows.count === 0
                 horizontalAlignment: Text.AlignHCenter
                 topPadding: 8
                 bottomPadding: 8
@@ -283,18 +302,19 @@ Item {
             spacing: 2
 
             Repeater {
-                model: popup.sources
+                id: sourceRows
+                model: Audio.sourceModel
 
                 DeviceRow {
-                    required property var modelData
-                    node: modelData
+                    required property var model
+                    node: model.PulseObject
                     isOutput: false
                 }
             }
 
             Text {
                 width: parent.width
-                visible: popup.sources.length === 0
+                visible: sourceRows.count === 0
                 horizontalAlignment: Text.AlignHCenter
                 topPadding: 8
                 bottomPadding: 8

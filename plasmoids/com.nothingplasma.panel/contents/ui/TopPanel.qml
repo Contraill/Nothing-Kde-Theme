@@ -45,7 +45,7 @@ Item {
     Binding { target: Island.Cfg; property: "colorInvertida"; value: root.lightMode ? "#D0CFC8" : "#FFFFFF" }
     Binding { target: Island.Cfg; property: "colorTexto"; value: root.lightMode ? "#393A37" : "#FFFFFF" }
 
-    Components.SystemControls { id: controls; active: popup.visible; autoWallpaper: Plasmoid.configuration.autoWallpaper }
+    Components.SystemControls { id: controls; autoWallpaper: Plasmoid.configuration.autoWallpaper }
     Component.onCompleted: { controlsReady = true; controls.retireLegacyInhibitors(); controls.syncLockWallpaper(); controls.initAccent(); Qt.callLater(() => controls.ensureTray()); }
     onLightModeChanged: if (controlsReady) Qt.callLater(() => controls.syncLockWallpaper())
     onAutoWallpaperChanged: if (controlsReady && autoWallpaper) Qt.callLater(() => controls.syncLockWallpaper())
@@ -58,7 +58,6 @@ Item {
     }
     Binding { target: Island.Backend; property: "trayHost"; value: tray }
     Components.SystemStats { id: stats; active: popup.visible }
-    Timer { interval: 2500; running: !popup.visible; repeat: true; triggeredOnStart: true; onTriggered: controls.refreshAudio() }
 
     function toggleMenu(): void {
         if (popup.visible) popup.closePopup();

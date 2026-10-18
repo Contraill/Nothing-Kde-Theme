@@ -7,11 +7,14 @@ Rectangle {
     color: Theme.containerHigh
     readonly property var controls: Backend.controls
     property bool keyboardMode: false
-    signal requestKeyboard
+    // One entry of controls.displays; null drives the built-in (primary) display.
+    property var display: null
+    signal requestDetails
     readonly property bool keyboardAvailable: controls?.keyboardBrightnessAvailable ?? false
+    readonly property bool detailsAvailable: controls?.brightnessDetailsAvailable ?? keyboardAvailable
     readonly property bool available: keyboardMode ? keyboardAvailable : (controls?.brightnessAvailable ?? false)
-    readonly property int percent: keyboardMode ? (controls?.keyboardBrightness ?? 0) : (controls?.brightness ?? 0)
-    readonly property string title: keyboardMode ? Cfg.t("KEYBOARD BRIGHTNESS") : Cfg.t("BRIGHTNESS")
+    readonly property int percent: keyboardMode ? (controls?.keyboardBrightness ?? 0) : display ? display.percent : (controls?.brightness ?? 0)
+    readonly property string title: keyboardMode ? Cfg.t("KEYBOARD BRIGHTNESS") : display ? display.label : Cfg.t("BRIGHTNESS")
     property int pendingValue: -1
 
     function flush() {
@@ -21,7 +24,7 @@ Rectangle {
         pendingValue = -1;
         if (!Backend.preview && available) {
             if (keyboardMode) controls.setKeyboardBrightness(value);
-            else controls.setDisplayBrightness(value);
+            else controls.setDisplayBrightness(value, display?.displayName ?? "");
         }
     }
     Timer { id: update; interval: 100; onTriggered: root.flush() }
@@ -82,8 +85,8 @@ Rectangle {
         }
         enabled: root.available
         Accessible.name: root.title
-        Accessible.description: !root.keyboardMode && root.keyboardAvailable
-            ? Cfg.t("KEYBOARD RIGHT CLICK") : root.keyboardMode ? Cfg.t("KEYBOARD BRIGHTNESS") : Cfg.t("BRIGHTNESS HELP")
+        Accessible.description: !root.keyboardMode && !root.display && root.detailsAvailable
+            ? Cfg.t("BRIGHTNESS RIGHT CLICK") : root.keyboardMode ? Cfg.t("KEYBOARD BRIGHTNESS") : Cfg.t("BRIGHTNESS HELP")
         onMoved: {
             root.pendingValue = Math.round(value);
             if (!update.running) update.start();
@@ -115,7 +118,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
-        enabled: !root.keyboardMode && root.keyboardAvailable
-        onClicked: root.requestKeyboard()
+        enabled: !root.keyboardMode && !root.display && root.detailsAvailable
+        onClicked: root.requestDetails()
     }
 }

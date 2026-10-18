@@ -252,6 +252,8 @@ Grid {
                 anchors.margins: -4
                 cursorShape: Qt.PointingHandCursor
                 acceptedButtons: Qt.LeftButton | Qt.RightButton
+                Accessible.role: Accessible.Button
+                Accessible.name: Audio.muted ? Cfg.t("UNMUTE") : Cfg.t("MUTE")
                 onClicked: mouse => {
                     if (mouse.button === Qt.RightButton) {
                         root.requestPanel("audio");
@@ -261,80 +263,29 @@ Grid {
                 }
             }
         }
-        Rectangle {
-            id: volTrack
-            readonly property real maxVolume: Audio.maxVolume
+        VolumeTrack {
             anchors.left: volIcon.right
             anchors.leftMargin: 8
-            anchors.right: parent.right
-            anchors.rightMargin: 12
+            anchors.right: micToggle.visible ? micToggle.left : parent.right
+            anchors.rightMargin: micToggle.visible ? 8 : 12
             anchors.verticalCenter: volIcon.verticalCenter
-            height: 6
-            radius: 3
             color: Theme.containerHighest
-
-            Rectangle {
-                width: volTrack.width * (Audio.muted ? 0 : Math.min(Audio.volume, 1) / volTrack.maxVolume)
-                height: parent.height
-                radius: parent.radius
-                color: Theme.fg
-
-                Behavior on width {
-                    NumberAnimation {
-                        duration: Theme.durShort
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: Theme.emphasized
-                    }
-                }
-            }
-
-            Rectangle {
-                anchors.right: parent.right
-                width: volTrack.width * (Audio.muted ? 0 : Math.max(Audio.volume - 1, 0) / volTrack.maxVolume)
-                height: parent.height
-                radius: parent.radius
-                color: Theme.alert
-
-                Behavior on width {
-                    NumberAnimation {
-                        duration: Theme.durShort
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: Theme.emphasized
-                    }
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                anchors.margins: -6
-                cursorShape: Qt.PointingHandCursor
-                acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-                function apply(mx) {
-                    Audio.setVolume((mx / volTrack.width) * volTrack.maxVolume);
-                }
-
-                onClicked: mouse => {
-                    if (mouse.button === Qt.RightButton)
-                        root.requestPanel("audio");
-                }
-                onPressed: mouse => {
-                    if (mouse.button !== Qt.LeftButton)
-                        return;
-                    Audio.holding = true;
-                    apply(mouse.x);
-                }
-                onReleased: Audio.holding = false
-                onPositionChanged: mouse => {
-                    if (pressed)
-                        apply(mouse.x);
-                }
-            }
+            value: Audio.volume
+            maxValue: Audio.maxVolume
+            muted: Audio.muted
+            accessibleName: Cfg.t("SOUND")
+            onMoved: value => Audio.setVolume(value)
+        }
+        MicToggle {
+            id: micToggle
+            anchors.right: parent.right
+            anchors.rightMargin: 8
+            anchors.verticalCenter: volIcon.verticalCenter
         }
     }
     BrightnessCard {
         width: root.pillWidth
         height: 52
-        onRequestKeyboard: root.requestPanel("keyboard")
+        onRequestDetails: root.requestPanel("brightness")
     }
 }

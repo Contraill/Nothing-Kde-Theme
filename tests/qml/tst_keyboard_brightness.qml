@@ -18,7 +18,7 @@ Item {
         function setDisplayBrightness(value) { displayWrite = value; }
     }
     Island.BrightnessCard { id: card; width: 300; height: 52 }
-    SignalSpy { id: opened; target: card; signalName: "requestKeyboard" }
+    SignalSpy { id: opened; target: card; signalName: "requestDetails" }
     SignalSpy { id: moved; signalName: "moved" }
     TestCase {
         name: "KeyboardBrightness"

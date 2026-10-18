@@ -1,15 +1,19 @@
 import QtQuick
 import QtQuick.Controls as QQC2
 
+// Every display PowerDevil can dim (external monitors included) and the
+// keyboard backlight; the main card only drives the built-in display.
 Item {
     id: root
     signal closed
-    implicitHeight: 100
+    readonly property var controls: Backend.controls
+    implicitHeight: list.y + list.implicitHeight
+
     Text {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.topMargin: 7
-        text: Cfg.t("KEYBOARD LIGHTING")
+        text: Cfg.t("DISPLAYS AND KEYBOARD")
         color: Theme.fgFaint
         font.family: Theme.font
         font.pixelSize: Theme.labelSmall
@@ -36,11 +40,26 @@ Item {
             color: Theme.fgDim
         }
     }
-    BrightnessCard {
+    Column {
+        id: list
         anchors.left: parent.left
         anchors.right: parent.right
         y: 36
-        height: 56
-        keyboardMode: true
+        spacing: 8
+        Repeater {
+            model: root.controls?.displays ?? []
+            BrightnessCard {
+                required property var modelData
+                width: list.width
+                height: 56
+                display: modelData
+            }
+        }
+        BrightnessCard {
+            visible: root.controls?.keyboardBrightnessAvailable ?? false
+            width: list.width
+            height: 56
+            keyboardMode: true
+        }
     }
 }

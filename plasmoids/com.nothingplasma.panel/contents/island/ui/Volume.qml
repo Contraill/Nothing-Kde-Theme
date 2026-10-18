@@ -13,7 +13,7 @@ MouseArea {
     acceptedButtons: Qt.LeftButton
 
     onClicked: Audio.toggleMute()
-    onWheel: wheel => Audio.step(wheel.angleDelta.y > 0 ? 0.05 : -0.05)
+    onWheel: wheel => Audio.wheel(wheel)
 
     Row {
         id: row

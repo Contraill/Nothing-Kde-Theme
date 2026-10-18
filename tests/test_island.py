@@ -39,7 +39,13 @@ class IslandTests(unittest.TestCase):
         net = (UI / 'Net.qml').read_text()
         self.assertIn('wifiCommand("activate "', net)
         self.assertIn('JSON.parse(data["stdout"]).ok === true', net)
-        self.assertIn('controls.setDefaultAudioOutput', (UI / 'Audio.qml').read_text())
+        audio = (UI / 'Audio.qml').read_text()
+        # Native PulseAudio bindings; choosing a level also unmutes, as in Plasma's applet.
+        self.assertIn('org.kde.plasma.private.volume', audio)
+        self.assertIn('PA.PreferredDevice.sink', audio)
+        self.assertIn('if (v > 0 && device.muted) device.muted = false;', audio)
+        self.assertNotIn('wpctl', audio)
+        self.assertNotIn('refreshAudio', (ROOT / 'plasmoids/com.nothingplasma.panel/contents/ui/TopPanel.qml').read_text())
         notifs = (UI / 'Notifs.qml').read_text()
         self.assertIn('settings.notificationsInhibitedUntil', notifs)
         self.assertNotIn('NM.Server.inhibited =', notifs)
@@ -61,14 +67,15 @@ class IslandTests(unittest.TestCase):
 
     def test_brightness_reuses_system_backend_and_two_column_layout(self):
         card = (UI / 'BrightnessCard.qml').read_text()
-        self.assertIn('controls.setDisplayBrightness(value)', card)
+        self.assertIn('controls.setDisplayBrightness(value, display?.displayName ?? "")', card)
         self.assertIn('!Backend.preview && available', card)
         self.assertIn('interval: 100', card)
         self.assertIn('from: root.keyboardMode ? 0 : 1', card)
         pills = (UI / 'StatusPills.qml').read_text()
         self.assertIn('columns: 2', pills)
         self.assertIn('BrightnessCard {', pills)
-        self.assertIn('maxVolume: Audio.maxVolume', pills)
+        self.assertIn('maxValue: Audio.maxVolume', pills)
+        self.assertIn('MicToggle {', pills)
 
     def test_battery_is_outside_media_replacement_and_has_percentage(self):
         compact = (UI / 'CompactPill.qml').read_text()
@@ -77,16 +84,19 @@ class IslandTests(unittest.TestCase):
         self.assertIn('id: headerBattery', (UI / 'ExpandedPanel.qml').read_text())
         self.assertIn('root.percent + "%"', (UI / 'Battery.qml').read_text())
 
-    def test_keyboard_overlay_requires_native_capability(self):
+    def test_brightness_overlay_requires_native_capability(self):
         card = (UI / 'BrightnessCard.qml').read_text()
         self.assertIn('acceptedButtons: Qt.RightButton', card)
-        self.assertIn('enabled: !root.keyboardMode && root.keyboardAvailable', card)
+        self.assertIn('enabled: !root.keyboardMode && !root.display && root.detailsAvailable', card)
         panel = (UI / 'ExpandedPanel.qml').read_text()
-        self.assertIn('name === "keyboard" && !(Backend.controls?.keyboardBrightnessAvailable ?? false)', panel)
-        self.assertIn('onKeyboardBrightnessAvailableChanged', panel)
+        self.assertIn('name === "brightness" && !(Backend.controls?.brightnessDetailsAvailable ?? false)', panel)
+        self.assertIn('onBrightnessDetailsAvailableChanged', panel)
         controls = (ROOT / 'plasmoids/com.nothingplasma.panel/contents/ui/components/SystemControls.qml').read_text()
-        self.assertIn('Actions/KeyboardBrightnessControl', controls)
-        self.assertIn('!Number.isInteger(maximum) || maximum <= 0', controls)
+        self.assertIn('Brightness.KeyboardBrightnessControl', controls)
+        self.assertIn('keyboardControl.isBrightnessAvailable && keyboardControl.brightnessMax > 0', controls)
+        # PowerDevil also drives external monitors; never write 0 to a display.
+        self.assertIn('Brightness.ScreenBrightnessControl', controls)
+        self.assertIn('screenControl.setBrightness(display.displayName, Math.max(1, level))', controls)
 
 
 if __name__ == '__main__':

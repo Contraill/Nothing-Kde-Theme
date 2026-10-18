@@ -75,7 +75,7 @@ Item {
                 anchors.fill: parent
                 anchors.margins: -6
                 acceptedButtons: Qt.NoButton
-                onWheel: wheel => Audio.step(wheel.angleDelta.y > 0 ? 0.05 : -0.05)
+                onWheel: wheel => Audio.wheel(wheel)
             }
 
             Row {
