@@ -446,8 +446,7 @@ QtObject {
         "MOON PHASES": ["AY EVRELERİ", "MOON PHASES"],
         "AUTO THEME": ["GÜN DOĞUMU / BATIMINDA OTOMATİK", "AUTOMATIC AT SUNRISE / SUNSET"],
         "DND TILE": ["Rahatsız etme", "Do not disturb"],
-        "FIND PHONE": ["Telefonu bul", "Find phone"],
-        "CONNECT PHONE": ["Telefon bağla", "Connect phone"],
+        "SCREEN OFF": ["Ekranı kapat", "Screen off"],
         "MIC BLOCKED": ["Mikrofon sistemde engelli · açmak için tıkla", "Microphone blocked by the system · click to allow"]
 })
 

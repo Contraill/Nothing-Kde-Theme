@@ -56,13 +56,12 @@ Rectangle {
             }
         }
     }
-    // Quick settings: Do Not Disturb, and the phone through KDE Connect when it
-    // is installed. The camera switch lives with the island's action buttons.
+    // Quick settings. The camera switch lives with the island's action buttons.
     Row {
         x: 8; y: 59
         width: parent.width - 16
         spacing: 6
-        readonly property real tileWidth: phone.status === Loader.Ready ? (width - spacing) / 2 : width
+        readonly property real tileWidth: (width - spacing) / 2
         // Do Not Disturb stays on until it is turned off again.
         QuickTile {
             width: parent.tileWidth
@@ -72,13 +71,17 @@ Rectangle {
             label: Cfg.t("DND TILE")
             onClicked: Notifs.toggleMute()
         }
-        Loader {
-            id: phone
+        // Screen off while the session keeps running, e.g. with coffee mode.
+        QuickTile {
             width: parent.tileWidth
-            height: 36
-            active: !Backend.preview
-            source: "PhoneTile.qml"
-            visible: status === Loader.Ready
+            enabled: !Backend.preview
+            glyph: "tv_off"
+            label: Cfg.t("SCREEN OFF")
+            onClicked: {
+                Backend.dismissRequested();
+                // PowerDevil's own action; the pause keeps the click from waking the screen.
+                Exec.run("sleep 0.8; qdbus6 org.kde.kglobalaccel /component/org_kde_powerdevil org.kde.kglobalaccel.Component.invokeShortcut 'Turn Off Screen'");
+            }
         }
     }
 }
