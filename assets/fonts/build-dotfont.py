@@ -5,8 +5,8 @@
   build-dotfont.py doto Doto[ROND,wght].ttf NothingDots.ttf
 
 Sources (SIL OFL 1.1, no Reserved Font Name), from github.com/google/fonts:
-  bitcount  ofl/bitcountsingle  light, with stylistic set 2 baked in: 5x7 digits and
-                                capitals instead of 5x6, the colon centred on them (in use)
+  bitcount  ofl/bitcountsingle  weight 375, stylistic set 2 baked in (5x7 digits and
+                                capitals instead of 5x6), rows spread 1.25x, colon centred (in use)
   doto      ofl/doto            round heavy dots; its ":" "." ";" use five-dot
                                 crosses and "%" small rings, which read as "※"
                                 at panel sizes, so they get single dots
@@ -18,8 +18,10 @@ from fontTools.ttLib.tables._g_l_y_f import Glyph, GlyphCoordinates
 from fontTools.varLib import instancer
 
 FAMILY = 'Nothing Dots'
+# Row pitch over column pitch for bitcount: taller digits with round dots.
+ROW_STRETCH = 1.25
 FONTS = {
-    'bitcount': {'wght': 250, 'ELSH': 0, 'ELXP': 0, 'slnt': 0, 'CRSV': 0},
+    'bitcount': {'wght': 375, 'ELSH': 0, 'ELXP': 0, 'slnt': 0, 'CRSV': 0},
     'doto': {'ROND': 100, 'wght': 900},
 }
 
@@ -112,6 +114,20 @@ def centre_colon(font, rows):
         component.y = 100 * row
 
 
+def stretch_rows(font, factor):
+    """Spreads the element rows apart: taller glyphs, dots stay round."""
+    glyf = font['glyf']
+    for name in font.getGlyphOrder():
+        glyph = glyf[name]
+        if glyph.isComposite():
+            for component in glyph.components:
+                component.y = round(component.y * factor)
+    for table, fields in (('hhea', ('ascent', 'descent')),
+                          ('OS/2', ('sTypoAscender', 'sTypoDescender', 'usWinAscent', 'usWinDescent', 'sCapHeight', 'sxHeight'))):
+        for field in fields:
+            setattr(font[table], field, round(getattr(font[table], field) * factor))
+
+
 def rename(font):
     name = font['name']
     for record in list(name.names):
@@ -140,6 +156,7 @@ def main(kind, source, target):
     if kind == 'bitcount':
         bake_single_substitution(font, 'ss02')
         centre_colon(font, (2, 4))
+        stretch_rows(font, ROW_STRETCH)
     rename(font)
     font.save(target)
     check = TTFont(target)
