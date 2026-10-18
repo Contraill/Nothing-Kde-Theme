@@ -23,7 +23,8 @@ QtObject {
 
     function fail(key) { failed = true; errorKey = key; }
     function fetchCoordinates(latitude, longitude, label) {
-        transport.get(Data.forecastUrl(latitude, longitude), data => {
+        // Fahrenheit where the region uses US customary units (KDE region settings).
+        transport.get(Data.forecastUrl(latitude, longitude, Qt.locale().measurementSystem === Locale.ImperialUSSystem), data => {
             try {
                 const value = Data.current(data);
                 temp = value.temp; code = value.code; day = value.day; city = label;

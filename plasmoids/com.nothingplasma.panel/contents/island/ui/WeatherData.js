@@ -17,10 +17,11 @@ function locations(data) {
         latitude: p.latitude, longitude: p.longitude
     }));
 }
-function forecastUrl(latitude, longitude) {
+function forecastUrl(latitude, longitude, fahrenheit) {
     if (!validCoordinates(latitude, longitude)) throw new Error("coordinates");
     return "https://api.open-meteo.com/v1/forecast?latitude=" + Number(latitude)
-        + "&longitude=" + Number(longitude) + "&current=temperature_2m,weather_code,is_day&forecast_days=1";
+        + "&longitude=" + Number(longitude) + "&current=temperature_2m,weather_code,is_day&forecast_days=1"
+        + (fahrenheit ? "&temperature_unit=fahrenheit" : "");
 }
 function current(data) {
     const c = data?.current;
