@@ -5,7 +5,8 @@
   build-dotfont.py doto Doto[ROND,wght].ttf NothingDots.ttf
 
 Sources (SIL OFL 1.1, no Reserved Font Name), from github.com/google/fonts:
-  bitcount  ofl/bitcountsingle  the Light instance (in use)
+  bitcount  ofl/bitcountsingle  light, with stylistic set 2 baked in: 5x7 digits and
+                                capitals instead of 5x6, the colon centred on them (in use)
   doto      ofl/doto            round heavy dots; its ":" "." ";" use five-dot
                                 crosses and "%" small rings, which read as "※"
                                 at panel sizes, so they get single dots
@@ -18,7 +19,7 @@ from fontTools.varLib import instancer
 
 FAMILY = 'Nothing Dots'
 FONTS = {
-    'bitcount': {'wght': 300, 'ELSH': 0, 'ELXP': 0, 'slnt': 0, 'CRSV': 0},
+    'bitcount': {'wght': 250, 'ELSH': 0, 'ELXP': 0, 'slnt': 0, 'CRSV': 0},
     'doto': {'ROND': 100, 'wght': 900},
 }
 
@@ -86,19 +87,46 @@ def draw_patterns(font):
                               for row, line in enumerate(rows) for col, cell in enumerate(line) if cell == '#'])
 
 
+def bake_single_substitution(font, tag):
+    """Points the character map at the feature's alternates, then drops GSUB
+    so no contextual rule swaps them back."""
+    gsub = font['GSUB'].table
+    mapping = {}
+    for record in gsub.FeatureList.FeatureRecord:
+        if record.FeatureTag != tag: continue
+        for index in record.Feature.LookupListIndex:
+            for table in gsub.LookupList.Lookup[index].SubTable:
+                mapping.update(getattr(getattr(table, 'ExtSubTable', table), 'mapping', None) or {})
+    assert mapping, tag + ' not found'
+    for subtable in font['cmap'].tables:
+        if subtable.isUnicode():
+            subtable.cmap = {code: mapping.get(glyph, glyph) for code, glyph in subtable.cmap.items()}
+    del font['GSUB']
+
+
+def centre_colon(font, rows):
+    """Bitcount's colon is two element components; place them on the given rows."""
+    colon = font['glyf']['colon']
+    assert colon.isComposite() and len(colon.components) == len(rows)
+    for component, row in zip(colon.components, rows):
+        component.y = 100 * row
+
+
 def rename(font):
     name = font['name']
     for record in list(name.names):
         if record.nameID in (1, 4, 6, 16, 17, 21, 22, 25):
             name.removeNames(nameID=record.nameID)
     name.setName(FAMILY, 1, 3, 1, 0x409)
-    name.setName('Regular', 2, 3, 1, 0x409)
+    # The only face is marked bold: QML asks the dot font for Font.Bold in many
+    # places, and synthetic bolding would swell the dots until they touch.
+    name.setName('Bold', 2, 3, 1, 0x409)
     name.setName(FAMILY, 4, 3, 1, 0x409)
-    name.setName(FAMILY.replace(' ', '') + '-Regular', 6, 3, 1, 0x409)
+    name.setName(FAMILY.replace(' ', '') + '-Bold', 6, 3, 1, 0x409)
     name.setName('Static instance built by Nothing KDE (assets/fonts/build-dotfont.py).', 5, 3, 1, 0x409)
-    font['OS/2'].usWeightClass = 400
-    font['OS/2'].fsSelection = (font['OS/2'].fsSelection & ~0b1100001) | 0b1000000  # REGULAR
-    font['head'].macStyle = 0
+    font['OS/2'].usWeightClass = 700
+    font['OS/2'].fsSelection = (font['OS/2'].fsSelection & ~0b1100001) | 0b0100000  # BOLD
+    font['head'].macStyle = 1
 
 
 def main(kind, source, target):
@@ -109,6 +137,9 @@ def main(kind, source, target):
         for name in ('period', 'semicolon'):
             collapse_crosses(font, name)
         draw_patterns(font)
+    if kind == 'bitcount':
+        bake_single_substitution(font, 'ss02')
+        centre_colon(font, (2, 4))
     rename(font)
     font.save(target)
     check = TTFont(target)
