@@ -155,6 +155,9 @@ class AppearanceTests(unittest.TestCase):
         qml = (source / 'ui/GlassyDecoration.qml').read_text()
         self.assertIn('property alias decorationMask: blurMask.mask', qml)
         self.assertIn('SystemPalette', qml)
+        # Window-sized Canvas images were repainted on every resize frame.
+        self.assertNotIn('Canvas', qml)
+        self.assertIn('fillRule: ShapePath.OddEvenFill', qml)
         spec = importlib.util.spec_from_file_location('glassy_build', ROOT / 'plasma/aurorae/build.py')
         builder = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(builder)

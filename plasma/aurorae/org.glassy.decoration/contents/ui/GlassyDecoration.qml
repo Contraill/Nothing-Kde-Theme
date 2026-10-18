@@ -1,10 +1,10 @@
 // Glassy: shared native Aurorae component for the runtime and KPackage entrypoints.
 import QtQuick
+import QtQuick.Shapes
 import org.kde.kwin.decoration
 import org.kde.ksvg as KSvg
 import org.kde.plasma.plasma5support as PlasmaSupport
 import "ConfigDefaults.js" as Config
-import "Geometry.js" as Geometry
 
 Decoration {
     id: root
@@ -74,20 +74,26 @@ Decoration {
         id: frame
         anchors.fill: parent
         anchors.margins: decoration.client.maximized ? 0 : root.shadowSize
-        Canvas {
+        // Scene-graph primitives only: Canvas kept a window-sized image per item and
+        // repainted it on every frame of a resize.
+        Item {
+            id: shadow
             anchors.fill: parent; anchors.margins: -root.shadowSize
             visible: !root.screenAdjacent && root.settings.Shadow > 0
-            readonly property var paintState: [root.cornerRadius,root.roundBottom,root.settings.Shadow,decoration.client.active]
-            onPaintStateChanged: requestPaint()
-            onWidthChanged: requestPaint()
-            onHeightChanged: requestPaint()
-            onPaint: {
-                const c=getContext("2d"); c.reset(); c.lineWidth=1;
-                for (let i=0;i<root.shadowSize;i++) {
-                    c.strokeStyle=Qt.rgba(0,0,0,[0,.10,.16,.23][root.settings.Shadow] *
-                        (decoration.client.active ? 1 : .65) * (1-i/root.shadowSize));
-                    Geometry.path(c,width,height,root.cornerRadius+root.shadowSize,root.shadowSize-i-.5,root.roundBottom);
-                    c.stroke();
+            readonly property real strength: [0, .10, .16, .23][root.settings.Shadow] * (decoration.client.active ? 1 : .65)
+            // One 1 px ring per shadow pixel, fading outwards from the frame edge.
+            Repeater {
+                model: root.shadowSize
+                Rectangle {
+                    required property int index
+                    readonly property real ringRadius: Math.min(root.cornerRadius + index + 1, width / 2, height / 2)
+                    x: root.shadowSize - index - 1; y: x
+                    width: shadow.width - 2 * x; height: shadow.height - 2 * y
+                    color: "transparent"
+                    border.width: 1
+                    border.color: Qt.rgba(0, 0, 0, shadow.strength * (1 - index / root.shadowSize))
+                    topLeftRadius: ringRadius; topRightRadius: ringRadius
+                    bottomLeftRadius: root.roundBottom ? ringRadius : 0; bottomRightRadius: bottomLeftRadius
                 }
             }
         }
@@ -96,36 +102,44 @@ Decoration {
             anchors.left: parent.left; anchors.right: parent.right; anchors.top: parent.top
             height: root.titleHeight
         }
-        Canvas {
-            id: outline
+        Shape {
+            id: surfaceShape
             anchors.fill: parent
-            readonly property var paintState: [root.ink, root.surface, root.surfaceOpacity, root.cornerRadius, root.roundBottom, root.bottomHeight, root.edgeWidth, root.settings.Separator, root.titleHeight, root.settings.ActiveAccentBorder, decoration.client.active, colors.highlight]
-            onPaintStateChanged: requestPaint()
-            onWidthChanged: requestPaint()
-            onHeightChanged: requestPaint()
-            onPaint: {
-                const c=getContext("2d"); c.reset();
-                const b=root.edgeWidth;
-                // Clip only the decoration region; never fill client content.
-                c.save(); c.beginPath();
-                c.rect(0,0,width,root.titleHeight);
-                c.rect(0,root.titleHeight,b,height-root.titleHeight);
-                c.rect(width-b,root.titleHeight,b,height-root.titleHeight);
-                c.rect(b,height-root.bottomHeight,Math.max(0,width-2*b),root.bottomHeight); c.clip();
-                Geometry.path(c,width,height,root.cornerRadius,0,root.roundBottom);
-                c.fillStyle=Qt.rgba(root.surface.r,root.surface.g,root.surface.b,root.surfaceOpacity);
-                c.fill(); c.restore();
-                if (b > 0) {
-                    const ink=root.settings.ActiveAccentBorder && decoration.client.active ? colors.highlight : root.ink;
-                    c.strokeStyle=Qt.rgba(ink.r,ink.g,ink.b,root.settings.ActiveAccentBorder && decoration.client.active ? .28 : .15);
-                    c.lineWidth=b; c.lineJoin="miter";
-                    Geometry.path(c,width,height,root.cornerRadius,b/2,root.roundBottom); c.stroke();
+            readonly property real outer: Math.max(0, Math.min(root.cornerRadius, width / 2, height / 2))
+            ShapePath {
+                // Odd-even fill leaves the client area out: decoration region only.
+                fillRule: ShapePath.OddEvenFill
+                fillColor: Qt.rgba(root.surface.r, root.surface.g, root.surface.b, root.surfaceOpacity)
+                strokeWidth: -1
+                PathRectangle {
+                    width: surfaceShape.width; height: surfaceShape.height
+                    topLeftRadius: surfaceShape.outer; topRightRadius: surfaceShape.outer
+                    bottomLeftRadius: root.roundBottom ? surfaceShape.outer : 0; bottomRightRadius: root.roundBottom ? surfaceShape.outer : 0
                 }
-                if (root.settings.Separator) {
-                    c.strokeStyle=Qt.rgba(root.ink.r,root.ink.g,root.ink.b,.12); c.lineWidth=1;
-                    c.beginPath(); c.moveTo(b,root.titleHeight-.5); c.lineTo(width-b,root.titleHeight-.5); c.stroke();
+                PathRectangle {
+                    x: root.edgeWidth; y: root.titleHeight
+                    width: Math.max(0, surfaceShape.width - 2 * root.edgeWidth)
+                    height: Math.max(0, surfaceShape.height - root.titleHeight - root.bottomHeight)
                 }
             }
+        }
+        Rectangle {
+            id: outline
+            anchors.fill: parent
+            visible: root.edgeWidth > 0
+            readonly property bool accent: root.settings.ActiveAccentBorder && decoration.client.active
+            readonly property color ink: accent ? colors.highlight : root.ink
+            color: "transparent"
+            border.width: root.edgeWidth
+            border.color: Qt.rgba(ink.r, ink.g, ink.b, accent ? .28 : .15)
+            topLeftRadius: surfaceShape.outer; topRightRadius: surfaceShape.outer
+            bottomLeftRadius: root.roundBottom ? surfaceShape.outer : 0; bottomRightRadius: bottomLeftRadius
+        }
+        Rectangle {
+            visible: root.settings.Separator
+            x: root.edgeWidth; y: root.titleHeight - 1
+            width: Math.max(0, parent.width - 2 * root.edgeWidth); height: 1
+            color: Qt.rgba(root.ink.r, root.ink.g, root.ink.b, .12)
         }
         ButtonGroup {
             id: leftButtons
