@@ -130,7 +130,8 @@ printf 'Pre-change backup: %s\n' "$BACKUP"
 MUTATING=1
 if (( CURRENT )); then
   printf 'Notification package already current; checking live attachment.\n'
-elif kpackagetool6 --type Plasma/Applet --list 2>/dev/null | grep -Fq "$ID"; then
+elif [[ -d "$INSTALLED" ]]; then
+  # The package list also matches retired "$ID.rcNN" ids; trust the directory.
   kpackagetool6 --type Plasma/Applet --upgrade "$PACKAGE"
 else
   kpackagetool6 --type Plasma/Applet --install "$PACKAGE"

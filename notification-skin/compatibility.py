@@ -43,6 +43,8 @@ def validate(sources):
     # role and callback. Anything new needs an explicit adapter review.
     def delegate(text):
         text = re.sub(r'delegate\s*:\s*NotificationPopup\s*\{', 'delegate: NotificationPopup {', text)
+        # Plasma 6.8 made the adapter's own jobError type fix upstream.
+        text = text.replace('required property string jobError', 'required property int jobError')
         return prepare.block(text, 'delegate: NotificationPopup {')
     if tokens(delegate(native)) != tokens(delegate(pinned)):
         raise ValueError('Native notification delegate/model contract changed')

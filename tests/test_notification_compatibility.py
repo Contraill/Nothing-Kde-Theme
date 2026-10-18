@@ -29,6 +29,11 @@ class ContractTests(unittest.TestCase):
         source['NotificationPopup.qml'] = source['NotificationPopup.qml'].replace('property int popupWidth', 'property   int   popupWidth')
         compat.validate(source)
 
+    def test_plasma_6_8_job_error_type_is_compatible(self):
+        source = self.fixture()
+        source['global/Globals.qml'] = source['global/Globals.qml'].replace('required property string jobError', 'required property int jobError')
+        compat.validate(source)
+
     def test_unrelated_global_changes_allowed(self):
         source = self.fixture()
         source['global/Globals.qml'] = source['global/Globals.qml'].replace('property int popupSpacing:', 'property int popupSpacing: /* distro */')

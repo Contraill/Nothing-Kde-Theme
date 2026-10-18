@@ -181,6 +181,11 @@ fi
 mkdir -p "$DATA_HOME/nothing-plasma/bin" "$DATA_HOME/nothing-plasma/wallpapers"
 install -m 0755 "$ROOT/runtime/nothing-control.sh" "$DATA_HOME/nothing-plasma/bin/nothing-control.sh"
 "$DATA_HOME/nothing-plasma/bin/nothing-control.sh" retire-inhibitors
+# Release-candidate notification bridges used versioned ids; drop unused ones.
+for old_bridge in "$DATA_HOME"/plasma/plasmoids/com.nothingplasma.notificationbridge.rc*; do
+  [[ -d "$old_bridge" && ! -L "$old_bridge" ]] || continue
+  grep -Fqs "plugin=$(basename -- "$old_bridge")" "${XDG_CONFIG_HOME:-$HOME/.config}/plasma-org.kde.plasma.desktop-appletsrc" || rm -rf -- "$old_bridge"
+done
 # Wi-Fi now goes through Plasma's NetworkManager bindings; drop the retired helper.
 rm -f "$DATA_HOME/nothing-plasma/bin/wifi.py"
 install -m 0755 "$ROOT/runtime/privacy.py" "$DATA_HOME/nothing-plasma/bin/privacy.py"
