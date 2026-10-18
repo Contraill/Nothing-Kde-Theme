@@ -1,9 +1,44 @@
 import QtQuick
+import org.kde.plasma.plasmoid
+import org.kde.plasma.workspace.calendar as PlasmaCalendar
 import "."
 Item {
     id: popup
 
     signal closed
+    property var panelConfig: Plasmoid.configuration
+
+    // Holidays and moon phases come from Plasma's own calendar event plugins.
+    readonly property var plugins: panelConfig?.calendarEvents ?? ["holidaysevents"]
+    function togglePlugin(id) {
+        if (!panelConfig) return;
+        const list = popup.plugins.filter(p => p !== id);
+        if (list.length === popup.plugins.length) list.push(id);
+        panelConfig.calendarEvents = list;
+    }
+    PlasmaCalendar.EventPluginsManager {
+        id: eventPlugins
+        enabledPlugins: popup.plugins
+    }
+    PlasmaCalendar.Calendar {
+        id: backend
+        days: 7
+        weeks: 6
+        firstDayOfWeek: popup.primerDia
+        today: popup.hoy
+        displayedDate: new Date(popup.verAnio, popup.verMes, 1)
+        Component.onCompleted: daysModel.setPluginsManager(eventPlugins)
+    }
+    property int eventRev: 0
+    Connections {
+        target: backend.daysModel
+        function onAgendaUpdated() { popup.eventRev++; }
+        function onModelReset() { popup.eventRev++; }
+    }
+    function eventsOn(d) {
+        const update = popup.eventRev;
+        return backend.daysModel.eventsForDate(d);
+    }
 
     implicitHeight: col.implicitHeight + 44
     property date hoy: new Date()
@@ -103,6 +138,38 @@ Item {
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 6
+                Repeater {
+                    model: [{id: "holidaysevents", icon: "celebration", label: "HOLIDAYS"},
+                        {id: "astronomicalevents", icon: "bedtime", label: "MOON PHASES"}]
+                    Rectangle {
+                        id: chip
+                        required property var modelData
+                        readonly property bool on: popup.plugins.includes(modelData.id)
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 26
+                        height: 26
+                        radius: height / 2
+                        color: on ? Theme.inverted : chipMa.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
+                        Accessible.role: Accessible.CheckBox
+                        Accessible.name: Cfg.t(modelData.label)
+                        Accessible.checked: on
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: chip.modelData.icon
+                            color: chip.on ? Theme.invertedFg : Theme.fgDim
+                            font.family: Theme.fontIcons
+                            font.pixelSize: 15
+                        }
+                        MouseArea {
+                            id: chipMa
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: popup.togglePlugin(chip.modelData.id)
+                        }
+                    }
+                }
                 Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     width: hoyTxt.implicitWidth + 20
@@ -233,7 +300,7 @@ Item {
                         if (popup.eligiendoMes)
                             return String(popup.verAnio);
                         const d = new Date(popup.verAnio, popup.verMes, 1);
-                        return (popup.loc.standaloneMonthName(d.getMonth(), Locale.LongFormat) + " " + popup.verAnio).toUpperCase();
+                        return (popup.loc.standaloneMonthName(d.getMonth(), Locale.LongFormat) + " " + popup.verAnio).toLocaleUpperCase(popup.loc.name);
                     }
                     color: Theme.fg
                     font.family: Theme.font
@@ -298,7 +365,7 @@ Item {
                             verticalAlignment: Text.AlignVCenter
                             text: {
                                 const d = (popup.primerDia + index) % 7;
-                                return popup.loc.dayName(d, Locale.ShortFormat).substring(0, 2).toUpperCase();
+                                return popup.loc.dayName(d, Locale.ShortFormat).substring(0, 2).toLocaleUpperCase(popup.loc.name);
                             }
                             color: Theme.fgFaint
                             font.family: Theme.font
@@ -325,6 +392,7 @@ Item {
 
                             readonly property bool esHoy: popup.mismoDia(modelData.fecha, popup.hoy)
                             readonly property bool esElegido: popup.haySeleccion && popup.mismoDia(modelData.fecha, popup.elegido)
+                            readonly property bool hayEvento: popup.eventsOn(modelData.fecha).length > 0
 
                             Rectangle {
                                 anchors.centerIn: parent
@@ -352,6 +420,17 @@ Item {
                                     font.family: Theme.fontDots
                                     font.pixelSize: 15
                                     font.weight: Font.Bold
+                                }
+                                Rectangle {
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    anchors.bottom: parent.bottom
+                                    anchors.bottomMargin: 2
+                                    width: 4
+                                    height: 4
+                                    radius: 2
+                                    visible: celda.hayEvento
+                                    color: celda.esHoy ? Theme.invertedFg : Theme.primary
+                                    opacity: celda.modelData.esteMes ? 1 : 0.4
                                 }
 
                                 MouseArea {
@@ -427,7 +506,7 @@ Item {
 
                             Text {
                                 anchors.centerIn: parent
-                                text: popup.loc.standaloneMonthName(mesItem.index, Locale.ShortFormat).toUpperCase()
+                                text: popup.loc.standaloneMonthName(mesItem.index, Locale.ShortFormat).toLocaleUpperCase(popup.loc.name)
                                 color: mesItem.index === popup.verMes ? Theme.invertedFg : Theme.fg
                                 font.family: Theme.font
                                 font.pixelSize: Theme.bodySmall
@@ -453,11 +532,12 @@ Item {
         Rectangle {
             id: pie
             width: parent.width
-            height: 46
+            height: Math.max(46, pieCol.implicitHeight + 16)
             radius: Theme.shapeLg
             color: Theme.surfaceAlt
 
             readonly property date foco: popup.haySeleccion ? popup.elegido : popup.hoy
+            readonly property string eventos: popup.eventsOn(foco).map(e => e.title).join(" · ")
 
             Text {
                 id: numGrande
@@ -472,6 +552,7 @@ Item {
             }
 
             Column {
+                id: pieCol
                 anchors.left: numGrande.right
                 anchors.leftMargin: 12
                 anchors.right: parent.right
@@ -481,7 +562,7 @@ Item {
 
                 Text {
                     width: parent.width
-                    text: popup.loc.dayName(pie.foco.getDay(), Locale.LongFormat).toUpperCase()
+                    text: popup.loc.dayName(pie.foco.getDay(), Locale.LongFormat).toLocaleUpperCase(popup.loc.name)
                     color: Theme.fg
                     font.family: Theme.font
                     font.pixelSize: Theme.labelMedium
@@ -494,12 +575,25 @@ Item {
                     text: {
                         const f = pie.foco;
                         const mes = popup.loc.standaloneMonthName(f.getMonth(), Locale.LongFormat);
-                        return (mes + " " + f.getFullYear() + " · " + Cfg.t("Week") + " " + popup.semanaDe(f)).toUpperCase();
+                        return (mes + " " + f.getFullYear() + " · " + Cfg.t("Week") + " " + popup.semanaDe(f)).toLocaleUpperCase(popup.loc.name);
                     }
                     color: Theme.fgFaint
                     font.family: Theme.font
                     font.pixelSize: Theme.labelSmall
                     font.letterSpacing: Theme.labelSpacing
+                    elide: Text.ElideRight
+                }
+
+                Text {
+                    width: parent.width
+                    visible: text !== ""
+                    text: pie.eventos.toLocaleUpperCase(popup.loc.name)
+                    color: Theme.primary
+                    font.family: Theme.font
+                    font.pixelSize: Theme.labelSmall
+                    font.letterSpacing: Theme.labelSpacing
+                    wrapMode: Text.Wrap
+                    maximumLineCount: 2
                     elide: Text.ElideRight
                 }
             }

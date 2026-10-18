@@ -441,7 +441,9 @@ QtObject {
         "RUNNING JOBS": ["Süren işler", "Running jobs"],
         "MICROPHONE IN USE": ["Mikrofon kullanımda", "Microphone in use"],
         "AUDIO OSD IN ISLAND": ["Ses ve mikrofon değişimini adada göster", "Show volume and microphone changes in the island"],
-        "PHONE": ["Telefon (KDE Connect)", "Phone (KDE Connect)"]
+        "PHONE": ["Telefon (KDE Connect)", "Phone (KDE Connect)"],
+        "HOLIDAYS": ["TATİLLER", "HOLIDAYS"],
+        "MOON PHASES": ["AY EVRELERİ", "MOON PHASES"]
 })
 
     function t(clave) {

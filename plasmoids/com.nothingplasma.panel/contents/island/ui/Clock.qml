@@ -28,7 +28,7 @@ Row {
     Text {
         anchors.verticalCenter: parent.verticalCenter
         visible: root.showDate
-        text: Cfg.locale.toString(clock.now, "ddd d MMM").toUpperCase()
+        text: Cfg.locale.toString(clock.now, "ddd d MMM").toLocaleUpperCase(Cfg.locale.name)
         color: Theme.fgDim
         font.family: Theme.font
         font.pixelSize: Theme.labelSmall

@@ -92,7 +92,7 @@ Item {
                     Text {
                         Layout.fillWidth: true
                         Layout.minimumWidth: 0
-                        text: (root.modelInterface.applicationName || root.modelInterface.originName || "NOTIFICATION").toUpperCase()
+                        text: (root.modelInterface.applicationName || root.modelInterface.originName || "NOTIFICATION").toLocaleUpperCase()
                         color: root.mutedColor
                         font.pointSize: Kirigami.Theme.smallFont.pointSize
                         font.weight: Font.DemiBold

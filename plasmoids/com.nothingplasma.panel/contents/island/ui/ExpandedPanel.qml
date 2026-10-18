@@ -243,7 +243,7 @@ Item {
                                     id: dateText
                                     width: Math.max(0, parent.parent.width - 20)
                                     elide: Text.ElideRight
-                                    text: Cfg.locale.toString(panelClock.now, "dddd, d MMMM").toUpperCase()
+                                    text: Cfg.locale.toString(panelClock.now, "dddd, d MMMM").toLocaleUpperCase(Cfg.locale.name)
                                     color: Theme.fg
                                     font.family: Theme.font
                                     font.pixelSize: Theme.labelMedium

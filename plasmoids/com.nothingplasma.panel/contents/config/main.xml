@@ -25,6 +25,8 @@
     <entry name="showBattery" type="Bool"><default>true</default></entry>
     <entry name="showMiniPlayer" type="Bool"><default>true</default></entry>
     <entry name="showPhone" type="Bool"><default>true</default></entry>
+    <!-- Plasma calendar event plugins shown in the island calendar. -->
+    <entry name="calendarEvents" type="StringList"><default>holidaysevents</default></entry>
     <entry name="dockCurrentDesktopOnly" type="Bool"><default>false</default></entry>
     <entry name="dockCurrentScreenOnly" type="Bool"><default>false</default></entry>
     <entry name="hiddenApplications" type="StringList" />
