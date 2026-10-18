@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls as QQC2
+import "."
 
 Rectangle {
     id: root
@@ -55,65 +56,29 @@ Rectangle {
             }
         }
     }
+    // Quick settings: Do Not Disturb, and the phone through KDE Connect when it
+    // is installed. The camera switch lives with the island's action buttons.
     Row {
         x: 8; y: 59
         width: parent.width - 16
         spacing: 6
-        component PrivacyButton: QQC2.AbstractButton {
-            id: button
-            property bool blocked: false
-            property bool mixed: false
-            property string glyph: ""
-            property string label: ""
-            property string explanation: ""
-            width: (parent.width - 6) / 2
+        readonly property real tileWidth: phone.status === Loader.Ready ? (width - spacing) / 2 : width
+        // Do Not Disturb stays on until it is turned off again.
+        QuickTile {
+            width: parent.tileWidth
+            enabled: !Backend.preview
+            on: Notifs.muted
+            glyph: Notifs.muted ? "do_not_disturb_on" : "do_not_disturb_off"
+            label: Cfg.t("DND TILE")
+            onClicked: Notifs.toggleMute()
+        }
+        Loader {
+            id: phone
+            width: parent.tileWidth
             height: 36
-            Accessible.name: label + " · " + (mixed ? Cfg.t("PARTIAL") : (!enabled && !ControlHub.busy) ? Cfg.t("UNAVAILABLE") : blocked ? Cfg.t("PRIVACY OFF") : Cfg.t("PRIVACY ON"))
-            Accessible.description: explanation
-            background: Rectangle {
-                radius: 11
-                color: button.blocked ? Theme.inverted : button.hovered ? Theme.surfaceTop : Theme.surfaceHigh
-                border.width: button.mixed ? 1 : 0
-                border.color: Theme.alert
-                Behavior on color { ColorAnimation { duration: Theme.durShort } }
-            }
-            contentItem: Row {
-                spacing: 5
-                opacity: button.enabled || ControlHub.busy ? 1 : 0.3
-                leftPadding: 8
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: button.glyph
-                    font.family: Theme.fontIcons
-                    font.pixelSize: 17
-                    color: button.blocked ? Theme.invertedFg : Theme.fgDim
-                }
-                Text {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: ControlHub.busy ? "…" : button.label
-                    font.family: Theme.font
-                    font.pixelSize: 10
-                    color: button.blocked ? Theme.invertedFg : Theme.fgDim
-                }
-            }
-        }
-        PrivacyButton {
-            blocked: ControlHub.cameraBlocked
-            mixed: ControlHub.cameraMixed
-            enabled: !ControlHub.busy && ControlHub.cameraAvailable
-            glyph: blocked ? "videocam_off" : "videocam"
-            label: Cfg.t("CAMERA")
-            explanation: Cfg.t("CAMERA HELP")
-            onClicked: ControlHub.toggleCamera()
-        }
-        PrivacyButton {
-            blocked: ControlHub.microphoneBlocked
-            mixed: ControlHub.microphonePartial
-            enabled: !ControlHub.busy && (ControlHub.microphoneAvailable || ControlHub.microphonePartial)
-            glyph: blocked ? "mic_off" : "mic"
-            label: Cfg.t("MICROPHONE")
-            explanation: Cfg.t("MIC HELP")
-            onClicked: ControlHub.toggleMicrophone()
+            active: !Backend.preview
+            source: "PhoneTile.qml"
+            visible: status === Loader.Ready
         }
     }
 }

@@ -6,15 +6,22 @@ import "."
 Rectangle {
     id: root
     property int size: 24
+    // An ALSA block from the retired privacy button outlives the software
+    // mute; show it here so it can still be lifted.
+    readonly property bool systemBlocked: ControlHub.microphoneBlocked || ControlHub.microphonePartial
 
-    visible: Audio.inputAvailable
+    visible: Audio.inputAvailable || systemBlocked
     width: size
     height: size
     radius: size / 2
-    color: Audio.inputMuted ? Theme.inverted : ma.containsMouse ? Theme.surfaceHigh : "transparent"
+    color: systemBlocked ? Theme.alert : Audio.inputMuted ? Theme.inverted : ma.containsMouse ? Theme.surfaceHigh : "transparent"
     Accessible.role: Accessible.Button
-    Accessible.name: Audio.inputMuted ? Cfg.t("UNMUTE MICROPHONE") : Cfg.t("MUTE MICROPHONE")
-    Accessible.onPressAction: Audio.toggleInputMute()
+    Accessible.name: systemBlocked ? Cfg.t("MIC BLOCKED") : Audio.inputMuted ? Cfg.t("UNMUTE MICROPHONE") : Cfg.t("MUTE MICROPHONE")
+    Accessible.onPressAction: root.activate()
+    function activate() {
+        if (systemBlocked) ControlHub.toggleMicrophone();
+        else Audio.toggleInputMute();
+    }
 
     Behavior on color {
         ColorAnimation {
@@ -24,8 +31,8 @@ Rectangle {
 
     Text {
         anchors.centerIn: parent
-        text: Audio.inputMuted ? "mic_off" : "mic"
-        color: Audio.inputMuted ? Theme.invertedFg : Theme.fgVariant
+        text: Audio.inputMuted || root.systemBlocked ? "mic_off" : "mic"
+        color: root.systemBlocked || Audio.inputMuted ? Theme.invertedFg : Theme.fgVariant
         font.family: Theme.fontIcons
         font.pixelSize: Math.round(root.size * 0.62)
     }
@@ -35,6 +42,6 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
-        onClicked: Audio.toggleInputMute()
+        onClicked: root.activate()
     }
 }

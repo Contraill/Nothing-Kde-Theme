@@ -21,6 +21,9 @@ USB = Path('/sys/bus/usb/devices')
 PROBE = Path('/sys/bus/usb/drivers_probe')
 SOUND = Path('/dev/snd')
 RULE = Path('/etc/udev/rules.d/71-nothing-plasma-microphone.rules')
+# Installed with its polkit rule by privacy-system.sh (the rules directory
+# is unreadable for users, so the helper marks the setup).
+SYSTEM_HELPER = Path('/usr/local/libexec/nothing-kde-privacy')
 STATE = Path('/var/lib/nothing-plasma-privacy')
 RULE_TEXT = '# Nothing KDE local ALSA capture privacy\nSUBSYSTEM=="sound", KERNEL=="pcmC*D*c", TAG-="uaccess", MODE:="0000"\n'
 ENV = dict(os.environ, LC_ALL='C')
@@ -88,6 +91,7 @@ def status():
             'microphoneAvailable': bool(nodes) and extras == [] and mic_tools and not legacy_capture,
             'microphoneBlocked': own_rule() and denied and extras == [] and not legacy_capture,
             'microphonePartial': own_rule() and (not denied or extras != [] or legacy_capture),
+            'cameraPasswordless': SYSTEM_HELPER.is_file(),
             'profiles': profiles, 'profile': profile}
 
 

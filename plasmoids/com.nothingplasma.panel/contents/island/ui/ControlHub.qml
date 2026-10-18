@@ -10,6 +10,8 @@ QtObject {
     property bool cameraAvailable: false
     property bool cameraBlocked: false
     property bool cameraMixed: false
+    // privacy-system.sh lets the camera be turned off without a password.
+    property bool cameraPasswordless: false
     property bool microphoneAvailable: false
     property bool microphoneBlocked: false
     property bool microphonePartial: false
@@ -36,6 +38,7 @@ QtObject {
                 cameraAvailable = state.cameraAvailable === true;
                 cameraBlocked = state.cameraBlocked === true;
                 cameraMixed = state.cameraMixed === true;
+                cameraPasswordless = state.cameraPasswordless === true;
                 microphoneAvailable = state.microphoneAvailable === true;
                 microphoneBlocked = state.microphoneBlocked === true;
                 microphonePartial = state.microphonePartial === true;
@@ -67,7 +70,9 @@ QtObject {
     function toggleCamera() {
         if (Backend.preview || busy || !cameraAvailable) return;
         busy = true;
-        runner.run(helper("camera " + (cameraBlocked ? "on" : "off"), true), result => root.finish(result));
+        const command = !cameraBlocked && cameraPasswordless ? "pkexec /usr/local/libexec/nothing-kde-privacy camera off"
+            : helper("camera " + (cameraBlocked ? "on" : "off"), true);
+        runner.run(command, result => root.finish(result));
     }
     function toggleMicrophone() {
         if (Backend.preview || busy || (!microphoneAvailable && !microphonePartial)) return;

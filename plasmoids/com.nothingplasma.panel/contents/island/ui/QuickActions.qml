@@ -11,7 +11,7 @@ Row {
     signal requestSettings
 
     readonly property int btnSize: 44
-    readonly property int botones: 4
+    readonly property int botones: camera.visible ? 5 : 4
     Rectangle {
         width: root.width - (root.btnSize + root.spacing) * root.botones
         height: 44
@@ -108,13 +108,14 @@ Row {
         property string icon: ""
         property bool danger: false
         property bool rightClickable: false
+        property bool on: false
         signal activated
         signal rightActivated
 
         width: root.btnSize
         height: 44
         radius: Theme.shapeMd
-        color: abMa.pressed ? Theme.surfaceTop : abMa.containsMouse ? Theme.surfaceHigh : Theme.containerHigh
+        color: ab.on ? Theme.inverted : abMa.pressed ? Theme.surfaceTop : abMa.containsMouse ? Theme.surfaceHigh : Theme.containerHigh
         scale: abMa.pressed ? 0.98 : abMa.containsMouse ? 1.04 : 1.0
 
         Behavior on color {
@@ -133,7 +134,7 @@ Row {
         Text {
             anchors.centerIn: parent
             text: ab.icon
-            color: ab.danger ? Theme.error : Theme.fgVariant
+            color: ab.on ? Theme.invertedFg : ab.danger ? Theme.error : Theme.fgVariant
             font.family: Theme.fontIcons
             font.pixelSize: 19
         }
@@ -150,6 +151,21 @@ Row {
                 else ab.activated();
             }
         }
+    }
+
+    // USB camera access; filled while the camera is blocked.
+    ActionButton {
+        id: camera
+        visible: ControlHub.cameraAvailable
+        on: ControlHub.cameraBlocked
+        opacity: ControlHub.busy ? 0.5 : 1
+        icon: ControlHub.cameraBlocked ? "videocam_off" : "videocam"
+        border.width: ControlHub.cameraMixed ? 1 : 0
+        border.color: Theme.alert
+        Accessible.role: Accessible.Button
+        Accessible.name: Cfg.t("CAMERA") + " · " + Cfg.t(ControlHub.cameraBlocked ? "PRIVACY OFF" : "PRIVACY ON")
+        Accessible.description: Cfg.t("CAMERA HELP")
+        onActivated: ControlHub.toggleCamera()
     }
 
     ActionButton {

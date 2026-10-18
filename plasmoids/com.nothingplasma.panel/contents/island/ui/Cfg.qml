@@ -360,7 +360,7 @@ QtObject {
         "PERFORMANCE": ["Performans", "Performance"],
         "CAMERA": ["Kamera", "Camera"],
         "MICROPHONE": ["Mikrofon", "Microphone"],
-        "CAMERA HELP": ["Bağlı USB kameralarını aç/kapat. Yönetici onayı gerekir; yeniden takılınca veya başlatılınca sıfırlanabilir.", "Enable/block connected USB cameras. Administrator approval required; reconnecting or rebooting may reset this."],
+        "CAMERA HELP": ["Bağlı USB kameraları engeller ya da açar. Açmak yönetici onayı ister; kapatmak, şifresiz kurulum yapıldıysa istemez. Yeniden takınca veya başlatınca sıfırlanabilir.", "Blocks or allows connected USB cameras. Allowing asks for administrator approval; blocking does not once the passwordless setup is installed. Reconnecting or rebooting may reset it."],
         "MIC HELP": ["Yerel ALSA mikrofonlarına sistem erişimini engeller/açar. Yönetici onayı gerekir; ses hizmeti kısa süre yeniden başlar. Bluetooth ve sanal kaynaklar desteklenmez.", "Block/allow system access to local ALSA microphones. Requires administrator approval and briefly restarts audio. Bluetooth and virtual sources are not supported."],
         "MIC BUSY": ["Başka bir uygulama mikrofonu doğrudan kullanıyor. Kaydı kapatıp tekrar deneyin; değişiklik geri alındı.", "Another application is using the microphone directly. Stop recording and retry; the change was rolled back."],
         "PARTIAL": ["Tam engelleme doğrulanamadı", "Full blocking could not be verified"],
@@ -444,7 +444,11 @@ QtObject {
         "PHONE": ["Telefon (KDE Connect)", "Phone (KDE Connect)"],
         "HOLIDAYS": ["TATİLLER", "HOLIDAYS"],
         "MOON PHASES": ["AY EVRELERİ", "MOON PHASES"],
-        "AUTO THEME": ["GÜN DOĞUMU / BATIMINDA OTOMATİK", "AUTOMATIC AT SUNRISE / SUNSET"]
+        "AUTO THEME": ["GÜN DOĞUMU / BATIMINDA OTOMATİK", "AUTOMATIC AT SUNRISE / SUNSET"],
+        "DND TILE": ["Rahatsız etme", "Do not disturb"],
+        "FIND PHONE": ["Telefonu bul", "Find phone"],
+        "CONNECT PHONE": ["Telefon bağla", "Connect phone"],
+        "MIC BLOCKED": ["Mikrofon sistemde engelli · açmak için tıkla", "Microphone blocked by the system · click to allow"]
 })
 
     function t(clave) {

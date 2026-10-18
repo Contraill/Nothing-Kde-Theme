@@ -34,6 +34,13 @@ FocusScope {
         const index = childIndex(row);
         return index && tasksModel ? tasksModel.data(index, role) : null;
     }
+    // Closes one window. The preview stays while the application has others.
+    function closeWindow(row) {
+        if (row < 0 || row >= childCount) return;
+        const last = childCount <= 1;
+        tasksModel.requestClose(childIndex(row));
+        if (last) windowActivated();
+    }
     function activate(row) {
         if (row < 0 || row >= childCount) return;
         tasksModel.requestActivate(childIndex(row));
@@ -106,6 +113,11 @@ FocusScope {
                 readonly property string elsewhere: cardWorkspaces.otherNames.join(", ")
                 Accessible.name: title + (elsewhere ? " · " + elsewhere : "")
                 onClicked: { previews.currentIndex = index; root.activate(index); }
+                // Middle click closes this window only, as in Plasma's task manager.
+                TapHandler {
+                    acceptedButtons: Qt.MiddleButton
+                    onTapped: root.closeWindow(card.index)
+                }
                 background: Rectangle {
                     radius: Island.Theme.shapeMd
                     color: card.hovered ? Island.Theme.surfaceHigh : Island.Theme.surfaceAlt
@@ -171,7 +183,7 @@ FocusScope {
                             Layout.preferredWidth: 24; Layout.preferredHeight: 24
                             visible: root.childData(card.index, TaskManager.AbstractTasksModel.IsClosable) === true
                             Accessible.name: Island.Cfg.t("CLOSE WINDOW") + " · " + card.title
-                            onClicked: { root.tasksModel.requestClose(root.childIndex(card.index)); root.windowActivated(); }
+                            onClicked: root.closeWindow(card.index)
                             background: Rectangle { radius: 12; color: close.hovered ? Island.Theme.alert : Island.Theme.surfaceHigh }
                             contentItem: Text {
                                 text: "close"; font.family: Island.Theme.fontIcons; font.pixelSize: 16

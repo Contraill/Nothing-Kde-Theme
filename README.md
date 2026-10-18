@@ -228,10 +228,23 @@ Restore the previous notification appearance with:
 ./notification-skin/rollback-native.sh
 ```
 
-Microphone blocking is not a mute toggle. With administrator approval, it denies local ALSA
-capture access and persists across reboot; audio services briefly restart. Bluetooth, virtual,
-network, and OSS capture devices, as well as root access, are outside its scope. USB camera
-blocking targets USB Video interfaces and may reset after reconnect or reboot.
+The camera button in the island's bottom row blocks USB Video interfaces; reconnecting or
+rebooting may reset it. Blocking normally asks for the administrator password. A one-time
+setup removes that prompt for blocking only:
+
+```sh
+./install.sh --privacy-helper install   # or remove; asks for the password once
+```
+
+It installs a root-owned copy of the helper and a polkit rule that lets the active local
+session run exactly `camera off` without a password. Allowing the camera again still asks,
+so a program running as you cannot quietly turn it back on.
+
+The island's microphone button is a software mute of the default input. The older ALSA
+capture block is still available from the command line (it denies local capture devices,
+persists across reboot and briefly restarts audio services; Bluetooth, virtual, network and
+OSS capture are outside its scope). While that block is active, the microphone button turns
+red and lifts it with administrator approval.
 
 Privacy controls require Polkit, ACL tools, udev, systemd, and PipeWire/WirePlumber.
 
@@ -284,6 +297,9 @@ notification badges (following Plasma's task-manager badge settings), a progress
 running transfers and a window count. Launcher settings can limit the dock to the current
 desktop or screen. The launcher's top row lists the most used applications, and typing
 anywhere starts a search.
+
+Middle-click a window preview to close that window; the application's other windows stay
+open.
 
 Drag dock icons to preview a new order; releasing commits it once. Releasing above or below
 the dock cancels the move. Right-click menus include actions supplied by the application's
