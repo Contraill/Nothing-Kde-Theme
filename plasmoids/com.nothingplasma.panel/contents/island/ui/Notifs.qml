@@ -18,6 +18,66 @@ QtObject {
     }
 
     readonly property int count: model.count
+
+    // KDE jobs (copies, extractions, downloads) drive progress rings on dock icons.
+    readonly property NM.Notifications jobs: NM.Notifications {
+        showNotifications: false
+        showJobs: true
+        showExpired: true
+        showDismissed: true
+        groupMode: NM.Notifications.GroupDisabled
+    }
+    readonly property Instantiator jobRows: Instantiator {
+        model: root.jobs
+        delegate: QtObject {
+            required property var model
+            readonly property string app: model.desktopEntry ?? ""
+            readonly property int percentage: model.percentage ?? 0
+            readonly property bool running: model.jobState === NM.Notifications.JobStateRunning
+                || model.jobState === NM.Notifications.JobStateSuspended
+        }
+    }
+    // Desktop entry -> average progress (0..100) of its running jobs.
+    readonly property var jobsByApp: {
+        const sums = {}, counts = {};
+        const list = [];
+        for (let i = 0; i < jobRows.count; ++i)
+            list.push(jobRows.objectAt(i));
+        for (const job of list) {
+            if (!job || !job.running || !job.app) continue;
+            sums[job.app] = (sums[job.app] ?? 0) + job.percentage;
+            counts[job.app] = (counts[job.app] ?? 0) + 1;
+        }
+        const result = {};
+        for (const app in sums) result[app] = Math.round(sums[app] / counts[app]);
+        return result;
+    }
+
+    // Unread badges follow Plasma's own "badges in task manager" settings. A
+    // notification counts until its application or the notification list is opened.
+    property var seenAt: ({})
+    readonly property var unreadByApp: {
+        const update = model.count + root.clock;
+        const map = {};
+        if (!settings.badgesInTaskManager) return map;
+        const blocked = settings.badgeBlacklistedApplications ?? [];
+        const all = seenAt["*"] ?? 0;
+        for (let row = 0; row < model.count; ++row) {
+            if (root.at(row, NM.Notifications.IsGroupRole)) continue;
+            const app = String(root.at(row, NM.Notifications.DesktopEntryRole) ?? "");
+            if (!app || blocked.includes(app)) continue;
+            const when = root.at(row, NM.Notifications.UpdatedRole) ?? root.at(row, NM.Notifications.CreatedRole);
+            const time = when instanceof Date ? when.getTime() : 0;
+            if (time <= Math.max(all, seenAt[app] ?? 0)) continue;
+            map[app] = (map[app] ?? 0) + 1;
+        }
+        return map;
+    }
+    function markSeen(app) {
+        const next = Object.assign({}, root.seenAt);
+        next[app || "*"] = Date.now();
+        root.seenAt = next;
+    }
     readonly property int notificationCount: {
         let n = 0;
         for (let row = 0; row < model.count; ++row)

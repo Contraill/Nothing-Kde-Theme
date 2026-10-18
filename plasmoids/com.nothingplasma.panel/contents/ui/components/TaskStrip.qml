@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls as QQC2
+import QtQuick.Shapes
 import QtQuick.Window
 import QtQml.Models
 import org.kde.kirigami as Kirigami
@@ -69,6 +70,34 @@ Item {
         chooser.anchorItem = anchor;
         chooser.openPopup();
     }
+    // Next/previous window of a task (wheel, Meta+N on groups); a lone window or launcher is just activated.
+    function cycleTask(row, direction) {
+        if (!tasksModel || row < 0 || row >= taskList.count) return;
+        const parent = tasksModel.makeModelIndex(row);
+        const count = Number(tasksModel.data(parent, TaskManager.AbstractTasksModel.ChildCount)) || 0;
+        if (tasksModel.data(parent, TaskManager.AbstractTasksModel.IsGroupParent) !== true || count < 2) {
+            tasksModel.requestActivate(parent);
+            return;
+        }
+        let active = -1;
+        for (let i = 0; i < count; ++i) {
+            if (tasksModel.data(tasksModel.makeModelIndex(row, i), TaskManager.AbstractTasksModel.IsActive) === true) {
+                active = i;
+                break;
+            }
+        }
+        const next = active < 0 ? 0 : (active + direction + count) % count;
+        tasksModel.requestActivate(tasksModel.makeModelIndex(row, next));
+    }
+    // Meta+1…9 as in Plasma's task manager: launch, raise or minimise; groups cycle.
+    function activateEntry(row) {
+        if (!tasksModel || row < 0 || row >= taskList.count) return;
+        const index = tasksModel.makeModelIndex(row);
+        Island.Notifs.markSeen(String(tasksModel.data(index, TaskManager.AbstractTasksModel.AppId) ?? ""));
+        const count = Number(tasksModel.data(index, TaskManager.AbstractTasksModel.ChildCount)) || 0;
+        if (tasksModel.data(index, TaskManager.AbstractTasksModel.IsGroupParent) === true && count > 1) cycleTask(row, 1);
+        else activateOrMinimize(index);
+    }
     function moveTask(from, to) {
         if (!tasksModel || from < 0 || to < 0 || from === to) return;
         chooser.closePopup();
@@ -126,6 +155,23 @@ Item {
             readonly property var modelIndex: root.tasksModel ? root.tasksModel.makeModelIndex(index) : null
             readonly property var launcherUrl: root.launcherUrlFor(model)
             readonly property string appName: String(model.AppName || model.display || "")
+            readonly property string appId: String(model.AppId || "")
+            readonly property var jobProgress: Island.Notifs.jobsByApp[appId]
+            readonly property int unreadCount: Island.Notifs.unreadByApp[appId] ?? 0
+            property real wheelDelta: 0
+            // KWin animates minimising towards this rectangle.
+            function publishGeometry(): void {
+                if (!root.tasksModel || !task.modelIndex || task.windowCount === 0) return;
+                const p = task.mapToGlobal(0, 0);
+                root.tasksModel.requestPublishDelegateGeometry(task.modelIndex, Qt.rect(p.x, p.y, task.width, task.height), task);
+            }
+            Component.onCompleted: Qt.callLater(task.publishGeometry)
+            onXChanged: Qt.callLater(task.publishGeometry)
+            onWindowCountChanged: Qt.callLater(task.publishGeometry)
+            Connections {
+                target: taskList
+                function onContentXChanged() { Qt.callLater(task.publishGeometry); }
+            }
             width: root.cellSize
             height: root.cellSize
             Accessible.role: Accessible.Button
@@ -136,6 +182,7 @@ Item {
             QQC2.ToolTip.delay: 500
 
             function activateTask() {
+                Island.Notifs.markSeen(task.appId);
                 if (isGroup) {
                     groupPreviewTip.hideImmediately();
                     root.chooseWindows(index, windowCount, appName, model.decoration, task);
@@ -180,6 +227,7 @@ Item {
                     border.color: Island.Theme.surface
                 }
                 Kirigami.Icon {
+                    id: taskIcon
                     anchors.centerIn: parent
                     anchors.verticalCenterOffset: -2
                     width: 25 * root.uiScale
@@ -198,19 +246,78 @@ Item {
                     color: task.model.IsDemandingAttention ? Island.Theme.alert : task.model.IsActive ? Island.Theme.fg : Island.Theme.fgDim
                     Behavior on width { NumberAnimation { duration: Island.Theme.durShort } }
                 }
+                // Progress of the application's running KDE jobs.
+                Shape {
+                    objectName: "taskProgressRing"
+                    anchors.centerIn: taskIcon
+                    width: taskIcon.width + 8 * root.uiScale
+                    height: width
+                    visible: task.jobProgress !== undefined
+                    preferredRendererType: Shape.CurveRenderer
+                    ShapePath {
+                        strokeColor: Island.Theme.surfaceHigh
+                        strokeWidth: 2 * root.uiScale
+                        fillColor: "transparent"
+                        PathAngleArc {
+                            centerX: taskIcon.width / 2 + 4 * root.uiScale
+                            centerY: centerX
+                            radiusX: centerX - root.uiScale
+                            radiusY: radiusX
+                            startAngle: 0
+                            sweepAngle: 360
+                        }
+                    }
+                    ShapePath {
+                        strokeColor: root.accentColor
+                        strokeWidth: 2 * root.uiScale
+                        fillColor: "transparent"
+                        capStyle: ShapePath.RoundCap
+                        PathAngleArc {
+                            centerX: taskIcon.width / 2 + 4 * root.uiScale
+                            centerY: centerX
+                            radiusX: centerX - root.uiScale
+                            radiusY: radiusX
+                            startAngle: -90
+                            sweepAngle: 3.6 * Math.max(2, task.jobProgress ?? 0)
+                        }
+                    }
+                }
+                // Unread notifications (Plasma's "badges in task manager" setting).
                 Rectangle {
+                    objectName: "taskUnreadBadge"
                     anchors.right: parent.right
                     anchors.top: parent.top
-                    width: 15
+                    z: 1
+                    visible: task.unreadCount > 0
                     height: 15
+                    width: Math.max(15, unreadText.implicitWidth + 7)
                     radius: 7.5
+                    color: root.accentColor
+                    border.width: 1.5
+                    border.color: Island.Theme.surface
+                    Text {
+                        id: unreadText
+                        anchors.centerIn: parent
+                        text: task.unreadCount > 99 ? "99+" : task.unreadCount
+                        font.family: Island.Theme.font
+                        font.pixelSize: 9
+                        font.weight: Font.Bold
+                        color: root.accentColor.hslLightness > 0.58 ? "#111111" : "#ffffff"
+                    }
+                }
+                Rectangle {
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    width: 14
+                    height: 14
+                    radius: 7
                     visible: task.isGroup
                     color: Island.Theme.inverted
                     Text {
                         anchors.centerIn: parent
                         text: Math.min(99, task.windowCount)
                         font.family: Island.Theme.font
-                        font.pixelSize: 9
+                        font.pixelSize: 8
                         color: Island.Theme.invertedFg
                     }
                 }
@@ -279,12 +386,53 @@ Item {
                         else task.activateTask();
                     }
                     onWheel: wheel => {
-                        if (taskList.contentWidth > taskList.width) {
+                        // Over a running app the wheel walks its windows; Shift or an
+                        // overflowing launcher row scrolls the dock instead.
+                        if (task.windowCount > 0 && wheel.angleDelta.y !== 0 && !(wheel.modifiers & Qt.ShiftModifier)) {
+                            task.wheelDelta += wheel.angleDelta.y;
+                            while (Math.abs(task.wheelDelta) >= 120) {
+                                const direction = task.wheelDelta > 0 ? -1 : 1;
+                                task.wheelDelta += direction * 120;
+                                root.cycleTask(task.index, direction);
+                            }
+                            wheel.accepted = true;
+                        } else if (taskList.contentWidth > taskList.width) {
+                            const delta = wheel.angleDelta.y !== 0 ? wheel.angleDelta.y : wheel.angleDelta.x;
                             taskList.contentX = Math.max(0, Math.min(taskList.contentWidth - taskList.width,
-                                taskList.contentX - wheel.angleDelta.y));
+                                taskList.contentX - delta));
                             wheel.accepted = true;
                         } else wheel.accepted = false;
                     }
+                }
+            }
+            // Files dropped on an icon open with that application; hovering while
+            // dragging raises its window so the file can be dropped into it.
+            DropArea {
+                anchors.fill: parent
+                function isLauncherFile(url): bool {
+                    const text = String(url);
+                    return text.startsWith("applications:") || text.endsWith(".desktop");
+                }
+                onEntered: drag => {
+                    // .desktop files fall through to the dock's pinning drop area.
+                    if (!drag.hasUrls || drag.urls.every(url => isLauncherFile(url))) {
+                        drag.accepted = false;
+                        return;
+                    }
+                    if (task.windowCount > 0) raiseWhileDragging.restart();
+                }
+                onExited: raiseWhileDragging.stop()
+                onDropped: drop => {
+                    raiseWhileDragging.stop();
+                    const files = drop.urls.filter(url => !isLauncherFile(url));
+                    if (!files.length || !root.tasksModel || !task.modelIndex) return;
+                    root.tasksModel.requestOpenUrls(task.modelIndex, files);
+                    drop.acceptProposedAction();
+                }
+                Timer {
+                    id: raiseWhileDragging
+                    interval: 700
+                    onTriggered: if (root.tasksModel && task.modelIndex) root.tasksModel.requestActivate(task.modelIndex)
                 }
             }
             PlasmaExtras.Menu {

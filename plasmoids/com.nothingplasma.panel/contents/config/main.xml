@@ -21,11 +21,15 @@
     <entry name="showVolume" type="Bool"><default>true</default></entry>
     <entry name="showBattery" type="Bool"><default>true</default></entry>
     <entry name="showMiniPlayer" type="Bool"><default>true</default></entry>
+    <entry name="dockCurrentDesktopOnly" type="Bool"><default>false</default></entry>
+    <entry name="dockCurrentScreenOnly" type="Bool"><default>false</default></entry>
     <entry name="hiddenApplications" type="StringList" />
     <entry name="islandWeatherLatitude" type="String"><default></default></entry>
     <entry name="islandWeatherLongitude" type="String"><default></default></entry>
     <entry name="islandWeatherLocationQuery" type="String"><default></default></entry>
     <entry name="pinnedLaunchers" type="StringList" />
+    <!-- JSON {storageId: [launches, lastLaunchMs]} for the launcher's "most used" row. -->
+    <entry name="launcherUsage" type="String"><default>{}</default></entry>
     <entry name="appearanceMode" type="String"><default>dark</default></entry>
     <entry name="accentColor" type="Color"><default>#d71920</default></entry>
 

@@ -41,6 +41,7 @@ Item {
     implicitHeight: col.implicitHeight + 44
 
     readonly property int count: Notifs.count
+    Component.onCompleted: Notifs.markSeen("")
     readonly property int notificationCount: Notifs.notificationCount
 
     Timer {

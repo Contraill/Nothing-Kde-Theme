@@ -223,6 +223,42 @@ Item {
             }
         }
         Text {
+            text: Island.Cfg.t("DOCK WINDOWS")
+            font.family: Island.Theme.font; font.pixelSize: 12 * root.uiScale
+            color: Island.Theme.fgDim
+        }
+        Flow {
+            Layout.fillWidth: true
+            spacing: 6
+            Repeater {
+                model: [{key: "dockCurrentDesktopOnly", label: "ONLY THIS DESKTOP"},
+                        {key: "dockCurrentScreenOnly", label: "ONLY THIS SCREEN"}]
+                QQC2.AbstractButton {
+                    id: dockOption
+                    required property var modelData
+                    readonly property bool on: root.panelConfig?.[modelData.key] ?? false
+                    objectName: "dockOption-" + modelData.key
+                    width: optionText.implicitWidth + 24
+                    height: 30 * root.uiScale
+                    checkable: true
+                    checked: on
+                    Accessible.name: Island.Cfg.t(modelData.label)
+                    onClicked: if (root.panelConfig) root.panelConfig[modelData.key] = !on
+                    background: Rectangle {
+                        radius: height / 2
+                        color: dockOption.on ? Island.Theme.inverted : dockOption.hovered ? Island.Theme.surfaceHigh : Island.Theme.surfaceAlt
+                    }
+                    contentItem: Text {
+                        id: optionText
+                        text: Island.Cfg.t(dockOption.modelData.label)
+                        color: dockOption.on ? Island.Theme.invertedFg : Island.Theme.fgDim
+                        font.family: Island.Theme.font; font.pixelSize: 11 * root.uiScale
+                        horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
+                    }
+                }
+            }
+        }
+        Text {
             text: Island.Cfg.t("APP VISIBILITY")
             font.family: Island.Theme.font; font.pixelSize: 12 * root.uiScale
             color: Island.Theme.fgDim

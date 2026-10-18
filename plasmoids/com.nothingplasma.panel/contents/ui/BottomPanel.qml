@@ -12,6 +12,7 @@ import "components" as Components
 import QtQuick.Controls as QQC2
 import "../island/ui" as Island
 import org.kde.kwindowsystem as KWindowSystem
+import org.kde.plasma.workspace.dbus as DBus
 import org.kde.kcmutils as KCMUtils
 
 Item {
@@ -101,9 +102,10 @@ Item {
         taskReorderingEnabled: true
         activity: activityInfo.currentActivity
         virtualDesktop: virtualDesktopInfo.currentDesktop
-        filterByVirtualDesktop: false
+        screenGeometry: Plasmoid.containment.screenGeometry
+        filterByVirtualDesktop: Plasmoid.configuration.dockCurrentDesktopOnly
         filterByActivity: true
-        filterByScreen: false
+        filterByScreen: Plasmoid.configuration.dockCurrentScreenOnly
 
         onLauncherListChanged: {
             if (root.launcherPersistenceReady) {
@@ -134,7 +136,38 @@ Item {
         id: searchRunner
         appletInterface: root.appletItem
         mergeResults: true
-        runners: ["services"]
+        // Explicit plugin ids: "services" matched no runner, which enabled every runner
+        // (web search, browser tabs, Discover) but left out the calculator.
+        runners: ["krunner_services", "krunner_systemsettings", "calculator", "unitconverter",
+            "locations", "krunner_placesrunner", "krunner_recentdocuments", "baloosearch"]
+    }
+
+    // Plasma's task manager registers Meta+1…9 ("activate task manager entry N")
+    // itself; without it the keys do nothing. The dock on the primary screen
+    // claims the same actions so the keys reach its icons.
+    readonly property bool ownsEntryShortcuts: Plasmoid.containment.screen === 0
+    function registerEntryShortcuts(): void {
+        for (let n = 1; n <= 10; ++n) {
+            const action = ["plasmashell", "activate task manager entry " + n, "plasmashell", Island.Cfg.t("ACTIVATE DOCK ENTRY").arg(n)];
+            const call = {service: "org.kde.kglobalaccel", path: "/kglobalaccel", iface: "org.kde.KGlobalAccel"};
+            DBus.SessionBus.asyncCall(Object.assign({member: "doRegister", signature: "(as)", arguments: [action]}, call));
+            // SetPresent (2) without NoAutoloading keeps keys the user changed; defaults are Meta+1…9.
+            DBus.SessionBus.asyncCall(Object.assign({member: "setShortcut", signature: "(asaiu)",
+                arguments: [action, n < 10 ? [Qt.MetaModifier | (Qt.Key_0 + n)] : [], 2]}, call));
+        }
+    }
+    onOwnsEntryShortcutsChanged: if (ownsEntryShortcuts && !Island.Backend.preview) registerEntryShortcuts()
+    Component.onCompleted: if (ownsEntryShortcuts && !Island.Backend.preview) registerEntryShortcuts()
+    DBus.SignalWatcher {
+        enabled: root.ownsEntryShortcuts
+        busType: DBus.BusType.Session
+        service: "org.kde.kglobalaccel"
+        path: "/component/plasmashell"
+        iface: "org.kde.kglobalaccel.Component"
+        function dbusglobalShortcutPressed(component, action, timestamp) {
+            const match = /^activate task manager entry (\d+)$/.exec(String(action));
+            if (match) taskStrip.activateEntry(Number(match[1]) - 1);
+        }
     }
 
     function toggleLauncher(): void {
@@ -236,6 +269,7 @@ Item {
             }
 
             Components.TaskStrip {
+                id: taskStrip
                 Layout.minimumWidth: 0
                 visible: taskSourceModel.count > 0
                 Layout.preferredWidth: root.taskAreaWidth
@@ -294,6 +328,7 @@ Item {
                 appsModel: root.allAppsModel
                 runnerModel: searchRunner
                 hiddenApps: Plasmoid.configuration.hiddenApplications
+                panelConfig: Plasmoid.configuration
                 tasksModel: taskSourceModel
                 accentColor: root.accentColor
                 onLaunched: launcherPopup.closePopup()

@@ -11,6 +11,8 @@ KItemModels.KSortFilterProxyModel {
     readonly property ListModel emptyModel: ListModel {}
     property var hiddenApps: []
     property string query: ""
+    // Integer role id behind "favoriteId" (resolved by the inner proxy's role name).
+    readonly property int favoriteIdRole: visibleApps.filterRole
     function identity(value) { return String(value || "").replace(/^applications:/, ""); }
     function trigger(row, action, argument) {
         const filtered = root.mapToSource(root.index(row, 0));

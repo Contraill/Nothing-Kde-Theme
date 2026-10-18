@@ -429,7 +429,13 @@ QtObject {
         "TIME TO FULL": ["Dolmasına", "Until full"],
         "TIME LEFT": ["Kalan süre", "Time left"],
         "CALCULATING": ["Kalan süre hesaplanıyor…", "Estimating time left…"],
-        "BATTERY HEALTH": ["Pil sağlığı", "Battery health"]
+        "BATTERY HEALTH": ["Pil sağlığı", "Battery health"],
+        "ACTIVATE DOCK ENTRY": ["Dock'taki %1. uygulamayı etkinleştir", "Activate dock entry %1"],
+        "DOCK WINDOWS": ["Dock'ta gösterilen pencereler", "Windows shown in the dock"],
+        "ONLY THIS DESKTOP": ["Yalnızca bu masaüstü", "Only this desktop"],
+        "ONLY THIS SCREEN": ["Yalnızca bu ekran", "Only this screen"],
+        "SEARCH LAUNCHER": ["Uygulama, ayar, dosya ara veya hesapla…", "Search apps, settings, files or calculate…"],
+        "MOST USED": ["SIK KULLANILANLAR", "MOST USED"]
 })
 
     function t(clave) {

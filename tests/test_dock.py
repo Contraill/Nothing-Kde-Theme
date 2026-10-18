@@ -26,7 +26,29 @@ class DockTests(unittest.TestCase):
         for token in ('TaskManager.TasksModel.GroupApplications', 'groupInline: false',
                       'separateLaunchers: true', 'taskReorderingEnabled: true',
                       'Plasmoid.configuration.pinnedLaunchers = taskSourceModel.launcherList',
-                      'filterByVirtualDesktop: false', 'KWindowSystem.showingDesktop'):
+                      'filterByVirtualDesktop: Plasmoid.configuration.dockCurrentDesktopOnly',
+                      'filterByScreen: Plasmoid.configuration.dockCurrentScreenOnly',
+                      'KWindowSystem.showingDesktop'):
+            self.assertIn(token, text)
+        # Windows from every desktop and screen stay visible unless the user opts in.
+        schema = (UI.parent / 'config/main.xml').read_text()
+        for key in ('dockCurrentDesktopOnly', 'dockCurrentScreenOnly'):
+            self.assertIn(f'<entry name="{key}" type="Bool"><default>false</default></entry>', schema)
+
+    def test_meta_number_shortcuts_reach_the_dock(self):
+        text = (UI / 'BottomPanel.qml').read_text()
+        # Same actions as Plasma's task manager, registered once (primary screen).
+        self.assertIn('"activate task manager entry " + n', text)
+        self.assertIn('member: "doRegister", signature: "(as)"', text)
+        self.assertIn('member: "setShortcut", signature: "(asaiu)"', text)
+        self.assertIn('readonly property bool ownsEntryShortcuts: Plasmoid.containment.screen === 0', text)
+        self.assertIn('taskStrip.activateEntry(Number(match[1]) - 1)', text)
+
+    def test_icons_publish_geometry_and_accept_files(self):
+        text = (UI / 'components/TaskStrip.qml').read_text()
+        for token in ('requestPublishDelegateGeometry(task.modelIndex', 'requestOpenUrls(task.modelIndex, files)',
+                      'root.cycleTask(task.index, direction)', 'Island.Notifs.jobsByApp[appId]',
+                      'Island.Notifs.unreadByApp[appId]'):
             self.assertIn(token, text)
 
     def test_group_click_and_reorder_are_not_hover_only(self):
