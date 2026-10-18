@@ -31,7 +31,7 @@ def check(job):
                    XDG_CACHE_HOME=td + '/cache',
                    QT_FORCE_STDERR_LOGGING='1', QT_QPA_PLATFORM='offscreen', QT_QUICK_BACKEND='software', QT_QPA_PLATFORMTHEME='kde',
                    QT_LOGGING_RULES='qml.info=true')
-        extra = ['--calendar'] if package.name == 'date' and variant == 1 else []
+        extra = ['--calendar'] if package.name == 'date' and variant == 0 else []
         result = subprocess.run(['timeout', '15s', str(renderer), str(copied), str(screenshot)] + extra,
                                 env=env, capture_output=True, text=True)
         output = result.stdout + result.stderr
@@ -48,7 +48,9 @@ if __name__ == '__main__':
     args.screenshots.mkdir(parents=True, exist_ok=True)
     jobs = []
     for package in sorted((ROOT / 'widgets/packages').iterdir()):
-        variants = range(3) if package.name == 'weather' else range(2) if package.name in ('clock-analog', 'clock-digital', 'date') else range(1)
+        styles = {'weather': 4, 'clock-analog': 3, 'clock-digital': 3, 'date': 3, 'battery': 3, 'system': 3,
+                  'media': 2, 'note': 2, 'progress': 2, 'toggles': 2}
+        variants = range(styles.get(package.name, 1))
         jobs.extend((package, variant, mode, args.renderer, args.screenshots) for variant in variants for mode in (0, 1))
     failed = False
     with ThreadPoolExecutor(max_workers=4) as pool:

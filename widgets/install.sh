@@ -7,7 +7,7 @@ trap 'rm -rf -- "$stage"' EXIT
 python3 "$ROOT/prepare.py" --output "$stage/packages"
 DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 command -v kpackagetool6 >/dev/null
-for name in battery clock-analog clock-digital clock-digital-large date media note phone photo pomodoro system weather; do
+for name in battery clock-analog clock-digital clock-digital-large date media note phone photo pomodoro progress system toggles trash weather; do
   id="org.nothingkde.widget.$name"
   if [[ -d "$DATA_HOME/plasma/plasmoids/$id" ]] && diff -qr -- "$stage/packages/$name" "$DATA_HOME/plasma/plasmoids/$id" >/dev/null; then
     printf 'Already current: %s\n' "$id"

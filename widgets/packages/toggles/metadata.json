@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "System Information",
+    "Description": "Wi-Fi, Bluetooth, airplane mode and volume at a glance.",
+    "EnabledByDefault": true,
+    "Icon": "preferences-system-network",
+    "Id": "org.nothingkde.widget.toggles",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Quick Toggles",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Hızlı Geçişler"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

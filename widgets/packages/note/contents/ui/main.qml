@@ -7,7 +7,8 @@ import org.kde.plasma.core as PlasmaCore
 import "../../../../shared" as Glassy
 import "components"
 
-// A sticky note; the text is kept in the widget's own configuration.
+// A sticky note, or its first line as a mantra pill; the text is kept in
+// the widget's own configuration.
 PlasmoidItem {
     id: root
     preferredRepresentation: fullRepresentation
@@ -19,17 +20,19 @@ PlasmoidItem {
         useSystemAccent: Plasmoid.configuration.useSystemAccent
     }
     Glassy.DotFont { id: dotFont }
+    readonly property bool pill: Plasmoid.configuration.widgetVariant === 1
 
     fullRepresentation: Item {
-        Layout.preferredWidth: 240
-        Layout.preferredHeight: 220
+        Layout.preferredWidth: root.pill ? 260 : 240
+        Layout.preferredHeight: root.pill ? 64 : 220
         Layout.minimumWidth: 160
-        Layout.minimumHeight: 140
+        Layout.minimumHeight: root.pill ? 52 : 140
 
         Glassy.GlassySurface {
             id: card
             anchors.fill: parent
             anchors.margins: 10
+            cornerRadius: root.pill ? height / 2 : 20
             backgroundColor: nColors.background
             foregroundColor: nColors.textPrimary
         }
@@ -37,6 +40,7 @@ PlasmoidItem {
             anchors.fill: card
             anchors.margins: 14
             spacing: 6
+            visible: !root.pill
             RowLayout {
                 Layout.fillWidth: true
                 Text {
@@ -72,6 +76,40 @@ PlasmoidItem {
                     leftPadding: 0
                     rightPadding: 0
                     onTextChanged: if (text !== Plasmoid.configuration.noteText) save.restart()
+                }
+            }
+        }
+        // The pill edits the first line; the rest of the note is kept.
+        RowLayout {
+            anchors.fill: card
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            visible: root.pill
+            spacing: 10
+            Rectangle {
+                implicitWidth: 8
+                implicitHeight: 8
+                radius: 4
+                color: nColors.accent
+            }
+            TextInput {
+                id: mantra
+                Layout.fillWidth: true
+                readonly property string rest: editor.text.indexOf("\n") < 0 ? "" : editor.text.slice(editor.text.indexOf("\n"))
+                text: editor.text.split("\n")[0]
+                color: nColors.textPrimary
+                selectionColor: nColors.accent
+                selectByMouse: true
+                clip: true
+                font.pixelSize: 14
+                font.letterSpacing: 1.5
+                font.capitalization: Font.AllUppercase
+                onTextEdited: editor.text = text + rest
+                Text {
+                    visible: !mantra.text && !mantra.activeFocus
+                    text: i18n("Write a mantra…")
+                    font: mantra.font
+                    color: nColors.textMuted
                 }
             }
         }

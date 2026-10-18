@@ -84,15 +84,18 @@ PlasmoidItem {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Text {
+                        // "-12°" shrinks rather than pushing the glyph out of the card.
+                        Layout.fillWidth: true
                         text: root.degrees(weather.temperature)
                         color: nColors.textPrimary
                         font.family: bigDots.name
                         font.pixelSize: full.height * 0.3
+                        fontSizeMode: Text.HorizontalFit
+                        minimumPixelSize: 16
                     }
-                    Item { Layout.fillWidth: true }
                     Glassy.DotGlyph {
-                        Layout.preferredWidth: full.width * 0.34
-                        Layout.preferredHeight: full.width * 0.3
+                        Layout.preferredWidth: full.width * 0.3
+                        Layout.preferredHeight: full.width * 0.26
                         name: root.glyph
                         color: nColors.textPrimary
                         accentColor: nColors.accent

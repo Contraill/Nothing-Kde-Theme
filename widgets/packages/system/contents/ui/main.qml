@@ -84,39 +84,6 @@ PlasmoidItem {
         }
     }
 
-    // A labelled row of dots filled to `percent`.
-    component Meter: ColumnLayout {
-        id: meter
-        property string label: ""
-        property real percent: 0
-        property string detail: ""
-        spacing: 4
-        RowLayout {
-            Layout.fillWidth: true
-            Text { text: meter.label; color: nColors.textSecondary; font.pixelSize: 11; font.letterSpacing: 1.5 }
-            Item { Layout.fillWidth: true }
-            Text { text: meter.detail; color: nColors.textMuted; font.pixelSize: 10 }
-            Text { text: Math.round(meter.percent) + "%"; color: meter.percent >= 85 ? nColors.accent : nColors.textPrimary; font.family: dotFont.name; font.pixelSize: 14 }
-        }
-        Row {
-            id: dotsRow
-            Layout.fillWidth: true
-            Layout.preferredHeight: 5
-            readonly property int count: 22
-            spacing: (width - count * height) / (count - 1)
-            Repeater {
-                model: dotsRow.count
-                Rectangle {
-                    required property int index
-                    width: dotsRow.height
-                    height: width
-                    radius: width / 2
-                    color: index < Math.round(meter.percent / 100 * dotsRow.count) ? (meter.percent >= 85 ? nColors.accent : nColors.textPrimary) : nColors.divider
-                }
-            }
-        }
-    }
-
     fullRepresentation: Item {
         Layout.preferredWidth: root.variant === 2 ? 260 : 220
         Layout.preferredHeight: root.variant === 2 ? 96 : 220
@@ -178,9 +145,10 @@ PlasmoidItem {
             anchors.margins: 16
             visible: root.variant === 1
             spacing: 10
-            Meter { Layout.fillWidth: true; label: i18n("CPU"); percent: cpu.value || 0 }
-            Meter { Layout.fillWidth: true; label: i18n("MEMORY"); percent: memory.value || 0 }
-            Meter {
+            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; label: i18n("CPU"); percent: cpu.value || 0 }
+            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; label: i18n("MEMORY"); percent: memory.value || 0 }
+            Glassy.DotMeter {
+                colors: nColors
                 Layout.fillWidth: true
                 label: i18n("DISK")
                 percent: disk.value || 0

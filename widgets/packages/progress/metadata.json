@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "Date and Time",
+    "Description": "How much of the year, month, week and day has gone, in dots.",
+    "EnabledByDefault": true,
+    "Icon": "view-calendar-timeline",
+    "Id": "org.nothingkde.widget.progress",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Progress",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — İlerleme"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

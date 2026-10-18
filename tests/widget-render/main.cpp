@@ -70,8 +70,10 @@ int main(int argc, char **argv)
         window.resize(200, 200);
         item->setSize(QSizeF(200, 200));
         QTimer::singleShot(1500, &app, [&] {
+            // The date page turns over to its month.
             auto face = item->fullRepresentationItem();
-            if (!face || !QMetaObject::invokeMethod(face, "togglePage")) app.exit(8);
+            auto page = face ? face->findChild<QObject *>(QStringLiteral("datePage")) : nullptr;
+            if (!page || !QMetaObject::invokeMethod(page, "flip")) app.exit(8);
         });
     }
     QJsonArray samples;

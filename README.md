@@ -1,6 +1,6 @@
 # Nothing KDE
 
-A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, twelve desktop widgets,
+A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, fifteen desktop widgets,
 Glassy application styling, and optional application accent integrations. The UI is localized
 in Turkish and English; no custom daemon is required.
 
@@ -36,11 +36,14 @@ cd Nothing-Kde-Theme
 ```
 
 Choose **Nothing KDE** (dark) or **Nothing KDE Light** in System Settings. Add the desktop
-widgets through **Add Widgets**: clocks (analog, digital and world, large), date and calendar,
-weather, media, photo, devices and battery, and the Nothing KDE originals: **System Monitor**
-(CPU and memory dot rings, temperature, network speed), **Note** (saves as you type), **Focus
-Timer** (pomodoro that survives restarts and notifies with Plasma's timer sound) and **Phone**
-(the KDE Connect phone's battery, ring and open).
+widgets through **Add Widgets**; most offer several styles in their settings: clocks (analog,
+digital and world, large), date and calendar, weather (Open-Meteo), media, photo, devices and
+battery, **System Monitor** (dot rings, dotted bars with the disk, or a pill), **Note** (saves
+as you type, or a mantra pill), **Focus Timer** (pomodoro that survives restarts and notifies
+with Plasma's timer sound), **Phone** (the KDE Connect phone's battery, ring and open),
+**Progress** (the year as a dot ring, or day, week, month and year bars), **Quick Toggles**
+(Wi-Fi, Bluetooth, airplane mode and volume, or a volume pill) and **Trash** (item count and
+size; click to open).
 
 ### Boot login wallpaper (Plasma Login Manager)
 

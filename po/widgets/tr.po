@@ -15,6 +15,9 @@ msgstr ""
 msgid "%1 h %2 min"
 msgstr "%1 sa %2 dk"
 
+msgid "%1 h %2 min until midnight"
+msgstr "Gece yarısına %1 sa %2 dk"
+
 msgid "%1 left"
 msgstr "%1 kaldı"
 
@@ -35,6 +38,9 @@ msgstr "Cihaz adı kalıplarına göre özel simge eşleştirmeleri ekleyin"
 
 msgid "Adds margin around the image to reveal the dark background, creating a frame effect"
 msgstr "Görselin çevresinde boşluk bırakarak arka planı çerçeve olarak gösterir"
+
+msgid "Airplane"
+msgstr "Uçak"
 
 msgid "Appearance"
 msgstr "Görünüm"
@@ -59,6 +65,9 @@ msgstr "Siyah beyaz"
 
 msgid "Block"
 msgstr "Blok"
+
+msgid "Bluetooth"
+msgstr "Bluetooth"
 
 msgid "Bluetooth devices that have been connected to this system"
 msgstr "Bu sisteme daha önce bağlanmış Bluetooth cihazları"
@@ -156,6 +165,12 @@ msgstr "Kırp: Çerçeveyi doldurur, görselin bir kısmını kesebilir\nSığd�
 msgid "Custom Device Icons"
 msgstr "Özel cihaz simgeleri"
 
+msgid "DAY"
+msgstr "GÜN"
+
+msgid "DAY %1"
+msgstr "GÜN %1"
+
 msgid "DISK"
 msgstr "DİSK"
 
@@ -164,6 +179,9 @@ msgstr "Karanlık"
 
 msgid "Dark: Nothing's signature dark aesthetic. Light: Nothing's light palette. Follow System: Matches your KDE dark/light scheme."
 msgstr "Karanlık: Nothing'in koyu görünümü. Aydınlık: Nothing'in açık paleti. Sistemi izle: KDE açık/koyu temasına uyar."
+
+msgid "Day, week, month and year"
+msgstr "Gün, hafta, ay ve yıl"
 
 msgid "Default"
 msgstr "Varsayılan"
@@ -221,6 +239,9 @@ msgstr "Çisenti"
 
 msgid "Effects"
 msgstr "Efektler"
+
+msgid "Empty"
+msgstr "Boş"
 
 msgid "Enable Borders"
 msgstr "Çerçeveyi etkinleştir"
@@ -387,8 +408,17 @@ msgstr "BELLEK"
 msgid "MON"
 msgstr "PZT"
 
+msgid "MONTH"
+msgstr "AY"
+
+msgid "MUTED"
+msgstr "SESSİZ"
+
 msgid "Mainly Clear"
 msgstr "Genellikle açık"
+
+msgid "Mantra pill"
+msgstr "Mantra hapı"
 
 msgid "Minimal"
 msgstr "Sade"
@@ -426,11 +456,17 @@ msgstr "Geçmişte cihaz bulunamadı"
 msgid "No phone connected"
 msgstr "Bağlı telefon yok"
 
+msgid "Note"
+msgstr "Not"
+
 msgid "Nothing playing"
 msgstr "Çalan bir şey yok"
 
 msgid "Open KDE Connect"
 msgstr "KDE Bağlan'ı aç"
+
+msgid "Open the trash"
+msgstr "Çöp kutusunu aç"
 
 msgid "Overcast"
 msgstr "Kapalı"
@@ -597,6 +633,9 @@ msgstr "Kar sağanağı"
 msgid "Softer colour"
 msgstr "Daha yumuşak renk"
 
+msgid "Sound"
+msgstr "Ses"
+
 msgid "Start"
 msgstr "Başlat"
 
@@ -614,6 +653,9 @@ msgstr "İsviçre demiryolu"
 
 msgid "THU"
 msgstr "PER"
+
+msgid "TRASH"
+msgstr "ÇÖP"
 
 msgid "TUE"
 msgstr "SAL"
@@ -648,6 +690,9 @@ msgstr "Saat dilimi:"
 msgid "Time for a break."
 msgstr "Mola zamanı."
 
+msgid "Toggles and volume"
+msgstr "Geçişler ve ses"
+
 msgid "Two-tone dots"
 msgstr "İki tonlu noktalar"
 
@@ -675,14 +720,29 @@ msgstr "Açık arka planlarda okunabilirlik için koyu yazı rengi kullanır"
 msgid "Use system accent color"
 msgstr "Sistem vurgu rengini kullan"
 
+msgid "VOL"
+msgstr "SES"
+
+msgid "VOLUME"
+msgstr "SES DÜZEYİ"
+
 msgid "Violent Rain Showers"
 msgstr "Şiddetli sağanak"
+
+msgid "Volume pill"
+msgstr "Ses hapı"
 
 msgid "WED"
 msgstr "ÇAR"
 
+msgid "WEEK"
+msgstr "HAFTA"
+
 msgid "Weather is unavailable"
 msgstr "Hava durumu alınamıyor"
+
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
 
 msgid "World Clock"
 msgstr "Dünya saati"
@@ -693,8 +753,17 @@ msgstr "Dünya saati"
 msgid "World clock city: %1"
 msgstr "Dünya saati şehri: %1"
 
+msgid "Write a mantra…"
+msgstr "Bir mantra yaz…"
+
 msgid "Write something…"
 msgstr "Bir şeyler yaz…"
+
+msgid "YEAR"
+msgstr "YIL"
+
+msgid "Year ring"
+msgstr "Yıl halkası"
 
 msgid "You can change it later in the settings."
 msgstr "Bunu sonra ayarlardan değiştirebilirsin."

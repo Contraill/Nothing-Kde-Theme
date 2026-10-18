@@ -175,6 +175,9 @@ PlasmoidItem {
                 color: root.charging ? nColors.accent : nColors.textSecondary
                 font.pixelSize: Math.max(10, card.height * 0.09)
                 font.letterSpacing: 1.2
+                // Long states ("Plugged in, not charging") shrink before they elide.
+                fontSizeMode: Text.HorizontalFit
+                minimumPixelSize: 9
                 elide: Text.ElideRight
             }
             Row {
