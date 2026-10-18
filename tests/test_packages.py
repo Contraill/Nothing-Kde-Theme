@@ -23,7 +23,7 @@ class PackageTests(unittest.TestCase):
 
     def test_panel_carries_its_runtime_files(self):
         with zipfile.ZipFile(DIST / f'Nothing-KDE-Island-Dock-{VERSION}.plasmoid') as package:
-            for name in ('contents/tools/nothing-control.sh', 'contents/tools/wifi.py', 'contents/tools/privacy.py',
+            for name in ('contents/tools/nothing-control.sh', 'contents/tools/privacy.py',
                          'contents/tools/accent-links.py', 'contents/tools/jsonc_edit.py',
                          'contents/island/ui/ControlHub.qml', 'contents/island/ui/PowerPrivacyCard.qml',
                          'contents/ui/components/NativeWindowThumbnail.qml', 'contents/island/ui/AccentSettings.qml',

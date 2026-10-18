@@ -1,263 +1,234 @@
 pragma Singleton
 
 import QtQuick
-import org.kde.plasma.plasma5support as P5Support
-import "../../ui/components/RuntimePaths.js" as RuntimePaths
+import org.kde.bluezqt as BluezQt
+import org.kde.kcmutils as KCMUtils
+import org.kde.plasma.networkmanagement as PlasmaNM
+import "."
+
+// Network and Bluetooth state from Plasma's own NetworkManager and BlueZ bindings.
+// Everything is event driven; passwords go to NetworkManager over D-Bus and never
+// appear on a command line.
 QtObject {
     id: root
-    property bool wifiEnabled: false
-    property bool connected: false
-    property bool isWifi: false
-    property string connectionName: ""
-    property int signal_: -1
 
-    property var savedNets: []
-    property var nearbyNets: []
-    property bool btEnabled: false
-    property var btKnown: []
-    property var btNearby: []
-    property int netWatchers: 0
-    property int btWatchers: 0
-    property string connecting: ""
-    property string failed: ""
-    property string activeCmd: ""
-
-    // Read NetworkManager's cached signal even when the network menu is closed;
-    // this does not trigger a Wi-Fi scan or alter the connection.
-    readonly property string baseCmd: Exec.command('export LC_ALL=C; nmcli -t -f TYPE,STATE,CONNECTION device; echo ---; nmcli radio wifi; echo ---; bluetoothctl show | grep Powered; echo ---; nmcli -t -f IN-USE,SIGNAL device wifi list --rescan no')
-
-    readonly property string netListCmd: wifiCommand("scan")
-
-    readonly property string btListCmd: Exec.command('bluetoothctl devices Paired; echo ---; bluetoothctl devices Connected; echo ---; bluetoothctl devices')
-
-    function wifiCommand(args) {
-        return RuntimePaths.command(Qt.resolvedUrl("../../tools/wifi.py"), "wifi.py", "python3", args);
-    }
-    function fields(line) {
-        let result = [], current = "", escaped = false;
-        for (const c of line) {
-            if (escaped) { current += c; escaped = false; }
-            else if (c === "\\") escaped = true;
-            else if (c === ":") { result.push(current); current = ""; }
-            else current += c;
+    // ---- Wi-Fi and Ethernet (plasma-nm)
+    readonly property PlasmaNM.NetworkModel networkModel: PlasmaNM.NetworkModel {}
+    readonly property PlasmaNM.AppletProxyModel networks: PlasmaNM.AppletProxyModel { sourceModel: root.networkModel }
+    readonly property PlasmaNM.EnabledConnections enabledConnections: PlasmaNM.EnabledConnections {}
+    readonly property PlasmaNM.AvailableDevices availableDevices: PlasmaNM.AvailableDevices {}
+    readonly property PlasmaNM.Handler handler: PlasmaNM.Handler {
+        onConnectionActivationFailed: (connectionPath, message) => {
+            const row = root.allRows.find(r => r.connectionPath === connectionPath);
+            root.failed = row ? row.name : root.connecting;
+            root.connecting = "";
         }
-        result.push(current);
-        return result;
-    }
-
-    readonly property P5Support.DataSource source: P5Support.DataSource {
-        engine: "executable"
-        connectedSources: []
-
-        onNewData: (cmd, data) => {
-            disconnectSource(cmd);
-            const out = data["stdout"] ?? "";
-            if (cmd === root.baseCmd)
-                root.readBase(out);
-            else if (cmd === root.netListCmd)
-                root.readNetList(out);
-            else if (cmd === root.btListCmd)
-                root.readBtList(out);
+        onWifiCodeReceived: (data, ssid) => {
+            root.wifiCode = data;
+            root.wifiCodeSsid = ssid;
         }
     }
-
-    function readBase(text) {
-        const parts = text.split("---");
-        if (parts.length < 3)
-            return;
-
-        let conn = false, wifi = false, name = "";
-        for (const line of parts[0].split("\n")) {
-            const p = fields(line);
-            if (p.length < 3 || p[1] !== "connected" || p[0] === "loopback")
-                continue;
-            conn = true;
-            wifi = p[0] === "wifi";
-            name = p[2];
-            if (wifi)
-                break;
+    readonly property Instantiator rows: Instantiator {
+        model: root.networks
+        delegate: QtObject {
+            required property var model
+            readonly property int type: model.Type
+            readonly property bool wireless: type === PlasmaNM.Enums.Wireless
+            readonly property string name: wireless ? (model.Ssid || model.ItemUniqueName) : model.ItemUniqueName
+            readonly property string ssid: model.Ssid
+            readonly property int signal: model.Signal
+            readonly property int securityType: model.SecurityType
+            readonly property bool secure: securityType !== PlasmaNM.Enums.NoneSecurity
+                && securityType !== PlasmaNM.Enums.UnknownSecurity && securityType !== PlasmaNM.Enums.OWE
+            // Plasma asks for a typed key only for these; EAP and others open KDE's own dialog.
+            readonly property bool staticPassword: [PlasmaNM.Enums.StaticWep, PlasmaNM.Enums.WpaPsk,
+                PlasmaNM.Enums.Wpa2Psk, PlasmaNM.Enums.SAE].includes(securityType)
+            readonly property bool connected: model.ConnectionState === PlasmaNM.Enums.Activated
+            readonly property bool activating: model.ConnectionState === PlasmaNM.Enums.Activating
+            readonly property string uuid: model.Uuid
+            readonly property bool saved: uuid.length > 0
+            readonly property string connectionPath: model.ConnectionPath
+            readonly property string devicePath: model.DevicePath
+            readonly property string specificPath: model.SpecificPath
         }
-        root.connected = conn;
-        root.isWifi = wifi;
-        root.connectionName = name;
-        root.signal_ = -1;
-        if (wifi && parts.length > 3) {
-            for (const line of parts[3].split("\n")) {
-                const row = fields(line);
-                if ((row[0] === "*" || row[0] === "yes") && /^\d+$/.test(row[1] || "")) {
-                    root.signal_ = Math.max(root.signal_, Math.min(100, Number(row[1])));
-                }
-            }
-        }
-
-        root.wifiEnabled = parts[1].trim() === "enabled";
-        root.btEnabled = /Powered:\s*yes/.test(parts[2]);
     }
-
-    function readNetList(text) {
-        try {
-            const data = JSON.parse(text);
-            root.nearbyNets = (data.networks || []).map(n => ({
-                name: n.ssid, signal: n.signal, secure: !!n.security && n.security !== "--",
-                connected: n.active, saved: n.saved, uuid: n.uuid
-            }));
-            root.savedNets = root.nearbyNets.filter(n => n.saved);
-            // The compact indicator is updated by readBase independently of scans.
-        } catch (error) { root.failed = Cfg.t("Couldn't connect"); }
-    }
-
-    function readBtList(text) {
-        const parts = text.split("---");
-        if (parts.length < 3)
-            return;
-
-        const on = {};
-        for (const d of root.parseDevices(parts[1]))
-            on[d.mac] = true;
-
-        const paired = {};
-        const known = [];
-        for (const d of root.parseDevices(parts[0])) {
-            paired[d.mac] = true;
-            known.push({
-                mac: d.mac,
-                name: d.name,
-                connected: !!on[d.mac]
-            });
-        }
-        root.btKnown = known;
-        root.btNearby = root.parseDevices(parts[2]).filter(d => !paired[d.mac]);
-    }
-
-    function parseDevices(text) {
+    readonly property var allRows: {
         const list = [];
-        for (const line of text.split("\n")) {
-            const m = line.match(/^Device ([0-9A-F:]+) (.*)$/i);
-            if (m)
-                list.push({
-                    mac: m[1],
-                    name: m[2],
-                    connected: false
-                });
+        for (let i = 0; i < rows.count; ++i) {
+            const row = rows.objectAt(i);
+            if (row) list.push(row);
         }
         return list;
     }
+    readonly property var wifiRows: allRows.filter(r => r.wireless)
+    readonly property var activeWifi: wifiRows.find(r => r.connected) ?? null
+    readonly property var activeWired: allRows.find(r => r.connected && r.type === PlasmaNM.Enums.Wired) ?? null
 
-    function refreshLists() {
-        if (Backend.preview) return;
-        if (root.netWatchers > 0)
-            root.source.connectSource(root.netListCmd);
-        if (root.btWatchers > 0)
-            root.source.connectSource(root.btListCmd);
-    }
+    readonly property bool wifiAvailable: availableDevices.wirelessDeviceAvailable
+    readonly property bool wifiEnabled: enabledConnections.wirelessEnabled
+    readonly property bool wifiHardwareEnabled: enabledConnections.wirelessHwEnabled
+    readonly property bool connected: activeWifi !== null || activeWired !== null
+    readonly property bool isWifi: activeWifi !== null
+    readonly property bool wifiConnecting: wifiRows.some(r => r.activating) || connecting !== ""
+    readonly property string connectionName: activeWifi?.name ?? activeWired?.name ?? ""
+    readonly property int signal_: activeWifi?.signal ?? -1
+    readonly property var nearbyNets: wifiRows
+    readonly property var savedNets: wifiRows.filter(r => r.saved)
 
-    function toggleWifi() {
-        Exec.run(`nmcli radio wifi ${root.wifiEnabled ? "off" : "on"}`);
-        root.wifiEnabled = !root.wifiEnabled;
-    }
+    readonly property bool scanning: handler.scanning
+    readonly property bool hotspotSupported: handler.hotspotSupported
+    readonly property bool hotspotActive: handler.hotspotActive
+    readonly property bool airplaneMode: PlasmaNM.Configuration.airplaneModeEnabled
 
-    function toggleBt() {
-        Exec.run(`bluetoothctl power ${root.btEnabled ? "off" : "on"}`);
-        root.btEnabled = !root.btEnabled;
-    }
-    readonly property P5Support.DataSource runner: P5Support.DataSource {
-        engine: "executable"
-        connectedSources: []
+    property string connecting: ""
+    property string failed: ""
+    property string wifiCode: ""
+    property string wifiCodeSsid: ""
+    // While a password is typed the list must not reorder or rebuild its rows.
+    property bool holdNetworkUpdates: false
+    onHoldNetworkUpdatesChanged: networkModel.delayModelUpdates = holdNetworkUpdates
 
-        onNewData: (cmd, data) => {
-            disconnectSource(cmd);
-            if (cmd !== root.activeCmd)
-                return;
-            let ok = (data["exit code"] ?? -1) === 0;
-            if (root.activeCmd.indexOf("activate") >= 0) {
-                try { ok = ok && JSON.parse(data["stdout"]).ok === true; } catch (e) { ok = false; }
-            }
-            root.settle(ok);
-        }
-    }
-    function quote(s) {
-        return "'" + String(s).replace(/'/g, "'\\''") + "'";
-    }
-
-    function attempt(id, cmd) {
-        if (Backend.preview || root.connecting) return;
-        root.failed = "";
-        root.connecting = id;
-        root.activeCmd = cmd;
-        root.giveUp.restart();
-        root.hurry.restart();
-        root.runner.connectSource(cmd);
-    }
-
-    function settle(ok) {
-        root.giveUp.stop();
-        if (!ok)
-            root.failed = root.connecting;
-        root.connecting = "";
-        root.activeCmd = "";
-        root.refreshLists();
-    }
     readonly property Timer giveUp: Timer {
         interval: 30000
         onTriggered: {
-            root.runner.disconnectSource(root.activeCmd);
-            root.settle(false);
+            if (root.connecting) root.failed = root.connecting;
+            root.connecting = "";
         }
     }
-    readonly property Timer hurry: Timer {
-        interval: 1500
-        repeat: true
-        running: root.connecting !== ""
-        onTriggered: root.refreshLists()
+    function begin(ident) {
+        root.failed = "";
+        root.connecting = ident;
+        root.giveUp.restart();
     }
+    function wifiRow(name, saved) {
+        return root.wifiRows.find(r => r.name === name && (saved === undefined || r.saved === saved)) ?? null;
+    }
+    onActiveWifiChanged: if (activeWifi && activeWifi.name === connecting) { connecting = ""; giveUp.stop(); }
 
+    function refreshLists() {
+        if (!Backend.preview && root.wifiEnabled) root.handler.requestScan();
+    }
+    function toggleWifi() {
+        if (!Backend.preview) root.handler.enableWireless(!root.wifiEnabled);
+    }
     function connectNet(name) {
-        const row = root.savedNets.find(n => n.name === name);
-        if (row?.uuid) root.attempt(name, wifiCommand("activate " + root.quote(row.uuid)));
+        const row = root.wifiRow(name, true);
+        if (!row || Backend.preview) return;
+        root.begin(name);
+        root.handler.activateConnection(row.connectionPath, row.devicePath, row.specificPath);
     }
-    function joinNet(ssid, password) {
-        const extra = password ? ` password ${root.quote(password)}` : "";
-        root.attempt(ssid, Exec.command(`nmcli --wait 25 device wifi connect ${root.quote(ssid)}${extra}`));
+    function joinNet(name, password) {
+        const row = root.wifiRow(name, false);
+        if (!row || Backend.preview) return;
+        root.begin(name);
+        if (password) root.handler.addAndActivateConnection(row.devicePath, row.specificPath, password);
+        else root.handler.addAndActivateConnection(row.devicePath, row.specificPath);
     }
-
     function disconnectNet(name) {
-        const row = root.savedNets.find(n => n.name === name);
-        if (row?.uuid) Exec.run(`nmcli connection down uuid ${root.quote(row.uuid)}`, () => root.refreshLists());
+        const row = root.wifiRow(name);
+        if (row && !Backend.preview) root.handler.deactivateConnection(row.connectionPath, row.devicePath);
     }
-
     function forgetNet(name) {
-        const row = root.savedNets.find(n => n.name === name);
-        if (row?.uuid) Exec.run(`nmcli connection delete uuid ${root.quote(row.uuid)}`, () => root.refreshLists());
+        const row = root.wifiRow(name, true);
+        if (row && !Backend.preview) root.handler.removeConnection(row.connectionPath);
+    }
+    function shareNet(name) {
+        const row = root.wifiRow(name, true);
+        root.wifiCode = "";
+        if (row && !Backend.preview) root.handler.requestWifiCode(row.connectionPath, row.ssid, row.securityType);
+    }
+    function toggleHotspot() {
+        if (Backend.preview) return;
+        if (root.hotspotActive) root.handler.stopHotspot();
+        else root.handler.createHotspot();
+    }
+    function toggleAirplaneMode() {
+        if (Backend.preview) return;
+        const enable = !root.airplaneMode;
+        root.handler.enableAirplaneMode(enable);
+        PlasmaNM.Configuration.airplaneModeEnabled = enable;
+    }
+    // Hidden, enterprise and VPN profiles are edited in KDE's own network settings.
+    function openNetworkSettings() {
+        if (!Backend.preview) KCMUtils.KCMLauncher.openSystemSettings("kcm_networkmanagement");
     }
 
+    function openBluetoothSettings() {
+        if (!Backend.preview) KCMUtils.KCMLauncher.openSystemSettings("kcm_bluetooth");
+    }
+
+    // ---- Bluetooth (BluezQt)
+    readonly property var btManager: BluezQt.Manager
+    readonly property bool btAvailable: btManager.adapters.length > 0
+    readonly property bool btEnabled: btManager.bluetoothOperational
+    readonly property bool btDiscovering: btManager.usableAdapter?.discovering ?? false
+    readonly property var btDevices: btManager.devices.map(d => ({
+        device: d,
+        mac: d.address,
+        name: d.name,
+        type: d.type,
+        paired: d.paired,
+        connected: d.connected,
+        battery: d.battery ? d.battery.percentage : -1
+    }))
+    readonly property var btKnown: btDevices.filter(d => d.paired)
+    // Unnamed devices only report their address; they are noise in a picker.
+    readonly property var btNearby: btDevices.filter(d => !d.paired && d.name
+        && !/^([0-9A-F]{2}[-:]){5}[0-9A-F]{2}$/i.test(d.name))
+    property bool ownsDiscovery: false
+
+    function btDevice(mac) {
+        return root.btManager.deviceForAddress(mac);
+    }
+    function settleCall(call, mac, after) {
+        call.finished.connect(() => {
+            if (call.error !== 0 && root.connecting === mac) root.failed = mac;
+            if (root.connecting === mac) root.connecting = "";
+            if (call.error === 0 && after) after();
+        });
+    }
+    function toggleBt() {
+        if (Backend.preview) return;
+        // Same as Plasma's Bluetooth applet: clear the soft block and power every adapter.
+        const enable = !root.btEnabled;
+        root.btManager.bluetoothBlocked = !enable;
+        for (const adapter of root.btManager.adapters) adapter.powered = enable;
+    }
     function connectBt(mac) {
-        root.attempt(mac, Exec.command(`bluetoothctl --timeout 25 connect ${root.quote(mac)}`));
-    }
-
-    function disconnectBt(mac) {
-        Exec.run(`bluetoothctl disconnect ${root.quote(mac)}`, () => root.refreshLists());
+        const device = root.btDevice(mac);
+        if (!device || Backend.preview) return;
+        root.begin(mac);
+        root.settleCall(device.connectToDevice(), mac);
     }
     function pairBt(mac) {
-        const address = root.quote(mac);
-        root.attempt(mac, Exec.command(`bluetoothctl --timeout 20 pair ${address} && bluetoothctl trust ${address} && bluetoothctl --timeout 5 connect ${address}`));
+        const device = root.btDevice(mac);
+        if (!device || Backend.preview) return;
+        root.begin(mac);
+        // Confirmation prompts come from KDE's Bluetooth agent (bluedevil).
+        root.settleCall(device.pair(), mac, () => {
+            device.trusted = true;
+            root.begin(mac);
+            root.settleCall(device.connectToDevice(), mac);
+        });
     }
-
+    function disconnectBt(mac) {
+        const device = root.btDevice(mac);
+        if (device && !Backend.preview) device.disconnectFromDevice();
+    }
     function forgetBt(mac) {
-        Exec.run(`bluetoothctl remove ${root.quote(mac)}`, () => root.refreshLists());
+        const device = root.btDevice(mac);
+        if (device && device.adapter && !Backend.preview) device.adapter.removeDevice(device);
     }
+    // Discovery runs only while the Bluetooth list is open, and only ours is stopped.
     function scanBt(on) {
-        if (on)
-            Exec.run('bluetoothctl --timeout 4 scan on', () => root.refreshLists());
-    }
-
-    readonly property Timer tick: Timer {
-        interval: 8000
-        running: !Backend.preview
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: {
-            root.source.connectSource(root.baseCmd);
-            root.refreshLists();
+        const adapter = root.btManager.usableAdapter;
+        if (Backend.preview || !adapter) return;
+        if (on && !adapter.discovering) {
+            adapter.startDiscovery();
+            root.ownsDiscovery = true;
+        } else if (!on && root.ownsDiscovery) {
+            if (adapter.discovering) adapter.stopDiscovery();
+            root.ownsDiscovery = false;
         }
     }
 }

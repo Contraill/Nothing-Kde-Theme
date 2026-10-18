@@ -17,19 +17,5 @@ Item {
                     {tag:"maximum", value:100, level:3}];
         }
         function test_signal_levels(data) { icon.strength = data.value; compare(icon.level, data.level); }
-        function test_cached_signal_without_network_menu() {
-            compare(Island.Net.netWatchers, 0);
-            Island.Net.readBase("wifi:connected:Test\n---\nenabled\n---\nPowered: yes\n---\n:99\n*:63\n");
-            compare(Island.Net.signal_, 63);
-            compare(Island.Net.isWifi, true);
-            Island.Net.readBase("wifi:disconnected:\n---\nenabled\n---\nPowered: yes\n---\n");
-            compare(Island.Net.signal_, -1);
-            compare(Island.Net.isWifi, false);
-        }
-        function test_unknown_is_not_zero_signal() {
-            Island.Net.readBase("wifi:connected:Test\n---\nenabled\n---\nPowered: yes\n---\n*:invalid\n");
-            compare(Island.Net.signal_, -1);
-            verify(Island.Net.baseCmd.includes("--rescan no"));
-        }
     }
 }

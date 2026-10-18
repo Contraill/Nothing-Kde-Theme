@@ -52,7 +52,7 @@ def main():
         panel = copy(ROOT / 'plasmoids/com.nothingplasma.panel', 'panel')
         helpers = panel / 'contents/tools'
         helpers.mkdir()
-        for name in ('nothing-control.sh', 'wifi.py', 'privacy.py', 'accent-links.py', 'kitty-theme.py', 'jsonc_edit.py', 'appearance.py', 'appearance_render.py', 'glassy_settings.py'):
+        for name in ('nothing-control.sh', 'privacy.py', 'accent-links.py', 'kitty-theme.py', 'jsonc_edit.py', 'appearance.py', 'appearance_render.py', 'glassy_settings.py'):
             shutil.copy2(ROOT / 'runtime' / name, helpers / name)
         walls = panel / 'contents/wallpapers'
         walls.mkdir()

@@ -42,6 +42,16 @@ Rectangle {
         font.weight: Font.Medium
         font.letterSpacing: Theme.labelSpacing
     }
+    DetailChevron {
+        anchors.left: label.right
+        anchors.leftMargin: 1
+        anchors.verticalCenter: label.verticalCenter
+        visible: !root.keyboardMode && !root.display && root.detailsAvailable
+        font.pixelSize: 15
+        color: Theme.fgDim
+        Accessible.name: Cfg.t("DISPLAYS AND KEYBOARD")
+        onTriggered: root.requestDetails()
+    }
     Text {
         anchors.right: parent.right
         anchors.rightMargin: 12

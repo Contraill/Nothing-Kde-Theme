@@ -16,61 +16,7 @@ def load(name,path):
     spec.loader.exec_module(module)
     return module
 
-wifi=load('nothing_wifi',ROOT/'runtime/wifi.py')
 manage=load('nothing_notification_restore',ROOT/'notification-skin/restore-legacy.py')
-UUID='12345678-1234-1234-1234-123456789abc'
-
-class WifiTests(unittest.TestCase):
-    def test_escaped_nmcli_fields(self):
-        self.assertEqual(wifi.fields(r'yes:My\:Network:WPA2:85'),['yes','My:Network','WPA2','85'])
-
-    def test_saved_network_uses_profile_uuid(self):
-        calls=[]
-        def fake_run(*args,**kwargs):
-            calls.append(args)
-            if args[-2:]==('connection','show'):
-                return subprocess.CompletedProcess(args,0,f'{UUID}:802-11-wireless:wlan0\n','')
-            if args[-3:]==('connection','show','--active'):
-                return subprocess.CompletedProcess(args,0,f'{UUID}:802-11-wireless:wlan0\n','')
-            if args[:2]==('-g','802-11-wireless.ssid'):
-                return subprocess.CompletedProcess(args,0,'Black_Net\n','')
-            if args[:2]==('-g','GENERAL.STATE'):
-                return subprocess.CompletedProcess(args,0,'100 (connected)\n','')
-            if 'wifi' in args and 'list' in args:
-                return subprocess.CompletedProcess(args,0,'yes:Black_Net:WPA2:85\n','')
-            if args[:2]==('--wait','30'):
-                return subprocess.CompletedProcess(args,0,'Connection successfully activated\n','')
-            raise AssertionError(args)
-        with mock.patch.object(wifi,'run',side_effect=fake_run):
-            row=wifi.scan()['networks'][0]
-            self.assertTrue(row['saved'])
-            self.assertEqual(row['uuid'],UUID)
-            result=wifi.activate(UUID)
-            self.assertTrue(result['ok'])
-        self.assertIn(('--wait','30','connection','up','uuid',UUID),calls)
-        self.assertFalse(any('password' in str(call) for call in calls))
-
-    def test_activation_failure_is_not_success(self):
-        with mock.patch.object(wifi,'profile_rows',return_value=[{'uuid':UUID,'device':'wlan0'}]), \
-             mock.patch.object(wifi,'run',return_value=subprocess.CompletedProcess([],4,'','Secrets were required')), \
-             mock.patch.object(wifi,'active_state',return_value=[]):
-            result=wifi.activate(UUID)
-        self.assertFalse(result['ok'])
-        self.assertTrue(result['needsPassword'])
-
-    def test_existing_active_connection_wins_over_command_error(self):
-        with mock.patch.object(wifi,'profile_rows',return_value=[{'uuid':UUID,'device':'wlan0'}]), \
-             mock.patch.object(wifi,'run',return_value=subprocess.CompletedProcess([],4,'','Secrets were required')), \
-             mock.patch.object(wifi,'active_state',return_value=[{'uuid':UUID,'ssid':'Black_Net'}]):
-            result=wifi.activate(UUID)
-        self.assertTrue(result['ok'])
-        self.assertEqual(result['error'],'')
-
-    def test_invalid_uuid_never_reaches_nmcli(self):
-        with mock.patch.object(wifi,'run') as runner:
-            result=wifi.activate('not-a-uuid; rm -rf /')
-        self.assertFalse(result['ok'])
-        runner.assert_not_called()
 
 class NotificationTests(unittest.TestCase):
     def setUp(self):

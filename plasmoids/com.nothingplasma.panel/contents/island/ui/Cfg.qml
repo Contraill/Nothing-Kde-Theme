@@ -394,7 +394,19 @@ QtObject {
         "UNMUTE MICROPHONE": ["Mikrofonu aç", "Unmute microphone"],
         "MICROPHONE MUTED": ["Mikrofon sessizde", "Microphone muted"],
         "DISPLAYS AND KEYBOARD": ["EKRANLAR VE KLAVYE", "DISPLAYS AND KEYBOARD"],
-        "BRIGHTNESS RIGHT CLICK": ["Tüm ekranlar ve klavye ışığı için sağ tıklayın", "Right-click for every display and keyboard lighting"]
+        "BRIGHTNESS RIGHT CLICK": ["Tüm ekranlar ve klavye ışığı için sağ tıklayın", "Right-click for every display and keyboard lighting"],
+        "HOTSPOT": ["Erişim noktası (hotspot)", "Hotspot"],
+        "AIRPLANE MODE": ["Uçak modu", "Airplane mode"],
+        "NETWORK SETTINGS": ["Ağ ayarları (gizli ve kurumsal ağlar)", "Network settings (hidden and enterprise networks)"],
+        "BLUETOOTH SETTINGS": ["Bluetooth ayarları", "Bluetooth settings"],
+        "SHARE": ["PAYLAŞ", "SHARE"],
+        "SHOW PASSWORD": ["Şifreyi göster", "Show password"],
+        "HIDE PASSWORD": ["Şifreyi gizle", "Hide password"],
+        "SCAN TO JOIN": ["Bağlanmak için okutun", "Scan to join"],
+        "WIFI HARDWARE OFF": ["Wi-Fi donanım anahtarıyla kapalı", "Wi-Fi is off by its hardware switch"],
+        "NOT CONNECTED": ["BAĞLI DEĞİL", "NOT CONNECTED"],
+        "NO OTHER NETWORKS": ["Başka ağ bulunamadı", "No other networks found"],
+        "NO NEARBY DEVICES": ["Yakında cihaz bulunamadı", "No nearby devices found"]
 })
 
     function t(clave) {

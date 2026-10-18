@@ -164,7 +164,8 @@ fi
 mkdir -p "$DATA_HOME/nothing-plasma/bin" "$DATA_HOME/nothing-plasma/wallpapers"
 install -m 0755 "$ROOT/runtime/nothing-control.sh" "$DATA_HOME/nothing-plasma/bin/nothing-control.sh"
 "$DATA_HOME/nothing-plasma/bin/nothing-control.sh" retire-inhibitors
-install -m 0755 "$ROOT/runtime/wifi.py" "$DATA_HOME/nothing-plasma/bin/wifi.py"
+# Wi-Fi now goes through Plasma's NetworkManager bindings; drop the retired helper.
+rm -f "$DATA_HOME/nothing-plasma/bin/wifi.py"
 install -m 0755 "$ROOT/runtime/privacy.py" "$DATA_HOME/nothing-plasma/bin/privacy.py"
 install -m 0755 "$ROOT/runtime/accent-links.py" "$DATA_HOME/nothing-plasma/bin/accent-links.py"
 install -m 0755 "$ROOT/runtime/kitty-theme.py" "$DATA_HOME/nothing-plasma/bin/kitty-theme.py"

@@ -37,8 +37,12 @@ class IslandTests(unittest.TestCase):
 
     def test_existing_backends_and_native_notification_settings(self):
         net = (UI / 'Net.qml').read_text()
-        self.assertIn('wifiCommand("activate "', net)
-        self.assertIn('JSON.parse(data["stdout"]).ok === true', net)
+        # Passwords reach NetworkManager over D-Bus, never on a command line.
+        self.assertIn('handler.addAndActivateConnection(row.devicePath, row.specificPath, password)', net)
+        self.assertNotIn('nmcli', net)
+        self.assertNotIn('bluetoothctl', net)
+        self.assertIn('BluezQt.Manager', net)
+        self.assertIn('networkModel.delayModelUpdates = holdNetworkUpdates', net)
         audio = (UI / 'Audio.qml').read_text()
         # Native PulseAudio bindings; choosing a level also unmutes, as in Plasma's applet.
         self.assertIn('org.kde.plasma.private.volume', audio)

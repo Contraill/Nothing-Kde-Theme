@@ -1,4 +1,5 @@
 import QtQuick
+import org.kde.prison as Prison
 import "."
 Item {
     id: popup
@@ -34,6 +35,12 @@ Item {
     }
     property string asking: ""
     property string detail: ""
+    property bool showPassword: false
+    // Keep NetworkManager from reordering rows while a password is typed.
+    onAskingChanged: {
+        Net.holdNetworkUpdates = asking !== "";
+        showPassword = false;
+    }
 
     function toggle(): void {
         if (mode === "wifi")
@@ -41,21 +48,34 @@ Item {
         else
             Net.toggleBt();
     }
-    Component.onCompleted: {
-        if (popup.mode === "bt") {
-            Net.btWatchers++;
-            Net.scanBt(true);
-        } else {
-            Net.netWatchers++;
-        }
-        Net.refreshLists();
+    function btIcon(type): string {
+        // BluezQt::Device::Type
+        return ({0: "smartphone", 2: "computer", 4: "headset_mic", 5: "headphones", 6: "speaker",
+                 7: "keyboard", 8: "mouse", 9: "sports_esports", 10: "tablet", 12: "photo_camera",
+                 13: "print", 14: "watch"})[type] ?? "bluetooth";
     }
-
-    Component.onDestruction: {
+    Component.onCompleted: {
+        Net.wifiCode = "";
         if (popup.mode === "bt")
-            Net.btWatchers--;
+            Net.scanBt(true);
         else
-            Net.netWatchers--;
+            Net.refreshLists();
+    }
+    Component.onDestruction: {
+        Net.holdNetworkUpdates = false;
+        if (popup.mode === "bt")
+            Net.scanBt(false);
+    }
+    Connections {
+        target: Net
+        function onBtEnabledChanged() {
+            if (popup.mode === "bt" && Net.btEnabled)
+                Net.scanBt(true);
+        }
+        function onWifiEnabledChanged() {
+            if (popup.mode === "wifi")
+                Net.refreshLists();
+        }
     }
 
     Item {
@@ -82,7 +102,41 @@ Item {
                     font.letterSpacing: Theme.labelSpacing
                 }
 
+                Row {
+                    anchors.right: closeBtn.left
+                    anchors.rightMargin: 6
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 6
+
+                    HeaderChip {
+                        visible: popup.mode === "wifi" && (Net.hotspotSupported || Net.hotspotActive)
+                        icon: "wifi_tethering"
+                        label: Cfg.t("HOTSPOT")
+                        active: Net.hotspotActive
+                        onTriggered: Net.toggleHotspot()
+                    }
+                    HeaderChip {
+                        visible: popup.mode === "wifi" && Net.wifiAvailable
+                        icon: "flight"
+                        label: Cfg.t("AIRPLANE MODE")
+                        active: Net.airplaneMode
+                        onTriggered: Net.toggleAirplaneMode()
+                    }
+                    HeaderChip {
+                        icon: "settings"
+                        label: popup.mode === "wifi" ? Cfg.t("NETWORK SETTINGS") : Cfg.t("BLUETOOTH SETTINGS")
+                        onTriggered: {
+                            if (popup.mode === "wifi")
+                                Net.openNetworkSettings();
+                            else
+                                Net.openBluetoothSettings();
+                            popup.closed();
+                        }
+                    }
+                }
+
                 Rectangle {
+                    id: closeBtn
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     width: 26
@@ -193,6 +247,37 @@ Item {
                     onClicked: popup.toggle()
                 }
             }
+            component HeaderChip: Rectangle {
+                id: chip
+                property string icon: ""
+                property string label: ""
+                property bool active: false
+                signal triggered
+
+                width: 26
+                height: 26
+                radius: height / 2
+                color: chip.active ? Theme.inverted : chipMa.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
+                Accessible.role: Accessible.Button
+                Accessible.name: chip.label
+                Accessible.checkable: chip.active
+                Accessible.onPressAction: chip.triggered()
+
+                Text {
+                    anchors.centerIn: parent
+                    text: chip.icon
+                    color: chip.active ? Theme.invertedFg : chipMa.containsMouse ? Theme.fg : Theme.fgDim
+                    font.family: Theme.fontIcons
+                    font.pixelSize: 15
+                }
+                MouseArea {
+                    id: chipMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: chip.triggered()
+                }
+            }
             component AccionBtn: Rectangle {
                 id: ab
                 property string etiqueta: ""
@@ -240,14 +325,14 @@ Item {
                 readonly property string ident: popup.mode === "wifi" ? (item?.name ?? "") : (item?.mac ?? "")
 
                 readonly property bool isConnected: item?.connected ?? false
-                readonly property bool isBusy: ident !== "" && Net.connecting === ident
+                readonly property bool isBusy: ident !== "" && (Net.connecting === ident || (item?.activating ?? false))
                 readonly property bool didFail: ident !== "" && Net.failed === ident
                 readonly property bool askingPass: popup.asking !== "" && popup.asking === ident
                 readonly property bool abierto: popup.detail !== "" && popup.detail === ident
 
                 readonly property string detalleTexto: {
                     if (popup.mode !== "wifi")
-                        return cr.item?.mac ?? "";
+                        return [cr.item?.mac ?? "", (cr.item?.battery ?? -1) >= 0 ? Cfg.t("BATTERY") + " " + cr.item.battery + "%" : ""].filter(Boolean).join(" · ");
                     const partes = [];
                     if (cr.item?.signal !== undefined)
                         partes.push(Cfg.t("Signal") + " " + cr.item.signal + "%");
@@ -266,7 +351,8 @@ Item {
                             Net.connectNet(it.name);
                             return;
                         }
-                        if (it.secure) {
+                        // WPA-Enterprise and similar ask through KDE's own credentials dialog.
+                        if (it.secure && it.staticPassword) {
                             popup.asking = cr.askingPass ? "" : cr.ident;
                             return;
                         }
@@ -332,16 +418,7 @@ Item {
                         text: {
                             if (popup.mode === "wifi")
                                 return cr.isConnected ? "wifi" : (cr.item?.secure ?? false) ? "lock" : "wifi_find";
-                            const n = (cr.item?.name ?? "").toLowerCase();
-                            if (n.includes("head") || n.includes("buds") || n.includes("audio"))
-                                return "headphones";
-                            if (n.includes("phone"))
-                                return "call";
-                            if (n.includes("keyboard") || n.includes("teclado"))
-                                return "keyboard";
-                            if (n.includes("mouse"))
-                                return "mouse";
-                            return "bluetooth";
+                            return popup.btIcon(cr.item?.type ?? -1);
                         }
                         color: cr.didFail ? Theme.alert : cr.isConnected ? Theme.fg : Theme.fgFaint
                         font.family: Theme.fontIcons
@@ -414,7 +491,7 @@ Item {
                                 if (cr.didFail)
                                     return Cfg.t("Couldn't connect");
                                 if (cr.isConnected)
-                                    return Cfg.t("Connected");
+                                    return (cr.item?.battery ?? -1) >= 0 ? Cfg.t("Connected") + " · " + cr.item.battery + "%" : Cfg.t("Connected");
                                 if (cr.isKnown)
                                     return Cfg.t("Saved");
                                 return Cfg.t("Available");
@@ -520,6 +597,12 @@ Item {
                         }
 
                         AccionBtn {
+                            etiqueta: Cfg.t("SHARE")
+                            visible: popup.mode === "wifi" && cr.isKnown && (cr.item?.saved ?? false)
+                            onApretado: Net.shareNet(cr.item.name)
+                        }
+
+                        AccionBtn {
                             etiqueta: Cfg.t("FORGET")
                             peligro: true
                             visible: cr.isKnown
@@ -547,14 +630,14 @@ Item {
                     TextInput {
                         id: passIn
                         anchors.left: parent.left
-                        anchors.right: okBtn.left
+                        anchors.right: revealBtn.left
                         anchors.leftMargin: 10
                         anchors.rightMargin: 6
                         anchors.verticalCenter: parent.verticalCenter
                         color: Theme.fg
                         font.family: Theme.font
                         font.pixelSize: Theme.bodySmall
-                        echoMode: TextInput.Password
+                        echoMode: popup.showPassword ? TextInput.Normal : TextInput.Password
                         selectByMouse: true
                         selectionColor: Qt.alpha(Theme.fg, 0.25)
                         clip: true
@@ -568,6 +651,34 @@ Item {
                             color: Theme.fgFaint
                             font.family: Theme.font
                             font.pixelSize: Theme.bodySmall
+                        }
+                    }
+
+                    Rectangle {
+                        id: revealBtn
+                        anchors.right: okBtn.left
+                        anchors.rightMargin: 2
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: 28
+                        height: 28
+                        radius: height / 2
+                        color: revealMa.containsMouse ? Theme.surfaceHigh : "transparent"
+                        Accessible.role: Accessible.Button
+                        Accessible.name: popup.showPassword ? Cfg.t("HIDE PASSWORD") : Cfg.t("SHOW PASSWORD")
+
+                        Text {
+                            anchors.centerIn: parent
+                            text: popup.showPassword ? "visibility_off" : "visibility"
+                            color: Theme.fgDim
+                            font.family: Theme.fontIcons
+                            font.pixelSize: 16
+                        }
+                        MouseArea {
+                            id: revealMa
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: popup.showPassword = !popup.showPassword
                         }
                     }
 
@@ -620,10 +731,46 @@ Item {
                 font.weight: Font.Medium
                 font.letterSpacing: 0.6
             }
+            Column {
+                width: parent.width
+                spacing: 8
+                visible: popup.mode === "wifi" && Net.wifiCode !== ""
+
+                Rectangle {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: 196
+                    height: 196
+                    radius: Theme.shapeMd
+                    color: "#ffffff"
+                    Prison.Barcode {
+                        anchors.fill: parent
+                        anchors.margins: 12
+                        barcodeType: Prison.Barcode.QRCode
+                        content: Net.wifiCode
+                        foregroundColor: "#000000"
+                        backgroundColor: "#ffffff"
+                    }
+                }
+                Text {
+                    width: parent.width
+                    horizontalAlignment: Text.AlignHCenter
+                    text: Cfg.t("SCAN TO JOIN") + " · " + Net.wifiCodeSsid
+                    color: Theme.fgVariant
+                    font.family: Theme.font
+                    font.pixelSize: Theme.labelSmall
+                    elide: Text.ElideMiddle
+                }
+                AccionBtn {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    etiqueta: Cfg.t("CLOSE")
+                    onApretado: Net.wifiCode = ""
+                }
+            }
+
             Item {
                 width: parent.width
                 height: Math.min(popup.listMax, lista.contentHeight)
-                visible: popup.radioEnabled
+                visible: popup.radioEnabled && !(popup.mode === "wifi" && Net.wifiCode !== "")
 
                 Flickable {
                     id: lista
@@ -701,7 +848,8 @@ Item {
                                 horizontalAlignment: Text.AlignHCenter
                                 topPadding: 8
                                 bottomPadding: 8
-                                text: Cfg.t("Searching…")
+                                text: (popup.mode === "wifi" ? Net.scanning : Net.btDiscovering) ? Cfg.t("Searching…")
+                                    : popup.mode === "wifi" ? Cfg.t("NO OTHER NETWORKS") : Cfg.t("NO NEARBY DEVICES")
                                 color: Theme.outline
                                 font.family: Theme.font
                                 font.pixelSize: Theme.bodySmall
@@ -735,7 +883,7 @@ Item {
                 horizontalAlignment: Text.AlignHCenter
                 topPadding: 10
                 bottomPadding: 10
-                text: popup.mode === "wifi" ? Cfg.t("Wi-Fi off") : Cfg.t("Bluetooth off")
+                text: popup.mode === "wifi" ? (Net.wifiHardwareEnabled ? Cfg.t("Wi-Fi off") : Cfg.t("WIFI HARDWARE OFF")) : Cfg.t("Bluetooth off")
                 color: Theme.outline
                 font.family: Theme.font
                 font.pixelSize: Theme.bodySmall
