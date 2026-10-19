@@ -84,6 +84,12 @@ msgstr "Çerçeve ayarları"
 msgid "Border Size:"
 msgstr "Çerçeve kalınlığı:"
 
+msgid "Bottom left"
+msgstr "Sol alt"
+
+msgid "Bottom right"
+msgstr "Sağ alt"
+
 msgid "Break (minutes):"
 msgstr "Mola (dakika):"
 
@@ -162,11 +168,20 @@ msgstr "Kahve"
 msgid "Coffee mode from the quick toggles"
 msgstr "Hızlı geçişlerden kahve modu"
 
+msgid "Comet"
+msgstr "Kuyruklu yıldız"
+
 msgid "Computer"
 msgstr "Bilgisayar"
 
 msgid "Convert the image to black and white (grayscale)"
 msgstr "Görseli siyah beyaza (gri tonlara) dönüştürür"
+
+msgid "Corner"
+msgstr "Köşe"
+
+msgid "Corner:"
+msgstr "Köşe:"
 
 msgid "Countdown"
 msgstr "Geri sayım"
@@ -236,6 +251,9 @@ msgstr "Köpek"
 
 msgid "Dot"
 msgstr "Nokta"
+
+msgid "Dot ring"
+msgstr "Nokta halkası"
 
 msgid "Dots"
 msgstr "Noktalar"
@@ -582,8 +600,8 @@ msgstr "Kalan"
 msgid "Reset"
 msgstr "Sıfırla"
 
-msgid "Resize the widget to make it longer: the line runs corner to corner and the strip gains lights."
-msgstr "Uzatmak için widget'ı yeniden boyutlandır: çizgi köşeden köşeye uzanır, şerit yeni ışıklar kazanır."
+msgid "Resize the widget to stretch it: lines run corner to corner, or straight when long and thin; the strip gains segments; the corner's arms follow the edges."
+msgstr "Uzatmak için widget'ı yeniden boyutlandır: çizgiler köşeden köşeye, uzun ve inceyse düz uzanır; şerit yeni bölümler kazanır; köşenin kolları kenarları izler."
 
 msgid "Right-click to configure"
 msgstr "Ayarlamak için sağ tıklayın"
@@ -759,6 +777,12 @@ msgstr "Geçiş:"
 msgid "Toggles"
 msgstr "Anahtarlar"
 
+msgid "Top left"
+msgstr "Sol üst"
+
+msgid "Top right"
+msgstr "Sağ üst"
+
 msgid "Turn the page at its corner to see the calendar; the wheel leafs through the months."
 msgstr "Takvimi görmek için sayfayı köşesinden çevir; tekerlek aylar arasında gezdirir."
 
@@ -821,6 +845,9 @@ msgstr "HAFTA"
 
 msgid "Watch"
 msgstr "Akıllı saat"
+
+msgid "Wave"
+msgstr "Dalga"
 
 msgid "Wi-Fi"
 msgstr "Wi-Fi"

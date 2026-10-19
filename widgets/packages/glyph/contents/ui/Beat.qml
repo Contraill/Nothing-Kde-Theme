@@ -34,6 +34,10 @@ QtObject {
     // The clock the lights fade by; ticks while anything is lit.
     property double now: 0
     property double lastSample: 0
+    // How far the moving lights (comet, wave, the dot ring's turn) have
+    // gone: a shared distance, faster the more the music drives.
+    property real travel: 0
+    property double lastStep: 0
 
     // Samples heard since the sound came on: the first second settles the
     // running loudness as a plain average, so a song's start is not one flash.
@@ -55,6 +59,7 @@ QtObject {
         hit = Math.max(hit * 0.62, Math.min(1, raw));
         body += (Math.min(1, above) - body) * (above > body ? 0.35 : 0.08);
         now = Date.now();
+        advance();
         if (armed && hit > 0.55 && now - beatTime > 110) {
             beats += 1;
             beatTime = now;
@@ -64,6 +69,11 @@ QtObject {
         } else if (hit < 0.35) {
             armed = true;
         }
+    }
+    function advance() {
+        const dt = Math.min(0.1, Math.max(0, (now - lastStep) / 1000));
+        lastStep = now;
+        travel += dt * (0.15 + 0.5 * body + 1.6 * hit);
     }
     // A flash that started at `since` milliseconds ago, over `length`.
     function fade(since, length) {
@@ -84,7 +94,7 @@ QtObject {
         running: beat.users > 0 && (beat.hit > 0.01 || beat.body > 0.01 || Date.now() - beat.beatTime < 600)
         onTriggered: {
             if (Date.now() - beat.lastSample > 50) beat.step(beat.monitor.volume);
-            else beat.now = Date.now();
+            else { beat.now = Date.now(); beat.advance(); }
         }
     }
 }

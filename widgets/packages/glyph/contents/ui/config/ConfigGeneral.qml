@@ -13,6 +13,8 @@ KCM.SimpleKCM {
     property alias cfg_progress: progress.checked
     property alias cfg_arcSweep: sweep.value
     property alias cfg_mirror: mirror.checked
+    property int cfg_corner
+    readonly property int shape: cfg_widgetVariant
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
     property alias cfg_monochrome: theme.monochrome
@@ -27,31 +29,54 @@ KCM.SimpleKCM {
             themeMode: theme.themeMode
             useSystemAccent: theme.useSystemAccent
             monochrome: theme.monochrome
-            styles: ["ring", "arc", "strip", "line", "dot"].map((shape, i) => ({
-                label: [i18n("Ring"), i18n("Arc"), i18n("Strip"), i18n("Line"), i18n("Dot")][i], value: i,
-                source: Qt.resolvedUrl("../GlyphLight.qml"), props: {shape: shape, light: n => [0.95, 0.45, 0.8, 0.25][n % 4], fill: 0.6, progress: progress.checked, sweep: sweep.value, mirror: mirror.checked, transparent: theme.transparent}
+            styles: ["ring", "arc", "strip", "line", "dot", "corner", "dots", "comet", "wave"].map((shape, i) => ({
+                label: [i18n("Ring"), i18n("Arc"), i18n("Strip"), i18n("Line"), i18n("Dot"), i18n("Corner"), i18n("Dot ring"), i18n("Comet"), i18n("Wave")][i], value: i,
+                source: Qt.resolvedUrl("../GlyphLight.qml"),
+                props: {shape: shape, light: n => shape === "dots" ? Math.max(0, 1 - Math.min(n, 12 - n) / 3) : [0.95, 0.45, 0.8, 0.25][n % 4],
+                        fill: 0.6, travel: 0.7, progress: progress.checked, sweep: sweep.value, mirror: mirror.checked, corner: page.cfg_corner, transparent: theme.transparent}
             }))
         }
         QQC2.CheckBox {
             id: progress
-            visible: page.cfg_widgetVariant === 1 || page.cfg_widgetVariant === 3
+            visible: page.shape === 1 || page.shape === 3 || page.shape === 5
             text: i18n("Fill along with the beat, like a progress bar")
         }
         QQC2.CheckBox {
             id: mirror
-            visible: page.cfg_widgetVariant === 3
+            visible: page.shape === 3 || page.shape === 7
             text: i18n("The other diagonal")
         }
         QQC2.Label {
             Layout.fillWidth: true
-            visible: page.cfg_widgetVariant === 2 || page.cfg_widgetVariant === 3
-            text: i18n("Resize the widget to make it longer: the line runs corner to corner and the strip gains lights.")
+            visible: [2, 3, 5, 7, 8].includes(page.shape)
+            text: i18n("Resize the widget to stretch it: lines run corner to corner, or straight when long and thin; the strip gains segments; the corner's arms follow the edges.")
             wrapMode: Text.Wrap
             opacity: 0.7
             font.pointSize: 9
         }
+        // Where the corner sits; four of them frame something.
         RowLayout {
-            visible: page.cfg_widgetVariant === 1
+            visible: page.shape === 5
+            spacing: 10
+            QQC2.Label { text: i18n("Corner:") }
+            Repeater {
+                model: ["⌜", "⌝", "⌞", "⌟"]
+                QQC2.RadioButton {
+                    required property string modelData
+                    required property int index
+                    text: modelData
+                    font.pointSize: 14
+                    Accessible.name: [i18n("Top left"), i18n("Top right"), i18n("Bottom left"), i18n("Bottom right")][index]
+                    checked: page.cfg_corner === index
+                    onToggled: {
+                        page.cfg_corner = index;
+                        checked = Qt.binding(() => page.cfg_corner === index);
+                    }
+                }
+            }
+        }
+        RowLayout {
+            visible: page.shape === 1
             QQC2.Label { text: i18n("Arc length:") }
             QQC2.Slider {
                 id: sweep

@@ -23,7 +23,7 @@ PlasmoidItem {
         monochrome: Plasmoid.configuration.monochrome
     }
 
-    readonly property string shape: ["ring", "arc", "strip", "line", "dot"][Plasmoid.configuration.widgetVariant] ?? "ring"
+    readonly property string shape: ["ring", "arc", "strip", "line", "dot", "corner", "dots", "comet", "wave"][Plasmoid.configuration.widgetVariant] ?? "ring"
 
     // This desktop's glyph widgets in the order they were added: each light's
     // place in the show, however many there are.
@@ -58,17 +58,37 @@ PlasmoidItem {
     readonly property real body: Math.min(1, Beat.body * gain)
     readonly property double since: Beat.now - Beat.beatTime
 
-    // The light of part `n` of this widget (the ring has four; the rest one).
+    // The light of part `n` of this widget: the ring has four, the dot ring
+    // twelve, the rest one.
     function light(n) {
         // The ring's further parts need harder hits: all four only on the hardest.
-        const step = 0.30 + zone * 0.13 + n * 0.2;
+        const step = 0.30 + zone * 0.13 + (shape === "ring" ? n * 0.2 : 0);
         // Soft: the music's body, a gentle glow well under a flash.
-        const soft = Math.max(0, Math.min(1, (body - zone * 0.12) / 0.6)) * 0.38;
-        // Sharp: the hit over this zone's step.
-        const sharp = Math.max(0, Math.min(1, (hit - step) / 0.1));
-        // In the ring the lead's flash turns from part to part.
-        const lead = leads(Beat.beats) && (shape !== "ring" || (Beat.beats + rank) % 4 === n);
-        const chase = lead ? Beat.fade(since, 300) * Math.min(1, Beat.beatStrength * gain * 1.1) : 0;
+        let soft = Math.max(0, Math.min(1, (body - zone * 0.12) / 0.6)) * 0.38;
+        // The dot ring turns softly with the music on its own.
+        if (shape === "dots") {
+            const turn = (Beat.travel * 4 + rank * 3) % 12;
+            const d = Math.min(Math.abs(n - turn), 12 - Math.abs(n - turn));
+            soft = Math.max(soft * 0.6, Math.max(0, 1 - d / 2.5) * Math.min(1, 0.25 + body) * 0.55);
+        }
+        // Sharp: the hit over this zone's step; the dot ring flashes from its lead instead.
+        const sharp = shape === "dots" ? 0 : Math.max(0, Math.min(1, (hit - step) / 0.1));
+        let chase = 0;
+        if (leads(Beat.beats)) {
+            const flash = Beat.fade(since, 300) * Math.min(1, Beat.beatStrength * gain * 1.1);
+            if (shape === "ring") {
+                // In the ring the lead's flash turns from part to part.
+                chase = (Beat.beats + rank) % 4 === n ? flash : 0;
+            } else if (shape === "dots") {
+                // From the lead dot, wider the harder the hit.
+                const lead = (Beat.beats * 5 + rank * 3) % 12;
+                const d = Math.min(Math.abs(n - lead), 12 - Math.abs(n - lead));
+                const reach = Math.round(Math.min(1, Beat.beatStrength * gain) * 3);
+                chase = d <= reach ? flash * (1 - d / (reach + 1)) : 0;
+            } else {
+                chase = flash;
+            }
+        }
         // The hardest hits, a few a minute, light everything at once.
         const blast = Beat.beatStrength * gain > 1.25 ? Beat.fade(since, 170) : 0;
         return Math.max(soft, sharp, chase, blast);
@@ -76,8 +96,11 @@ PlasmoidItem {
 
     fullRepresentation: GlyphLight {
         readonly property real side: root.shape === "dot" ? 72 : 180
-        Layout.preferredWidth: root.shape === "strip" ? 64 : side
-        Layout.preferredHeight: root.shape === "strip" ? 200 : side
+        // The lines' default proportions; resize to stretch them.
+        readonly property size stretched: root.shape === "strip" ? Qt.size(64, 200) : root.shape === "comet" ? Qt.size(260, 64)
+            : root.shape === "wave" ? Qt.size(260, 96) : Qt.size(side, side)
+        Layout.preferredWidth: stretched.width
+        Layout.preferredHeight: stretched.height
         Layout.minimumWidth: 24
         Layout.minimumHeight: 24
         colors: nColors
@@ -89,5 +112,7 @@ PlasmoidItem {
         progress: Plasmoid.configuration.progress
         sweep: Plasmoid.configuration.arcSweep
         mirror: Plasmoid.configuration.mirror
+        corner: Plasmoid.configuration.corner
+        travel: Beat.travel
     }
 }
