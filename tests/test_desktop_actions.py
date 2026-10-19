@@ -7,7 +7,9 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
-RUNNER = shutil.which('qmltestrunner') or shutil.which('qmltestrunner6')
+# As validate.sh: Qt 6's runner, never a Qt 5 qmltestrunner earlier on PATH.
+RUNNER = (shutil.which('qmltestrunner6') or (os.access('/usr/lib/qt6/bin/qmltestrunner', os.X_OK) and '/usr/lib/qt6/bin/qmltestrunner')
+          or shutil.which('qmltestrunner'))
 
 
 @unittest.skipUnless(RUNNER, 'Qt Quick Test runner required')

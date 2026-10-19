@@ -495,13 +495,14 @@ PY
 bash -n "$ROOT/notification-skin/install-native.sh" "$ROOT/notification-skin/rollback-native.sh"
 bash -n "$ROOT/install.sh" "$ROOT/uninstall.sh" "$ROOT/package.sh" "$ROOT/validate.sh" "$ROOT/runtime/nothing-control.sh"
 
+# Qt 6's tools first: a Qt 5 qmllint or qmltestrunner may come earlier on PATH.
 QMLLINT=""
 if command -v qmllint6 >/dev/null 2>&1; then
   QMLLINT="$(command -v qmllint6)"
-elif command -v qmllint >/dev/null 2>&1; then
-  QMLLINT="$(command -v qmllint)"
 elif [[ -x /usr/lib/qt6/bin/qmllint ]]; then
   QMLLINT="/usr/lib/qt6/bin/qmllint"
+elif command -v qmllint >/dev/null 2>&1; then
+  QMLLINT="$(command -v qmllint)"
 fi
 
 if [[ -n "$QMLLINT" ]]; then
@@ -567,10 +568,11 @@ else
 fi
 
 python3 -m unittest discover -s "$ROOT/tests" -p 'test_*.py'
-qml_test_runner="$(command -v qmltestrunner6 || command -v qmltestrunner || true)"
+qml_test_runner="$(command -v qmltestrunner6 || true)"
 if [[ -z "$qml_test_runner" && -x /usr/lib/qt6/bin/qmltestrunner ]]; then
   qml_test_runner=/usr/lib/qt6/bin/qmltestrunner
 fi
+[[ -n "$qml_test_runner" ]] || qml_test_runner="$(command -v qmltestrunner || true)"
 if [[ -n "$qml_test_runner" ]]; then
   QT_FORCE_STDERR_LOGGING=1 QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software "$qml_test_runner" -input "$ROOT/tests/qml" -o -,txt
 else
