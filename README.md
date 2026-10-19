@@ -44,7 +44,7 @@ and notifies with Plasma's timer sound), **Devices** (the batteries of this comp
 phones and Bluetooth headphones, mice and the like, as dot rings or filled circles),
 **Progress** (the year as a dot ring, or day, week, month and year bars), **Quick Toggles**
 (Wi-Fi, Bluetooth, airplane mode and volume, or a volume pill), **Greeting**, **Uptime**,
-**Visualizer** (bands, or glyph lights that play together across several widgets), **Glyph
+**Visualizer**, **Glyph** (a glyph light that flashes on the beat; several play together), **Glyph
 Matrix** (a round dot matrix to draw on, with a clock, animations, or your own picture or GIF)
 and **Pet** (a dot-matrix cat, dog, hamster or robot).
 

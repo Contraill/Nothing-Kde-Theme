@@ -42,6 +42,9 @@ msgstr "Telefonun Glyph Matrisi için yapılmış animasyonlar GIF olarak göste
 msgid "Appearance"
 msgstr "Görünüm"
 
+msgid "Arc"
+msgstr "Yay"
+
 msgid "Auto"
 msgstr "Otomatik"
 
@@ -321,23 +324,8 @@ msgstr "Oyun kumandası"
 msgid "General"
 msgstr "Genel"
 
-msgid "Glyph arc"
-msgstr "Glyph yayı"
-
-msgid "Glyph dot"
-msgstr "Glyph noktası"
-
-msgid "Glyph line"
-msgstr "Glyph çizgisi"
-
-msgid "Glyph ring"
-msgstr "Glyph halkası"
-
-msgid "Glyph strip"
-msgstr "Glyph şeridi"
-
-msgid "Glyph widgets share one clock: put several side by side, each in its own zone, and they play together, every zone with its part of the sound. Auto takes the zone from where the widget sits across the screen."
-msgstr "Glyph widget'ları aynı saati paylaşır: birkaçını yan yana, her birini kendi bölgesinde koyarsan birlikte çalarlar; her bölge sesin kendi kısmını alır. Otomatik, bölgeyi widget'ın ekrandaki yerinden seçer."
+msgid "Glyph widgets hear the same beat: zone 1 flashes on every hit, zone 5 only on the strongest, so several together light further the harder the music hits. Auto numbers them in the order they were added."
+msgstr "Glyph widget'ları aynı vuruşu duyar: bölge 1 her vuruşta, bölge 5 yalnızca en güçlülerinde parlar; birkaçı birlikte, müzik sertleştikçe daha çok yanar. Otomatik, onları eklenme sırasına göre numaralar."
 
 msgid "Good afternoon"
 msgstr "İyi öğleden sonralar"
@@ -419,6 +407,9 @@ msgstr "Hafif dondurucu çisenti"
 
 msgid "Light Freezing Rain"
 msgstr "Hafif dondurucu yağmur"
+
+msgid "Line"
+msgstr "Çizgi"
 
 msgid "Loading..."
 msgstr "Yükleniyor..."
@@ -582,6 +573,9 @@ msgstr "Sıfırla"
 msgid "Right-click to configure"
 msgstr "Ayarlamak için sağ tıklayın"
 
+msgid "Ring"
+msgstr "Halka"
+
 msgid "Rings"
 msgstr "Halkalar"
 
@@ -695,6 +689,9 @@ msgstr "Odaklan"
 
 msgid "Stretch"
 msgstr "Uzat"
+
+msgid "Strip"
+msgstr "Şerit"
 
 msgid "Style:"
 msgstr "Görünüm:"

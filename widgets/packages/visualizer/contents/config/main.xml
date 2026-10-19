@@ -15,12 +15,8 @@
     <entry name="monochrome" type="Bool">
         <default>false</default>
     </entry>
-    <!-- 0 circle, 1 bars, 2 short pill; 3 to 7 a glyph light: ring, arc, strip, line, dot -->
+    <!-- 0 circle, 1 bars, 2 short pill -->
     <entry name="widgetVariant" type="Int">
-      <default>0</default>
-    </entry>
-    <!-- The glyph light's zone, 1 to 5; 0 picks it from where the widget sits -->
-    <entry name="glyphZone" type="Int">
       <default>0</default>
     </entry>
     <entry name="transparent" type="Bool">

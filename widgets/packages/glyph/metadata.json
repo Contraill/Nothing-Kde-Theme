@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "Multimedia",
+    "Description": "A glyph light that flashes on the beat; several play together.",
+    "EnabledByDefault": true,
+    "Icon": "audio-x-generic",
+    "Id": "org.nothingkde.widget.glyph",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Glyph",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Glyph"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

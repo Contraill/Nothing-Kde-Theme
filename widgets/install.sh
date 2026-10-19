@@ -7,7 +7,7 @@ trap 'rm -rf -- "$stage"' EXIT
 python3 "$ROOT/prepare.py" --output "$stage/packages"
 DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 command -v kpackagetool6 >/dev/null
-for name in clock-analog clock-digital clock-digital-large date glyphmatrix greeting media note pet phone photo pomodoro progress system toggles uptime visualizer weather; do
+for name in clock-analog clock-digital clock-digital-large date glyph glyphmatrix greeting media note pet phone photo pomodoro progress system toggles uptime visualizer weather; do
   id="org.nothingkde.widget.$name"
   if [[ -d "$DATA_HOME/plasma/plasmoids/$id" ]] && diff -qr -- "$stage/packages/$name" "$DATA_HOME/plasma/plasmoids/$id" >/dev/null; then
     printf 'Already current: %s\n' "$id"
@@ -25,4 +25,4 @@ for id in org.nothingkde.widget.trash org.nothingkde.widget.battery; do
     kpackagetool6 --type Plasma/Applet --remove "$id" >/dev/null && printf 'Removed retired widget: %s\n' "$id"
   fi
 done
-printf 'Nothing KDE: 18 desktop widgets installed. Add Widgets / Gereç Ekle. No panels or services changed.\n'
+printf 'Nothing KDE: 19 desktop widgets installed. Add Widgets / Gereç Ekle. No panels or services changed.\n'
