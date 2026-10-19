@@ -15,7 +15,7 @@ permissions:
 env:
   # The QML modules the island and the widgets import, and the tools the tests call.
   PLASMA: >-
-    git python python-fonttools gettext zip unzip nodejs noto-fonts
+    git diffutils python python-fonttools python-pillow gettext zip unzip nodejs noto-fonts
     qt6-declarative kpackage kconfig ki18n kirigami kcmutils kdeclarative kitemmodels
     kwindowsystem knotifications libplasma plasma-workspace plasma5support plasma-nm
     plasma-pa plasma-integration powerdevil bluez-qt libksysguard kpipewire prison kdeconnect

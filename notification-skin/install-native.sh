@@ -21,7 +21,8 @@ INSTALLED="${XDG_DATA_HOME:-$HOME/.local/share}/plasma/plasmoids/$ID"
 if ! command -v plasmashell >/dev/null 2>&1; then
   printf 'Plasma is not installed. Nothing was changed.\n' >&2; exit 1
 fi
-for cmd in python3 kpackagetool6 qdbus6 qmlformat; do
+# diff tells a current package from one to replace; without it every run would reinstall.
+for cmd in python3 kpackagetool6 qdbus6 diff qmlformat; do
   if [[ "$cmd" == qmlformat ]]; then
     if ! command -v qmlformat6 >/dev/null 2>&1 && ! command -v qmlformat >/dev/null 2>&1 && [[ ! -x /usr/lib/qt6/bin/qmlformat ]]; then
       printf 'Qt QML tools (qmlformat) are required to validate the adapter. No changes made.\n' >&2; exit 1
@@ -82,7 +83,8 @@ cleanup() {
 trap cleanup EXIT
 PACKAGE="$build_dir/$ID"
 python3 "$ROOT/prepare-native.py" --output "$PACKAGE"
-LINT="$(command -v qmlformat6 || command -v qmlformat || printf /usr/lib/qt6/bin/qmlformat)"
+# Qt 6's qmlformat first: a Qt 5 one may come earlier on PATH and reject unversioned imports.
+LINT="$(command -v qmlformat6 || { [[ -x /usr/lib/qt6/bin/qmlformat ]] && printf /usr/lib/qt6/bin/qmlformat; } || command -v qmlformat)"
 # Compiled applet imports exist inside plasmashell, not on qmllint's search
 # path. Parse every file here; check actual module loading in the live shell.
 for file in "$PACKAGE/contents/ui/main.qml" "$PACKAGE/contents/ui/NothingNotificationPopup.qml" "$PACKAGE/contents/ui/delegates/"*.qml; do
