@@ -1,7 +1,7 @@
 # Nothing KDE
 
 [![CI](https://github.com/Contraill/Nothing-Kde-Theme/actions/workflows/ci.yml/badge.svg)](https://github.com/Contraill/Nothing-Kde-Theme/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/Contraill/Nothing-Kde-Theme?include_prereleases)](https://github.com/Contraill/Nothing-Kde-Theme/releases)
+[![Version](https://img.shields.io/github/v/tag/Contraill/Nothing-Kde-Theme?sort=semver&label=version)](https://github.com/Contraill/Nothing-Kde-Theme/tags)
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)](LICENSE)
 
 A Nothing-inspired theme suite for Plasma 6: a top island, a bottom dock, nineteen desktop
