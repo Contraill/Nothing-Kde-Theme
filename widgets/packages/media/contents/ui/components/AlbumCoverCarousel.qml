@@ -7,6 +7,8 @@ Item {
 
     // NothingColors reference
     required property QtObject colors
+    // On the wallpaper, without the glass.
+    property bool bare: false
 
     // Public properties - Media data
     property string albumArt: ""
@@ -28,6 +30,7 @@ Item {
 
     // Base rounded rectangle background
     Glassy.GlassySurface {
+        bare: carouselRoot.bare
         id: mainRect
         anchors.fill: parent
         anchors.margins: 10

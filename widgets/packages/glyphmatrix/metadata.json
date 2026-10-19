@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "Fun and Games",
+    "Description": "A round dot matrix to draw on, with a clock, animations, or your own picture or GIF.",
+    "EnabledByDefault": true,
+    "Icon": "view-grid",
+    "Id": "org.nothingkde.widget.glyphmatrix",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Glyph Matrix",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Glyph Matrisi"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

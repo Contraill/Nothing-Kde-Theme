@@ -36,26 +36,75 @@ PlasmoidItem {
         : variant === 1 ? metricList(Plasmoid.configuration.barMetrics)
         : variant === 2 ? metricList(Plasmoid.configuration.pillMetrics)
         : variant === 4 || variant === 5 ? metricList(Plasmoid.configuration.gaugeMetric) : []
-    // Polling an NVIDIA card can keep it awake: its sensors run only while shown.
     readonly property bool showsGpu: metrics.includes("gpu")
 
     Sensors.Sensor { id: cpu; sensorId: "cpu/all/usage"; updateRateLimit: 2000 }
     Sensors.Sensor { id: memory; sensorId: "memory/physical/usedPercent"; updateRateLimit: 2000 }
     Sensors.Sensor { id: temperature; sensorId: "cpu/all/averageTemperature"; updateRateLimit: 4000 }
-    Sensors.Sensor { id: gpu; sensorId: root.showsGpu ? "gpu/all/usage" : ""; updateRateLimit: 2000 }
-    // No "all" temperature: the hottest of the first three GPUs.
-    Sensors.Sensor { id: gpuTemp0; sensorId: root.showsGpu ? "gpu/gpu0/temperature" : ""; updateRateLimit: 4000 }
-    Sensors.Sensor { id: gpuTemp1; sensorId: root.showsGpu ? "gpu/gpu1/temperature" : ""; updateRateLimit: 4000 }
-    Sensors.Sensor { id: gpuTemp2; sensorId: root.showsGpu ? "gpu/gpu2/temperature" : ""; updateRateLimit: 4000 }
+    // The GPU. ksystemstats samples an NVIDIA card with a nvidia-smi monitor
+    // that keeps it awake for good, and reads an AMD one through sysfs that
+    // wakes it; so discrete cards come from gpu.sh instead: their power state
+    // from sysfs, and one reading only while awake, every 15 s so the card can
+    // still fall asleep in between. The integrated GPU stays with ksystemstats.
+    property var discrete: ({awake: false, usage: -1, temp: -1})
+    property string integratedVendor: ""
+    property string discreteVendor: ""
+    P5Support.DataSource {
+        id: gpuProbe
+        engine: "executable"
+        onNewData: (source, data) => {
+            disconnectSource(source);
+            const lines = String(data.stdout ?? "").trim().split("\n").map(l => l.trim().split(" ")).filter(f => f.length === 5);
+            const card = lines.find(f => f[1] === "0");
+            const own = lines.find(f => f[1] === "1");
+            root.integratedVendor = own ? own[0] : "";
+            root.discreteVendor = card ? card[0] : "";
+            root.discrete = card && Number(card[3]) >= 0 ? {awake: true, usage: Number(card[3]), temp: Number(card[4])} : {awake: false, usage: -1, temp: -1};
+        }
+    }
+    Timer {
+        interval: 15000
+        repeat: true
+        running: root.showsGpu
+        triggeredOnStart: true
+        onTriggered: gpuProbe.connectSource("sh " + root.shellQuote(decodeURIComponent(Qt.resolvedUrl("../code/gpu.sh").toString().replace(/^file:\/\//, ""))))
+    }
+    function shellQuote(text) {
+        return "'" + String(text).replace(/'/g, "'\\''") + "'";
+    }
+    // GPU names are static and start no sampler: find the integrated one's id.
+    Instantiator {
+        id: gpuNames
+        model: root.showsGpu ? 4 : 0
+        delegate: Sensors.Sensor {
+            required property int index
+            sensorId: "gpu/gpu" + index + "/name"
+        }
+    }
+    readonly property string integratedId: {
+        const patterns = {"0x10de": /nvidia|geforce|quadro|rtx|gtx/i, "0x1002": /amd|radeon/i, "0x8086": /intel|iris|uhd|arc/i};
+        const own = patterns[integratedVendor], card = patterns[discreteVendor];
+        if (!own) return "";
+        const ids = [];
+        for (let i = 0; i < gpuNames.count; ++i) {
+            const name = String(gpuNames.objectAt(i)?.value ?? "");
+            if (name && own.test(name) && !(card && card.test(name))) ids.push("gpu/gpu" + i);
+        }
+        return ids.length === 1 ? ids[0] : "";
+    }
+    Sensors.Sensor { id: integratedUsage; sensorId: root.integratedId ? root.integratedId + "/usage" : ""; updateRateLimit: 2000 }
+    Sensors.Sensor { id: integratedTemp; sensorId: root.integratedId ? root.integratedId + "/temperature" : ""; updateRateLimit: 4000 }
     Sensors.Sensor { id: download; sensorId: "network/all/download"; updateRateLimit: 2000 }
     Sensors.Sensor { id: upload; sensorId: "network/all/upload"; updateRateLimit: 2000 }
     Sensors.Sensor { id: disk; sensorId: "disk/all/usedPercent"; updateRateLimit: 30000 }
     Sensors.Sensor { id: diskUsed; sensorId: "disk/all/used"; updateRateLimit: 30000 }
     Sensors.Sensor { id: diskTotal; sensorId: "disk/all/total"; updateRateLimit: 30000 }
 
-    readonly property real gpuTemperature: Math.max(Number(gpuTemp0.value) || 0, Number(gpuTemp1.value) || 0, Number(gpuTemp2.value) || 0)
+    // The busier GPU; the awake discrete card's temperature, else the integrated one's.
+    readonly property real gpuPercent: Math.max(root.discrete.usage, Number(integratedUsage.value) || 0, 0)
+    readonly property real gpuTemperature: root.discrete.awake && root.discrete.temp > 0 ? root.discrete.temp : Number(integratedTemp.value) || 0
     function percent(key) {
-        return Number(key === "cpu" ? cpu.value : key === "gpu" ? gpu.value : key === "memory" ? memory.value : disk.value) || 0;
+        return Number(key === "cpu" ? cpu.value : key === "gpu" ? root.gpuPercent : key === "memory" ? memory.value : disk.value) || 0;
     }
     function caption(key) {
         return key === "cpu" ? i18n("CPU") : key === "gpu" ? i18n("GPU") : key === "memory" ? i18n("MEMORY") : i18n("DISK");
@@ -166,6 +215,7 @@ PlasmoidItem {
         Layout.minimumHeight: root.variant === 2 || root.everyPill ? 72 : 170
 
         EverySystem {
+            transparent: Plasmoid.configuration.transparent
             anchors.fill: parent
             visible: root.every
             colors: nColors
@@ -183,6 +233,7 @@ PlasmoidItem {
         }
 
         Glassy.GlassySurface {
+            bare: Plasmoid.configuration.transparent
             id: card
             visible: !root.every
             anchors.fill: parent

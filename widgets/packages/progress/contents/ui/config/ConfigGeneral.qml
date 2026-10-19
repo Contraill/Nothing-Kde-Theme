@@ -10,6 +10,7 @@ KCM.SimpleKCM {
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
     property alias cfg_monochrome: theme.monochrome
+    property alias cfg_transparent: theme.transparent
 
     ColumnLayout {
         spacing: 10
@@ -27,6 +28,6 @@ KCM.SimpleKCM {
                     props: {kind: v[0], round: v[1], yearFraction: 0.8, dayFraction: 0.4, dayOfYear: 292}
                 })))
         }
-        Glassy.ThemeSettings { id: theme }
+        Glassy.ThemeSettings { id: theme; cardOption: true }
     }
 }

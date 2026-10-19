@@ -13,12 +13,10 @@ Glassy.EveryFrame {
     // "circle", "bars" or "pill"
     property string layout: "circle"
     property var levels: []
-    // Straight on the wallpaper, without the card.
-    property bool transparent: false
     readonly property int bands: layout === "circle" ? 20 : layout === "bars" ? 25 : 11
     designWidth: layout === "bars" ? 390 : 190
     designHeight: layout === "circle" ? 190 : 95
-    card: transparent ? "none" : layout === "circle" ? "block" : "pill"
+    card: layout === "circle" ? "block" : "pill"
 
     // Circle: a sector every 18 degrees between radii 50 and 85, opening up to 10 degrees with its level.
     Repeater {

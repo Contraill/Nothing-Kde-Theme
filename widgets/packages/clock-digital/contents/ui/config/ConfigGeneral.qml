@@ -14,6 +14,7 @@ KCM.SimpleKCM {
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
     property alias cfg_monochrome: theme.monochrome
+    property alias cfg_transparent: theme.transparent
     property alias cfg_cityName: cityNameField.text
     property string cfg_timeZone
 
@@ -121,7 +122,7 @@ KCM.SimpleKCM {
         TextField {
             id: cityNameField
             visible: cfg_widgetVariant === 1
-            placeholderText: i18n("e.g., Austin, New York, Tokyo")
+            placeholderText: i18n("e.g., Famagusta, New York, Tokyo")
             Layout.fillWidth: true
         }
 
@@ -182,7 +183,7 @@ KCM.SimpleKCM {
             opacity: 0.3
         }
 
-        Glassy.ThemeSettings { id: theme }
+        Glassy.ThemeSettings { id: theme; cardOption: true }
 
         Item {
             Layout.fillHeight: true

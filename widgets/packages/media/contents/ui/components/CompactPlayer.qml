@@ -8,6 +8,8 @@ Item {
 
     // NothingColors reference
     required property QtObject colors
+    // On the wallpaper, without the glass.
+    property bool bare: false
 
     // Public properties - Media data
     property string albumArt: ""
@@ -18,6 +20,7 @@ Item {
     property real length: 0
 
     Glassy.GlassySurface {
+        bare: compactRoot.bare
         anchors.fill: parent
         anchors.margins: 10
         backgroundColor: compactRoot.colors.surfaceAlt

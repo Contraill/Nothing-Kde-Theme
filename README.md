@@ -37,13 +37,16 @@ cd Nothing-Kde-Theme
 
 Choose **Nothing KDE** (dark) or **Nothing KDE Light** in System Settings. Add the desktop
 widgets through **Add Widgets**: clocks (analog, digital and world, large), date and calendar,
-weather, media, photo, devices and battery (adapted from nothing-kde-widgets), and the Nothing
-KDE originals: **System Monitor** (dot rings, dotted bars with the disk, or a pill), **Note**
-(saves as you type, or a mantra pill), **Focus Timer** (pomodoro that survives restarts and
-notifies with Plasma's timer sound), **Phone** (the KDE Connect phone's battery, ring and open),
+weather, media and photo (adapted from nothing-kde-widgets), and the Nothing KDE originals:
+**System Monitor** (the CPU, GPU, memory and disk you pick, as dot rings, dotted bars or a pill),
+**Note** (saves as you type, or a mantra pill), **Focus Timer** (pomodoro that survives restarts
+and notifies with Plasma's timer sound), **Devices** (the batteries of this computer, KDE Connect
+phones and Bluetooth headphones, mice and the like, as dot rings or filled circles),
 **Progress** (the year as a dot ring, or day, week, month and year bars), **Quick Toggles**
 (Wi-Fi, Bluetooth, airplane mode and volume, or a volume pill), **Greeting**, **Uptime**,
-**Visualizer** and **Pet** (a dot-matrix cat, dog, hamster or robot).
+**Visualizer** (bands, or glyph lights that play together across several widgets), **Glyph
+Matrix** (a round dot matrix to draw on, with a clock, animations, or your own picture or GIF)
+and **Pet** (a dot-matrix cat, dog, hamster or robot).
 
 Most widgets also offer the designs of [EveryThing-UI](https://github.com/Prince-1652/EveryThing-UI)
 (Prince-1652, MIT) as styles: pills, circles and blocks for the clocks, date and calendar,

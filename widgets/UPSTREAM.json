@@ -3,7 +3,7 @@
   "commit": "4c1ae8752bb3cf5c8abba0b897631d3a695973f2",
   "sha256": "e8271060be342a4285e9511a79d223a01d43413f1b2060ce67ff5e979bbe7ca7",
   "included": [
-    "battery",
+    "phone (the former battery widget: its circle and device pictures)",
     "clock-analog",
     "clock-digital",
     "clock-digital-large",

@@ -6,6 +6,29 @@
   <kcfgfile name=""/>
 
   <group name="General">
+    <!-- 0 rings, 1 circles, 2 one device as a circle, 3 as a pill -->
+    <entry name="widgetVariant" type="Int">
+      <default>0</default>
+    </entry>
+    <!-- Devices seen so far: JSON [{key, name, kind}], kept by the widget -->
+    <entry name="deviceHistory" type="String">
+      <default>[]</default>
+    </entry>
+    <!-- The kind chosen per device: JSON {key: kind} -->
+    <entry name="deviceKinds" type="String">
+      <default>{}</default>
+    </entry>
+    <!-- Devices left out of the rings and circles: JSON [key] -->
+    <entry name="hiddenDevices" type="String">
+      <default>[]</default>
+    </entry>
+    <!-- The device of the single styles; empty for the first one -->
+    <entry name="focusDevice" type="String">
+      <default></default>
+    </entry>
+    <entry name="transparent" type="Bool">
+      <default>false</default>
+    </entry>
     <entry name="themeMode" type="Int">
       <default>2</default>
     </entry>

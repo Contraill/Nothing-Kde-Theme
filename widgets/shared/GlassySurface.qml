@@ -11,10 +11,12 @@ Rectangle {
     property color foregroundColor: Kirigami.Theme.textColor
     property real surfaceOpacity: 0.5
     property real cornerRadius: 20
+    // On the wallpaper: no glass and no edge, only what sits on the card.
+    property bool bare: false
 
-    color: Qt.rgba(backgroundColor.r, backgroundColor.g, backgroundColor.b, surfaceOpacity)
+    color: bare ? "transparent" : Qt.rgba(backgroundColor.r, backgroundColor.g, backgroundColor.b, surfaceOpacity)
     radius: Math.min(cornerRadius, width / 2, height / 2)
-    border.width: 1
+    border.width: bare ? 0 : 1
     border.color: Qt.rgba(foregroundColor.r, foregroundColor.g, foregroundColor.b, 0.12)
     antialiasing: true
     // Never apply opacity to the item: children (text, icons, controls) stay opaque.

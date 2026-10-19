@@ -90,6 +90,9 @@ Item {
                 anchors.fill: parent
                 source: {
                     // Use custom icon if provided (for Bluetooth devices)
+                    // Phones and tablets have no bundled picture: the icon theme's.
+                    if (root.deviceIcon === "phone") return "smartphone-symbolic"
+                    if (root.deviceIcon === "tablet") return "tablet-symbolic"
                     if (root.deviceIcon !== "") {
                         return Qt.resolvedUrl("../../device-icons/" + root.deviceIcon + ".svg")
                     }

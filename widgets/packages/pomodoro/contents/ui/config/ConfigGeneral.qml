@@ -10,6 +10,7 @@ KCM.SimpleKCM {
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
     property alias cfg_monochrome: theme.monochrome
+    property alias cfg_transparent: theme.transparent
     property alias cfg_focusMinutes: focusMinutes.value
     property alias cfg_breakMinutes: breakMinutes.value
     property alias cfg_longBreakMinutes: longBreakMinutes.value
@@ -18,7 +19,7 @@ KCM.SimpleKCM {
     ColumnLayout {
         spacing: 10
 
-        Glassy.ThemeSettings { id: theme }
+        Glassy.ThemeSettings { id: theme; cardOption: true }
 
         GridLayout {
             columns: 2

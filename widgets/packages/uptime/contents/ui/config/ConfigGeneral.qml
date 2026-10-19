@@ -9,6 +9,7 @@ KCM.SimpleKCM {
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
     property alias cfg_monochrome: theme.monochrome
+    property alias cfg_transparent: theme.transparent
 
     ColumnLayout {
         spacing: 10
@@ -19,6 +20,6 @@ KCM.SimpleKCM {
             opacity: 0.7
             font.pointSize: 9
         }
-        Glassy.ThemeSettings { id: theme }
+        Glassy.ThemeSettings { id: theme; cardOption: true }
     }
 }

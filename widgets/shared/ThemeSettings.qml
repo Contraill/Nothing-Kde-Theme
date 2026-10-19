@@ -4,12 +4,22 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 
 // Theme rows shared by every widget's settings page; the page aliases
-// cfg_themeMode, cfg_useSystemAccent and cfg_monochrome to these controls.
+// cfg_themeMode, cfg_useSystemAccent and cfg_monochrome to these controls,
+// and cfg_transparent when it sets cardOption.
 ColumnLayout {
     property alias themeMode: mode.currentIndex
     property alias useSystemAccent: accent.checked
     property alias monochrome: mono.checked
+    // Pages of widgets that can drop their card show the switch.
+    property bool cardOption: false
+    property alias transparent: card.checked
     spacing: 6
+
+    QQC2.CheckBox {
+        id: card
+        visible: cardOption
+        text: i18n("On the wallpaper, without a card")
+    }
 
     RowLayout {
         QQC2.Label { text: i18n("Theme:") }

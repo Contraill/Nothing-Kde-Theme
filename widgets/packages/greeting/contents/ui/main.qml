@@ -42,5 +42,7 @@ PlasmoidItem {
         square: root.square
         now: root.now
         clock24: root.clock24
+        showTime: Plasmoid.configuration.showTime
+        transparent: Plasmoid.configuration.transparent
     }
 }

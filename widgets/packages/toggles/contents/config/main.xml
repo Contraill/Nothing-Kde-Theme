@@ -15,9 +15,21 @@
     <entry name="monochrome" type="Bool">
         <default>false</default>
     </entry>
-    <!-- 0 toggles and volume, 1 volume pill -->
+    <!-- 0 tiles, 1 volume pill, 2 one toggle as a pill, 3 as a circle, 8 volume ring,
+         9 volume pie pill; 4 to 7 were Bluetooth and airplane mode as a pill and a circle -->
     <entry name="widgetVariant" type="Int">
       <default>0</default>
+    </entry>
+    <!-- The tiles shown, in order; "volume" is the bar under them -->
+    <entry name="tileToggles" type="String">
+      <default>wifi,bluetooth,airplane,sound,volume</default>
+    </entry>
+    <!-- The toggle of the pill and the circle -->
+    <entry name="singleToggle" type="String">
+      <default>wifi</default>
+    </entry>
+    <entry name="transparent" type="Bool">
+      <default>false</default>
     </entry>
   </group>
 </kcfg>

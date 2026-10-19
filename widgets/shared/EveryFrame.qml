@@ -14,6 +14,8 @@ Item {
     property string card: "block"
     // The other widgets' card margin; settings miniatures set it to 0.
     property real inset: 10
+    // Straight on the wallpaper, without the card.
+    property bool transparent: false
     default property alias content: canvas.data
     readonly property alias canvas: canvas
     readonly property real s: Math.max(0, Math.min((width - 2 * inset) / designWidth, (height - 2 * inset) / designHeight))
@@ -30,6 +32,7 @@ Item {
         GlassySurface {
             anchors.fill: parent
             visible: frame.card !== "none"
+            bare: frame.transparent
             cornerRadius: frame.card === "block" ? 20 * Math.min(1, frame.s) : Math.min(width, height) / 2
             backgroundColor: frame.colors.background
             foregroundColor: frame.colors.textPrimary

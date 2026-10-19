@@ -15,6 +15,7 @@ KCM.SimpleKCM {
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
     property alias cfg_monochrome: theme.monochrome
+    property alias cfg_transparent: theme.transparent
 
     readonly property var metricKeys: ["cpu", "gpu", "memory", "disk"]
     readonly property var metricNames: [i18n("CPU"), i18n("GPU"), i18n("Memory"), i18n("Disk")]
@@ -84,11 +85,11 @@ KCM.SimpleKCM {
         QQC2.Label {
             Layout.fillWidth: true
             visible: page.listKey !== "" || page.single
-            text: i18n("GPU readings can keep a sleeping graphics card awake, so they are read only while the GPU is shown.")
+            text: i18n("A sleeping graphics card stays asleep: it is read only while something else has woken it.")
             wrapMode: Text.Wrap
             opacity: 0.7
             font.pointSize: 9
         }
-        Glassy.ThemeSettings { id: theme }
+        Glassy.ThemeSettings { id: theme; cardOption: true }
     }
 }

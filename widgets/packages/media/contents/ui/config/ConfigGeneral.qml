@@ -11,6 +11,7 @@ KCM.SimpleKCM {
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
     property alias cfg_monochrome: theme.monochrome
+    property alias cfg_transparent: theme.transparent
 
     ColumnLayout {
         spacing: 10
@@ -29,7 +30,7 @@ KCM.SimpleKCM {
             ]
         }
 
-        Glassy.ThemeSettings { id: theme }
+        Glassy.ThemeSettings { id: theme; cardOption: true }
 
         Item {
             Layout.fillHeight: true

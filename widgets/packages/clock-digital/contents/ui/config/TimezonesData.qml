@@ -64,6 +64,7 @@ QtObject {
         { id: "Europe/Budapest", city: "Budapest", country: "HU", offset: 1.0, dst: "europe" },
         { id: "Africa/Lagos", city: "Lagos", country: "NG", offset: 1.0, dst: "" },
         { id: "Europe/Athens", city: "Athens", country: "GR", offset: 2.0, dst: "europe" },
+        { id: "Asia/Famagusta", city: "Famagusta", country: "CY", offset: 2.0, dst: "europe" },
         { id: "Europe/Bucharest", city: "Bucharest", country: "RO", offset: 2.0, dst: "europe" },
         { id: "Europe/Helsinki", city: "Helsinki", country: "FI", offset: 2.0, dst: "europe" },
         { id: "Europe/Kyiv", city: "Kyiv", country: "UA", offset: 2.0, dst: "europe" },

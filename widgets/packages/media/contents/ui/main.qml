@@ -106,6 +106,7 @@ PlasmoidItem {
 
         // EveryThing-UI's players.
         EveryPlayer {
+            transparent: Plasmoid.configuration.transparent
             anchors.fill: parent
             visible: root.variant > 0
             colors: nColors
@@ -132,6 +133,7 @@ PlasmoidItem {
             // PAGE 1: Album cover carousel design
             Components.AlbumCoverCarousel {
                 colors: nColors
+                bare: Plasmoid.configuration.transparent
                 albumArt: root.albumArt
                 isPlaying: root.isPlaying
                 canGoPrevious: root.canGoPrevious
@@ -147,6 +149,7 @@ PlasmoidItem {
             // PAGE 2: Compact media player layout
             Components.CompactPlayer {
                 colors: nColors
+                bare: Plasmoid.configuration.transparent
                 albumArt: root.albumArt
                 track: root.track
                 artist: root.artist

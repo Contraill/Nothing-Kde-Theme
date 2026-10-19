@@ -48,8 +48,8 @@ if __name__ == '__main__':
     args.screenshots.mkdir(parents=True, exist_ok=True)
     jobs = []
     for package in sorted((ROOT / 'widgets/packages').iterdir()):
-        styles = {'weather': 4, 'clock-analog': 4, 'clock-digital': 5, 'date': 4, 'battery': 3, 'media': 3, 'photo': 5,
-                  'system': 8, 'note': 3, 'progress': 6, 'toggles': 10, 'greeting': 2, 'visualizer': 3}
+        styles = {'weather': 4, 'clock-analog': 4, 'clock-digital': 5, 'date': 4, 'phone': 4, 'media': 3, 'photo': 5,
+                  'system': 8, 'note': 3, 'progress': 6, 'toggles': 10, 'greeting': 2, 'visualizer': 8, 'glyphmatrix': 7}
         variants = range(styles.get(package.name, 1))
         jobs.extend((package, variant, mode, args.renderer, args.screenshots) for variant in variants for mode in (0, 1))
     failed = False

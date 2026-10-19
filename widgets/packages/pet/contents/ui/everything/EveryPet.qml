@@ -11,11 +11,10 @@ Glassy.EveryFrame {
     property string family
     // "cat", "dog", "hamster" or "robo"
     property string pet: "cat"
-    property bool transparent: false
     property bool running: true
     designWidth: 190
     designHeight: 190
-    card: transparent ? "none" : "block"
+    card: "block"
 
     // From sprites.json: frame size, and where the sprite sits in the original 1280x720 frame.
     readonly property var sheets: ({

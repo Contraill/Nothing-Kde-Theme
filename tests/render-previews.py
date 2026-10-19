@@ -26,7 +26,7 @@ STYLES = {
     'clock-digital': ('widgetVariant', {0: '200x200', 1: '200x200'}),
     'clock-digital-large': ('fontStyle', {n: '400x200' for n in (0, 2, 3, 4)}),
     'date': ('widgetVariant', {0: '200x200'}),
-    'battery': ('widgetVariant', {0: '200x200'}),
+    'phone': ('widgetVariant', {0: '220x220', 1: '220x220'}),
     'media': ('widgetVariant', {0: '200x200'}),
     'system': ('widgetVariant', {0: '220x220', 1: '220x220', 2: '260x96'}),
     'note': ('widgetVariant', {0: '240x220', 1: '260x64'}),
@@ -78,6 +78,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--renderer', type=Path, required=True)
     args = parser.parse_args()
+    # The devices widget reads Bluetooth on the system bus: their names would land in the pictures.
+    connected = subprocess.run(['bluetoothctl', 'devices', 'Connected'], capture_output=True, text=True).stdout.strip()
+    if connected:
+        sys.exit('Disconnect Bluetooth devices first; their names would show in the previews.')
     for package, (key, styles) in STYLES.items():
         folder = ROOT / 'widgets/packages' / package / 'contents/ui/previews'
         folder.mkdir(exist_ok=True)

@@ -48,6 +48,7 @@ PlasmoidItem {
         Layout.minimumHeight: 150
 
         EveryProgress {
+            transparent: Plasmoid.configuration.transparent
             anchors.fill: parent
             visible: root.every
             colors: nColors
@@ -61,6 +62,7 @@ PlasmoidItem {
         }
 
         Glassy.GlassySurface {
+            bare: Plasmoid.configuration.transparent
             id: card
             visible: !root.every
             anchors.fill: parent

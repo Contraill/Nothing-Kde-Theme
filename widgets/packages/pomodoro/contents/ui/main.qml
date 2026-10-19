@@ -112,6 +112,7 @@ PlasmoidItem {
         Layout.minimumHeight: 200
 
         Glassy.GlassySurface {
+            bare: Plasmoid.configuration.transparent
             id: card
             anchors.fill: parent
             anchors.margins: 10

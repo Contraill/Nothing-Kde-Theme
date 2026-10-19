@@ -12,17 +12,23 @@ msgstr ""
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%1 circle"
+msgstr "%1 dairesi"
+
 msgid "%1 h %2 min until midnight"
 msgstr "Gece yarısına %1 sa %2 dk"
 
 msgid "%1 pill"
 msgstr "%1 hapı"
 
-msgid "Add Mapping"
-msgstr "Eşleştirme ekle"
+msgid "A GIF, WebP or PNG; light parts light the dots"
+msgstr "GIF, WebP ya da PNG; açık kısımlar noktaları yakar"
 
-msgid "Add custom icon mappings based on device name patterns"
-msgstr "Cihaz adı kalıplarına göre özel simge eşleştirmeleri ekleyin"
+msgid "A sleeping graphics card stays asleep: it is read only while something else has woken it."
+msgstr "Uyuyan ekran kartı uyandırılmaz: yalnızca başka bir şey onu uyandırmışken okunur."
+
+msgid "Accent dot"
+msgstr "Vurgu noktası"
 
 msgid "Adds margin around the image to reveal the dark background, creating a frame effect"
 msgstr "Görselin çevresinde boşluk bırakarak arka planı çerçeve olarak gösterir"
@@ -30,11 +36,14 @@ msgstr "Görselin çevresinde boşluk bırakarak arka planı çerçeve olarak g�
 msgid "Airplane"
 msgstr "Uçak"
 
-msgid "Airplane circle"
-msgstr "Uçak daire"
+msgid "Animations made for the phone's Glyph Matrix can be shown as GIFs; Glyph Toys themselves are Android apps and cannot run here."
+msgstr "Telefonun Glyph Matrisi için yapılmış animasyonlar GIF olarak gösterilebilir; Glyph Toy'ların kendisi Android uygulamasıdır ve burada çalışamaz."
 
 msgid "Appearance"
 msgstr "Görünüm"
+
+msgid "Auto"
+msgstr "Otomatik"
 
 msgid "Automatically creates a circle (if square) or pill shape (if rectangular). When disabled, uses standard rounded corners."
 msgstr "Kare alanda daire, dikdörtgende hap biçimi oluşturur. Kapalıyken standart yuvarlatılmış köşeler kullanılır."
@@ -45,11 +54,11 @@ msgstr "MOLA"
 msgid "Back to focus."
 msgstr "Odaklanma zamanı."
 
+msgid "Balanced"
+msgstr "Dengeli"
+
 msgid "Bars"
 msgstr "Çubuklar"
-
-msgid "Basic Settings"
-msgstr "Temel ayarlar"
 
 msgid "Blocks"
 msgstr "Bloklar"
@@ -57,11 +66,8 @@ msgstr "Bloklar"
 msgid "Bluetooth"
 msgstr "Bluetooth"
 
-msgid "Bluetooth circle"
-msgstr "Bluetooth daire"
-
-msgid "Bluetooth devices that have been connected to this system"
-msgstr "Bu sisteme daha önce bağlanmış Bluetooth cihazları"
+msgid "Bluetooth device"
+msgstr "Bluetooth cihazı"
 
 msgid "Border Settings"
 msgstr "Çerçeve ayarları"
@@ -77,6 +83,9 @@ msgstr "Mola bitti"
 
 msgid "Browse..."
 msgstr "Göz at..."
+
+msgid "Browse…"
+msgstr "Gözat…"
 
 msgid "Bubbles"
 msgstr "Kabarcıklar"
@@ -102,6 +111,9 @@ msgstr "Şarj oluyor"
 msgid "Choose Style"
 msgstr "Görünüm seç"
 
+msgid "Choose a picture"
+msgstr "Bir resim seç"
+
 msgid "Choose a style"
 msgstr "Bir stil seç"
 
@@ -114,6 +126,9 @@ msgstr "Daire"
 msgid "Circle Pages"
 msgstr "Dairesel sayfalar"
 
+msgid "Circles"
+msgstr "Daireler"
+
 msgid "Circular"
 msgstr "Dairesel"
 
@@ -122,6 +137,18 @@ msgstr "Şehir adı:"
 
 msgid "Clear"
 msgstr "Açık"
+
+msgid "Clock"
+msgstr "Saat"
+
+msgid "Coffee"
+msgstr "Kahve"
+
+msgid "Coffee mode from the quick toggles"
+msgstr "Hızlı geçişlerden kahve modu"
+
+msgid "Computer"
+msgstr "Bilgisayar"
 
 msgid "Convert the image to black and white (grayscale)"
 msgstr "Görseli siyah beyaza (gri tonlara) dönüştürür"
@@ -140,9 +167,6 @@ msgstr "Kırp (çerçeveyi doldur)"
 
 msgid "Crop: Fills the frame completely, may crop parts of the image\nFit: Shows the entire image, may have letterboxing\nStretch: Fills frame completely, may distort the image"
 msgstr "Kırp: Çerçeveyi doldurur, görselin bir kısmını kesebilir\nSığdır: Görselin tamamını gösterir, kenarlarda boşluk bırakabilir\nUzat: Çerçeveyi doldurur, görselin oranını bozabilir"
-
-msgid "Custom Device Icons"
-msgstr "Özel cihaz simgeleri"
 
 msgid "DAY"
 msgstr "GÜN"
@@ -168,23 +192,14 @@ msgstr "Yoğun çisenti"
 msgid "Depositing Rime Fog"
 msgstr "Kırağılı sis"
 
-msgid "Desktop PC"
-msgstr "Masaüstü bilgisayar"
+msgid "Device:"
+msgstr "Cihaz:"
 
-msgid "Detecting Battery..."
-msgstr "Pil algılanıyor..."
+msgid "Devices appear here once they have been connected with a battery reading."
+msgstr "Cihazlar, pil bilgisiyle bir kez bağlandıklarında burada görünür."
 
-msgid "Device History"
-msgstr "Cihaz geçmişi"
-
-msgid "Device Type:"
-msgstr "Cihaz türü:"
-
-msgid "Device name pattern"
-msgstr "Cihaz adı kalıbı"
-
-msgid "Devices"
-msgstr "Aygıtlar"
+msgid "Devices:"
+msgstr "Cihazlar:"
 
 msgid "Digital Clock"
 msgstr "Dijital saat"
@@ -198,8 +213,14 @@ msgstr "Disk"
 msgid "Display the current date above the time (e.g., \"Thu, 31 Jan\")"
 msgstr "Güncel tarihi saatin üzerinde gösterir (ör. \"Per, 31 Oca\")"
 
+msgid "Do not disturb"
+msgstr "Rahatsız etme"
+
 msgid "Dog"
 msgstr "Köpek"
+
+msgid "Dot"
+msgstr "Nokta"
 
 msgid "Dots"
 msgstr "Noktalar"
@@ -210,8 +231,17 @@ msgstr "Noktalı"
 msgid "Double-click to choose an image"
 msgstr "Görsel seçmek için çift tıklayın"
 
+msgid "Draw from a picture"
+msgstr "Bir resimden çiz"
+
+msgid "Drawing"
+msgstr "Çizim"
+
 msgid "Drizzle"
 msgstr "Çisenti"
+
+msgid "Earbuds"
+msgstr "Kulak içi kulaklık"
 
 msgid "Effects"
 msgstr "Efektler"
@@ -227,6 +257,9 @@ msgstr "Şehir adı ve isteğe bağlı ülke girin (ör. 'İstanbul, Türkiye').
 
 msgid "Enter the city name to display on the widget."
 msgstr "Widget üzerinde gösterilecek şehir adını girin."
+
+msgid "Eraser"
+msgstr "Silgi"
 
 msgid "FOCUS"
 msgstr "ODAK"
@@ -273,17 +306,38 @@ msgstr "Dondurucu çisenti"
 msgid "Freezing Rain"
 msgstr "Dondurucu yağmur"
 
+msgid "From a picture…"
+msgstr "Bir resimden…"
+
 msgid "Full"
 msgstr "Tam"
 
 msgid "GPU"
 msgstr "GPU"
 
-msgid "GPU readings can keep a sleeping graphics card awake, so they are read only while the GPU is shown."
-msgstr "GPU okumaları uykudaki ekran kartını uyanık tutabilir; bu yüzden yalnızca GPU gösterilirken okunur."
+msgid "Game controller"
+msgstr "Oyun kumandası"
 
 msgid "General"
 msgstr "Genel"
+
+msgid "Glyph arc"
+msgstr "Glyph yayı"
+
+msgid "Glyph dot"
+msgstr "Glyph noktası"
+
+msgid "Glyph line"
+msgstr "Glyph çizgisi"
+
+msgid "Glyph ring"
+msgstr "Glyph halkası"
+
+msgid "Glyph strip"
+msgstr "Glyph şeridi"
+
+msgid "Glyph widgets share one clock: put several side by side, each in its own zone, and they play together, every zone with its part of the sound. Auto takes the zone from where the widget sits across the screen."
+msgstr "Glyph widget'ları aynı saati paylaşır: birkaçını yan yana, her birini kendi bölgesinde koyarsan birlikte çalarlar; her bölge sesin kendi kısmını alır. Otomatik, bölgeyi widget'ın ekrandaki yerinden seçer."
 
 msgid "Good afternoon"
 msgstr "İyi öğleden sonralar"
@@ -303,6 +357,9 @@ msgstr "S"
 msgid "Hamster"
 msgstr "Hamster"
 
+msgid "Headphones"
+msgstr "Kulaklık"
+
 msgid "Heavy Rain"
 msgstr "Şiddetli yağmur"
 
@@ -315,8 +372,8 @@ msgstr "Yoğun kar sağanağı"
 msgid "Heavy Thunderstorm with Hail"
 msgstr "Dolu ve şiddetli gök gürültülü fırtına"
 
-msgid "Icon Mappings:"
-msgstr "Simge eşleştirmeleri:"
+msgid "Hotspot"
+msgstr "Erişim noktası"
 
 msgid "Image"
 msgstr "Görsel"
@@ -330,8 +387,8 @@ msgstr "Görsel sığdırma"
 msgid "Image Source"
 msgstr "Görsel kaynağı"
 
-msgid "Install KDE Connect to see your phone here."
-msgstr "Telefonunu burada görmek için KDE Bağlan'ı kur."
+msgid "Invert"
+msgstr "Tersine çevir"
 
 msgid "Inverted"
 msgstr "Ters"
@@ -339,11 +396,17 @@ msgstr "Ters"
 msgid "Keep going"
 msgstr "Devam et"
 
+msgid "Keyboard"
+msgstr "Klavye"
+
 msgid "LONG BREAK"
 msgstr "UZUN MOLA"
 
 msgid "Laptop"
 msgstr "Dizüstü"
+
+msgid "Life"
+msgstr "Hayat"
 
 msgid "Light"
 msgstr "Aydınlık"
@@ -393,11 +456,17 @@ msgstr "Mantra hapı"
 msgid "Memory"
 msgstr "Bellek"
 
+msgid "Microphone"
+msgstr "Mikrofon"
+
 msgid "Minimalist"
 msgstr "Sade"
 
 msgid "Monochrome"
 msgstr "Tek renkli"
+
+msgid "Mouse"
+msgstr "Fare"
 
 msgid "Muted"
 msgstr "Sessiz"
@@ -411,17 +480,20 @@ msgstr "Ağ"
 msgid "Network pill"
 msgstr "Ağ hapı"
 
+msgid "Night light"
+msgstr "Gece ışığı"
+
 msgid "No Image"
 msgstr "Görsel yok"
 
 msgid "No battery"
 msgstr "Pil yok"
 
-msgid "No devices found in history"
-msgstr "Geçmişte cihaz bulunamadı"
+msgid "No device is chosen in the settings"
+msgstr "Ayarlarda seçili cihaz yok"
 
-msgid "No phone connected"
-msgstr "Bağlı telefon yok"
+msgid "No device with a battery is connected"
+msgstr "Pili olan bağlı cihaz yok"
 
 msgid "Note"
 msgstr "Not"
@@ -438,23 +510,14 @@ msgstr "Sayılar"
 msgid "On the wallpaper, without a card"
 msgstr "Kart olmadan, doğrudan duvar kağıdında"
 
-msgid "Open in KDE Connect"
-msgstr "KDE Connect'te aç"
-
 msgid "Outline"
 msgstr "Dış hat"
 
 msgid "Overcast"
 msgstr "Kapalı"
 
-msgid "PC"
-msgstr "PC"
-
 msgid "Pages"
 msgstr "Sayfalar"
-
-msgid "Pair a phone"
-msgstr "Telefon eşle"
 
 msgid "Partly Cloudy"
 msgstr "Parçalı bulutlu"
@@ -462,8 +525,26 @@ msgstr "Parçalı bulutlu"
 msgid "Pause"
 msgstr "Duraklat"
 
+msgid "Performance"
+msgstr "Performans"
+
 msgid "Pet:"
 msgstr "Evcil hayvan:"
+
+msgid "Phone"
+msgstr "Telefon"
+
+msgid "Phones and tablets come from KDE Connect, the rest from Bluetooth; clicking a phone opens it in KDE Connect."
+msgstr "Telefon ve tabletler KDE Connect'ten, diğerleri Bluetooth'tan gelir; bir telefona tıklamak onu KDE Connect'te açar."
+
+msgid "Picture"
+msgstr "Resim"
+
+msgid "Picture:"
+msgstr "Resim:"
+
+msgid "Pictures (*.gif *.webp *.png *.jpg *.jpeg *.svg)"
+msgstr "Resimler (*.gif *.webp *.png *.jpg *.jpeg *.svg)"
 
 msgid "Pill"
 msgstr "Hap"
@@ -474,11 +555,17 @@ msgstr "Hap biçimi"
 msgid "Player"
 msgstr "Oynatıcı"
 
-msgid "Previously Connected:"
-msgstr "Daha önce bağlananlar:"
+msgid "Power profile"
+msgstr "Güç profili"
 
-msgid "Quick Add"
-msgstr "Hızlı ekle"
+msgid "Power saver"
+msgstr "Güç tasarrufu"
+
+msgid "Pulse"
+msgstr "Nabız"
+
+msgid "Radar"
+msgstr "Radar"
 
 msgid "Rain"
 msgstr "Yağmur"
@@ -543,6 +630,21 @@ msgstr "Kısa hap"
 msgid "Show Date"
 msgstr "Tarihi göster"
 
+msgid "Show the date"
+msgstr "Tarihi göster"
+
+msgid "Show the day"
+msgstr "Günü göster"
+
+msgid "Show the month"
+msgstr "Ayı göster"
+
+msgid "Show the time"
+msgstr "Saati göster"
+
+msgid "Show the week"
+msgstr "Haftayı göster"
+
 msgid "Show time in 24-hour format (e.g., 14:30) instead of 12-hour format (e.g., 2:30)"
 msgstr "Saati 12 saat biçimi (ör. 2:30) yerine 24 saat biçiminde (ör. 14:30) gösterir"
 
@@ -576,6 +678,9 @@ msgstr "Kar taneleri"
 msgid "Sound"
 msgstr "Ses"
 
+msgid "Speaker"
+msgstr "Hoparlör"
+
 msgid "Square"
 msgstr "Kare"
 
@@ -603,6 +708,9 @@ msgstr "PER"
 msgid "TUE"
 msgstr "SAL"
 
+msgid "Tablet"
+msgstr "Tablet"
+
 msgid "Tall pill"
 msgstr "Dikey hap"
 
@@ -614,6 +722,9 @@ msgstr "Çubuklar ses çıkışının yüksekliğini izler; ses kısıkken hassa
 
 msgid "Theme:"
 msgstr "Tema:"
+
+msgid "This computer"
+msgstr "Bu bilgisayar"
 
 msgid "Thunderstorm"
 msgstr "Gök gürültülü fırtına"
@@ -627,6 +738,9 @@ msgstr "Saat dilimi:"
 msgid "Time for a break."
 msgstr "Mola zamanı."
 
+msgid "Toggle:"
+msgstr "Geçiş:"
+
 msgid "Toggles"
 msgstr "Anahtarlar"
 
@@ -638,9 +752,6 @@ msgstr "Bilinmiyor"
 
 msgid "Until midnight"
 msgstr "Gece yarısına"
-
-msgid "Update Interval (ms):"
-msgstr "Güncelleme aralığı (ms):"
 
 msgid "Update second hand every 50ms instead of 1000ms ( 1s ) for a smoother motion"
 msgstr "Daha akıcı hareket için saniye ibresini 1000 ms yerine 50 ms aralıklarla günceller"
@@ -672,6 +783,9 @@ msgstr "Şiddetli sağanak"
 msgid "Volume"
 msgstr "Ses"
 
+msgid "Volume bar"
+msgstr "Ses çubuğu"
+
 msgid "Volume dots"
 msgstr "Ses noktaları"
 
@@ -687,11 +801,11 @@ msgstr "ÇAR"
 msgid "WEEK"
 msgstr "HAFTA"
 
+msgid "Watch"
+msgstr "Akıllı saat"
+
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
-
-msgid "Wi-Fi circle"
-msgstr "Wi-Fi daire"
 
 msgid "Wide"
 msgstr "Geniş"
@@ -726,11 +840,14 @@ msgstr "Bunu sonra ayarlardan değiştirebilirsin."
 msgid "You got this"
 msgstr "Başarırsın"
 
+msgid "Zone:"
+msgstr "Bölge:"
+
 msgid "can be changed later in configuration"
 msgstr "daha sonra ayarlardan değiştirilebilir"
 
-msgid "e.g., Austin, New York, Tokyo"
-msgstr "ör. İstanbul, Londra, Tokyo"
+msgid "e.g., Famagusta, New York, Tokyo"
+msgstr "örn. Mağusa, New York, Tokyo"
 
 msgid "e.g., Victoria, Canada or Home|48.4284,-123.3656"
 msgstr "ör. İstanbul, Türkiye veya Ev|41.0082,28.9784"

@@ -95,6 +95,7 @@ PlasmoidItem {
     }
 
     fullRepresentation: EveryUptime {
+        transparent: Plasmoid.configuration.transparent
         Layout.preferredWidth: 400
         Layout.preferredHeight: 200
         Layout.minimumWidth: 260

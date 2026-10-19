@@ -4,18 +4,22 @@
     "Authors": [
       {
         "Name": "Nothing KDE contributors"
+      },
+      {
+        "Email": "zinczorphin@email.com",
+        "Name": "Jack Faith"
       }
     ],
     "Category": "System Information",
-    "Description": "Battery of the phone paired with KDE Connect, with ring and open actions.",
+    "Description": "Batteries of this computer, phones paired with KDE Connect and Bluetooth devices.",
     "EnabledByDefault": true,
-    "Icon": "smartphone",
+    "Icon": "battery",
     "Id": "org.nothingkde.widget.phone",
     "License": "GPL-3.0",
-    "Name": "Nothing KDE — Phone",
+    "Name": "Nothing KDE — Devices",
     "Version": "0.6.0-rc35",
     "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
-    "Name[tr]": "Nothing KDE — Telefon"
+    "Name[tr]": "Nothing KDE — Cihazlar"
   },
   "X-Plasma-API-Minimum-Version": "6.0",
   "X-Plasma-FormFactors": [

@@ -22,10 +22,13 @@
       <default>true</default>
     </entry>
     <entry name="cityName" type="String">
-      <default>Austin</default>
+      <default>Famagusta</default>
     </entry>
     <entry name="timeZone" type="String">
-      <default>America/Chicago</default>
+      <default>Asia/Famagusta</default>
+    </entry>
+    <entry name="transparent" type="Bool">
+      <default>false</default>
     </entry>
   </group>
 </kcfg>

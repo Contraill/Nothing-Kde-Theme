@@ -327,6 +327,7 @@ PlasmoidItem {
     Component {
         id: everyComponent
         EveryDigital {
+            transparent: Plasmoid.configuration.transparent
             colors: nColors
             family: everyFont.name
             layout: ["vertical", "horizontal", "square"][root.widgetVariant - 2] ?? "vertical"
@@ -361,6 +362,7 @@ PlasmoidItem {
             readonly property bool isPillMode: (width / height) >= 1.8
 
             Glassy.GlassySurface {
+                bare: Plasmoid.configuration.transparent
                 id: mainRect
                 anchors.fill: parent
                 anchors.margins: 10
@@ -506,6 +508,7 @@ PlasmoidItem {
 
             // --- SQUARE / DEFAULT LAYOUT (with SwipeView) ---
             Glassy.GlassySurface {
+                bare: Plasmoid.configuration.transparent
                 id: mainRect
                 anchors.fill: parent
                 anchors.margins: 10
@@ -679,6 +682,7 @@ PlasmoidItem {
 
             // --- PILL MODE LAYOUT ---
             Glassy.GlassySurface {
+                bare: Plasmoid.configuration.transparent
                 anchors.fill: parent
                 anchors.margins: 10
                 backgroundColor: nColors.background

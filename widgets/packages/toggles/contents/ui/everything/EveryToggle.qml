@@ -9,6 +9,9 @@ Glassy.EveryFrame {
     id: f
     // "wifi", "bluetooth", "airplane" or "volume"
     property string kind: "wifi"
+    // The other toggles bring their own picture and name.
+    property string glyph: ""
+    property string label: ""
     property bool round: false
     property string family
     property bool on: false
@@ -35,19 +38,19 @@ Glassy.EveryFrame {
         y: 28.5 * f.s
         width: 38 * f.s
         height: 38 * f.s
-        name: f.kind === "bluetooth" ? "bluetooth" : f.kind === "airplane" ? "airplane" : "wifi"
+        name: f.glyph || (f.kind === "bluetooth" ? "bluetooth" : f.kind === "airplane" ? "airplane" : "wifi")
         color: f.ink
     }
     Glassy.EveryText {
         visible: !f.isVolume && !f.round
         s: f.s
-        px: f.kind === "wifi" ? 130 : f.kind === "bluetooth" ? 170 : 165
+        px: f.label ? 165 : f.kind === "wifi" ? 130 : f.kind === "bluetooth" ? 170 : 165
         py: 50
         pt: 14
         align: "RightCenter"
         // Names stay as written; only the translated word is upper-cased by locale.
-        upper: f.kind === "airplane"
-        value: f.kind === "wifi" ? "WI-FI" : f.kind === "bluetooth" ? "BLUETOOTH" : i18n("Airplane")
+        upper: !!f.label || f.kind === "airplane"
+        value: f.label || (f.kind === "wifi" ? "WI-FI" : f.kind === "bluetooth" ? "BLUETOOTH" : i18n("Airplane"))
         color: f.ink
         font.family: f.family
     }
