@@ -108,6 +108,9 @@ class IslandTests(unittest.TestCase):
             self.assertEqual(status('true', 'org.kde.breeze.desktop', 'org.kde.breezedark.desktop'), 'off')
             self.assertEqual(status('false', 'com.nothingplasma.light', 'com.nothingplasma.dark'), 'off')
         self.assertIn('auto-theme off', (ROOT / 'uninstall.sh').read_text())
+        # The backups are copied out before nothing-plasma is removed.
+        uninstall = (ROOT / 'uninstall.sh').read_text()
+        self.assertLess(uninstall.index('nothing-kde-backups'), uninstall.index('"$DATA_HOME/nothing-plasma"\n'))
 
     def test_player_switcher_skips_proxies_and_text_is_readable(self):
         media = (UI / 'Media.qml').read_text()

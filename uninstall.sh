@@ -77,6 +77,13 @@ fi
 # Automatic switching would otherwise point at the removed Nothing packages.
 [[ "$(bash "$ROOT/runtime/nothing-control.sh" auto-theme status 2>/dev/null)" != on ]] || bash "$ROOT/runtime/nothing-control.sh" auto-theme off >/dev/null 2>&1 || true
 
+# Layout and lock screen backups outlive Nothing KDE: they bring the previous desktop back.
+if [[ -d "$DATA_HOME/nothing-plasma/backups" ]]; then
+  mkdir -p "$DATA_HOME/nothing-kde-backups"
+  cp -a "$DATA_HOME/nothing-plasma/backups/." "$DATA_HOME/nothing-kde-backups/"
+  printf 'Backups kept in %s\n' "$DATA_HOME/nothing-kde-backups"
+fi
+
 rm -rf \
   "$DATA_HOME/plasma/plasmoids/com.nothingplasma.panel" \
   "$DATA_HOME/plasma/plasmoids/com.nothingplasma.launcherbridge" \
