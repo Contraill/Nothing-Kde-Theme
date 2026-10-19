@@ -91,42 +91,6 @@ Item {
 
     implicitHeight: content.implicitHeight + 44
 
-    // A round button: an icon, or a short label when `label` is set.
-    component RoundButton: Rectangle {
-        id: button
-        property string icon: ""
-        property string label: ""
-        property bool on: false
-        property bool flat: false
-        // A flat button that stays lit, like the title while picking a month.
-        property bool held: false
-        property int iconSize: 15
-        signal clicked
-        width: label ? caption.implicitWidth + 20 : height
-        height: 26
-        radius: height / 2
-        color: on ? Theme.inverted
-            : flat ? Qt.alpha(Theme.fg, area.containsMouse || held ? Theme.stateHover : 0)
-            : area.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
-        Behavior on color { ColorAnimation { duration: Theme.durShort } }
-        Text {
-            id: caption
-            anchors.centerIn: parent
-            text: button.label || button.icon
-            color: button.on ? Theme.invertedFg : area.containsMouse ? Theme.fg : Theme.fgDim
-            font.family: button.label ? Theme.font : Theme.fontIcons
-            font.pixelSize: button.label ? Theme.labelSmall : button.iconSize
-            font.letterSpacing: button.label ? Theme.labelSpacing : 0
-        }
-        MouseArea {
-            id: area
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: button.clicked()
-        }
-    }
-
     // Swaps between the days and the months, sliding a little.
     component Page: Item {
         property bool shown: true
@@ -144,42 +108,26 @@ Item {
         anchors.top: parent.top
         spacing: 10
 
-        Item {
-            width: parent.width
-            height: 26
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: Cfg.t("CALENDAR")
-                color: Theme.fgFaint
-                font.family: Theme.font
-                font.pixelSize: Theme.labelSmall
-                font.letterSpacing: Theme.labelSpacing
+        PanelHeader {
+            title: Cfg.t("CALENDAR")
+            onClosed: calendar.closed()
+            Repeater {
+                model: [{id: "holidaysevents", icon: "celebration", label: "HOLIDAYS"},
+                    {id: "astronomicalevents", icon: "bedtime", label: "MOON PHASES"}]
+                RoundButton {
+                    required property var modelData
+                    icon: modelData.icon
+                    on: calendar.plugins.includes(modelData.id)
+                    onClicked: calendar.togglePlugin(modelData.id)
+                    Accessible.role: Accessible.CheckBox
+                    Accessible.name: Cfg.t(modelData.label)
+                    Accessible.checked: on
+                }
             }
-            Row {
-                anchors.right: parent.right
-                spacing: 6
-                Repeater {
-                    model: [{id: "holidaysevents", icon: "celebration", label: "HOLIDAYS"},
-                        {id: "astronomicalevents", icon: "bedtime", label: "MOON PHASES"}]
-                    RoundButton {
-                        required property var modelData
-                        icon: modelData.icon
-                        on: calendar.plugins.includes(modelData.id)
-                        onClicked: calendar.togglePlugin(modelData.id)
-                        Accessible.role: Accessible.CheckBox
-                        Accessible.name: Cfg.t(modelData.label)
-                        Accessible.checked: on
-                    }
-                }
-                RoundButton {
-                    visible: !calendar.onThisMonth
-                    label: Cfg.t("TODAY")
-                    onClicked: calendar.showToday()
-                }
-                RoundButton {
-                    icon: "close"
-                    onClicked: calendar.closed()
-                }
+            RoundButton {
+                visible: !calendar.onThisMonth
+                label: Cfg.t("TODAY")
+                onClicked: calendar.showToday()
             }
         }
 

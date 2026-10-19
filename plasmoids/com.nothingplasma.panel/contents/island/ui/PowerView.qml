@@ -104,39 +104,9 @@ Item {
         anchors.right: parent.right
         spacing: 10
 
-        Item {
-            width: parent.width
-            height: 26
-            Text {
-                anchors.verticalCenter: parent.verticalCenter
-                text: Cfg.t("POWER")
-                color: Theme.fgFaint
-                font.family: Theme.font
-                font.pixelSize: Theme.labelSmall
-                font.letterSpacing: Theme.labelSpacing
-            }
-            Rectangle {
-                anchors.right: parent.right
-                width: 26
-                height: 26
-                radius: 13
-                color: closeArea.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
-                Behavior on color { ColorAnimation { duration: Theme.durShort } }
-                Text {
-                    anchors.centerIn: parent
-                    text: "close"
-                    color: closeArea.containsMouse ? Theme.fg : Theme.fgDim
-                    font.family: Theme.fontIcons
-                    font.pixelSize: 15
-                }
-                MouseArea {
-                    id: closeArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: root.closed()
-                }
-            }
+        PanelHeader {
+            title: Cfg.t("POWER")
+            onClosed: root.closed()
         }
 
         // Scrolls once the list outgrows the island.
