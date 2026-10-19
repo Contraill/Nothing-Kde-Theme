@@ -193,8 +193,8 @@ in the [changelog](CHANGELOG.md). To release, write the version and the changelo
 then push a tag; CI checks the tag against VERSION and publishes the packages:
 
 ```sh
-python3 packaging/set-version.py 0.6.0      # VERSION and every package's metadata
-git commit -am "Release 0.6.0" && git tag v0.6.0 && git push origin main v0.6.0
+python3 packaging/set-version.py 1.1.0      # VERSION and every package's metadata
+git commit -am "Release 1.1.0" && git tag v1.1.0 && git push origin main v1.1.0
 ```
 
 ## Credits
@@ -221,5 +221,4 @@ what was taken from where. This is not an official Nothing product.
 
 ## License
 
-[GPL](LICENSE). Store publication waits on two pieces of upstream artwork, the weather
-icons and the device pictures.
+[GPL](LICENSE).

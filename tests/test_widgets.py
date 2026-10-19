@@ -55,9 +55,6 @@ class WidgetTests(unittest.TestCase):
                     self.assertTrue((qml.parent / path).is_file(), str(qml) + ':' + path)
         self.assertFalse(any(p.is_symlink() for p in PACKAGES.rglob('*')))
 
-    def test_store_rights_are_explicitly_pending(self):
-        self.assertIn('blocked', json.loads((ROOT / 'widgets/UPSTREAM.json').read_text())['storePublication'])
-
     def test_turkish_catalogs_cover_all_translatable_strings(self):
         for package in PACKAGES.iterdir():
             catalog = package / 'contents/locale/tr/LC_MESSAGES' / ('plasma_applet_org.nothingkde.widget.' + package.name + '.mo')

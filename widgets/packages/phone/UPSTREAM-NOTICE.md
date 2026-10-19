@@ -1,10 +1,7 @@
 Nothing KDE widget. Code: GPL-3.0-or-later.
 It took in the Devices and Battery widget adapted from Jack Faith /
 jaxparrow07/nothing-kde-widgets (GPL-3.0): its filled battery circle
-(contents/ui/components/CircularBatteryProgress.qml) and device pictures
-(contents/device-icons, contents/icons) come from there. The device-picture
-artwork provenance is upstream's; do NOT publish these bundled assets to the
-KDE Store until their rights are confirmed.
+(contents/ui/components/CircularBatteryProgress.qml) comes from there.
 The dot-matrix font is Nothing Dots (SIL OFL 1.1, from Bitcount Single;
 see contents/ui/glassy/fonts/NothingDots-OFL.txt).
 

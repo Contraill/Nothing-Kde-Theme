@@ -3,7 +3,7 @@
   "commit": "4c1ae8752bb3cf5c8abba0b897631d3a695973f2",
   "sha256": "e8271060be342a4285e9511a79d223a01d43413f1b2060ce67ff5e979bbe7ca7",
   "included": [
-    "phone (the former battery widget: its circle and device pictures)",
+    "phone (the former battery widget: its circle)",
     "clock-analog",
     "clock-digital",
     "clock-digital-large",
@@ -17,7 +17,6 @@
     "panel representations",
     "Bluetooth service configuration"
   ],
-  "storePublication": "blocked pending artwork permission: the weather icons and the device pictures",
   "everythingUi": {
     "repository": "https://github.com/Prince-1652/EveryThing-UI",
     "commit": "d9c042967b6739b6376b69d6eda54521df4022b7",
