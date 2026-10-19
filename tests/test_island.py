@@ -49,9 +49,9 @@ class IslandTests(unittest.TestCase):
 
     def test_offline_radio_does_not_disable_whole_panel(self):
         text = (UI / 'ConnPanel.qml').read_text()
-        self.assertIn('readonly property bool radioEnabled:', text)
+        self.assertIn('readonly property bool radioOn:', text)
         self.assertNotIn('property bool enabled:', text)
-        self.assertNotIn('popup.enabled', text)
+        self.assertNotIn('root.enabled', text)
 
     def test_existing_backends_and_native_notification_settings(self):
         net = (UI / 'Net.qml').read_text()
@@ -60,7 +60,7 @@ class IslandTests(unittest.TestCase):
         self.assertNotIn('nmcli', net)
         self.assertNotIn('bluetoothctl', net)
         self.assertIn('BluezQt.Manager', net)
-        self.assertIn('networkModel.delayModelUpdates = holdNetworkUpdates', net)
+        self.assertIn('onHeldChanged: model.DelayModelUpdates = held', net)
         audio = (UI / 'Audio.qml').read_text()
         # Native PulseAudio bindings; choosing a level also unmutes, as in Plasma's applet.
         self.assertIn('org.kde.plasma.private.volume', audio)

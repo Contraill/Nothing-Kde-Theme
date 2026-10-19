@@ -50,6 +50,9 @@ QtObject {
             readonly property string connectionPath: model.ConnectionPath
             readonly property string devicePath: model.DevicePath
             readonly property string specificPath: model.SpecificPath
+            // Plasma delays updates per row: this one stays put while its password is typed.
+            readonly property bool held: root.holdNetwork !== "" && root.holdNetwork === name
+            onHeldChanged: model.DelayModelUpdates = held
         }
     }
     readonly property var allRows: {
@@ -84,9 +87,8 @@ QtObject {
     property string failed: ""
     property string wifiCode: ""
     property string wifiCodeSsid: ""
-    // While a password is typed the list must not reorder or rebuild its rows.
-    property bool holdNetworkUpdates: false
-    onHoldNetworkUpdatesChanged: networkModel.delayModelUpdates = holdNetworkUpdates
+    // The network whose password is being typed; its row must not move or rebuild.
+    property string holdNetwork: ""
 
     readonly property Timer giveUp: Timer {
         interval: 30000

@@ -66,38 +66,6 @@ Item {
 
     implicitHeight: content.implicitHeight + 30
 
-    component PillButton: Rectangle {
-        id: pill
-        property string label
-        property bool filled: false
-        signal clicked
-        width: caption.implicitWidth + 24
-        height: 28
-        radius: 14
-        color: filled ? (area.containsMouse ? Qt.lighter(Theme.alert, 1.15) : Theme.alert)
-            : Qt.alpha(Theme.fg, area.containsMouse ? Theme.stateHover : 0)
-        border.width: filled ? 0 : 1
-        border.color: Theme.outline
-        Behavior on color { ColorAnimation { duration: Theme.durShort } }
-        Text {
-            id: caption
-            anchors.centerIn: parent
-            text: pill.label
-            color: Theme.fg
-            font.family: Theme.font
-            font.pixelSize: Theme.labelSmall
-            font.weight: Font.Medium
-            font.letterSpacing: Theme.labelSpacing
-        }
-        MouseArea {
-            id: area
-            anchors.fill: parent
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-            onClicked: pill.clicked()
-        }
-    }
-
     Column {
         id: content
         anchors.left: parent.left
@@ -196,26 +164,14 @@ Item {
                                 anchors.topMargin: 2
                                 spacing: 6
                                 visible: option.asking
-                                PillButton { label: Cfg.t("YES"); filled: true; onClicked: root.actionRequested(option.command) }
-                                PillButton { label: Cfg.t("CANCEL"); onClicked: root.pending = "" }
+                                TextButton { label: Cfg.t("YES"); tone: "alert"; padding: 24; onClicked: root.actionRequested(option.command) }
+                                TextButton { label: Cfg.t("CANCEL"); padding: 24; onClicked: root.pending = "" }
                             }
                         }
                     }
                 }
             }
-            // A thin scroll indicator, brighter while the list moves.
-            Rectangle {
-                anchors.right: parent.right
-                anchors.rightMargin: 1
-                visible: list.contentHeight > list.height
-                width: 3
-                radius: 1.5
-                height: Math.max(24, list.height * list.height / list.contentHeight)
-                y: list.contentHeight > list.height ? list.contentY / (list.contentHeight - list.height) * (list.height - height) : 0
-                color: Theme.fgFaint
-                opacity: list.moving ? 0.9 : 0.25
-                Behavior on opacity { NumberAnimation { duration: Theme.durMedium } }
-            }
+            ScrollHint { flickable: list }
         }
         Text {
             width: parent.width

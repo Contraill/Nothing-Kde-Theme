@@ -47,29 +47,11 @@ Row {
             font.weight: Font.Medium
             font.letterSpacing: Theme.labelSpacing
         }
-        // The switch: the knob grows and slides right when on.
-        Rectangle {
+        ToggleSwitch {
             anchors.right: parent.right
             anchors.rightMargin: 12
             anchors.verticalCenter: parent.verticalCenter
-            width: 44
-            height: 24
-            radius: 12
-            color: root.coffee ? Theme.invertedFg : Theme.surfaceHigh
-            border.width: root.coffee ? 0 : 2
-            border.color: Theme.outline
-            Behavior on color { ColorAnimation { duration: Theme.durMedium } }
-            Rectangle {
-                anchors.verticalCenter: parent.verticalCenter
-                width: root.coffee ? 18 : 14
-                height: width
-                radius: width / 2
-                x: root.coffee ? parent.width - width - 3 : 4
-                color: root.coffee ? Theme.inverted : Theme.fgFaint
-                Behavior on x { NumberAnimation { duration: Theme.durMedium; easing.type: Easing.Bezier; easing.bezierCurve: Theme.emphasized } }
-                Behavior on width { NumberAnimation { duration: Theme.durShort } }
-                Behavior on color { ColorAnimation { duration: Theme.durMedium } }
-            }
+            on: root.coffee
         }
         MouseArea {
             id: coffeeArea
