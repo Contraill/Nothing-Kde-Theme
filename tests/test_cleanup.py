@@ -51,7 +51,8 @@ class CleanupTests(unittest.TestCase):
             self.assertEqual(set(files) - live, set(), package.name)
 
     def test_retired_files_are_not_in_source(self):
-        for name in ('dev-test.sh', 'CHANGELOG.md', 'README-RC18.md', 'theme-state',
+        # CHANGELOG.md is back, kept with each release.
+        for name in ('dev-test.sh', 'README-RC18.md', 'theme-state',
                      'third-party', 'notification-skin/apply.py', 'notification-skin/manage.py',
                      'packaging/import-widgets.py'):
             self.assertFalse((ROOT / name).exists(), name)

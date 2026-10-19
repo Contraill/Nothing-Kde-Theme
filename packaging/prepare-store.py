@@ -11,7 +11,7 @@ import zipfile
 import importlib.util
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.6.0-rc35'
+VERSION = (ROOT / 'VERSION').read_text().strip()
 
 
 def archive(source, target):

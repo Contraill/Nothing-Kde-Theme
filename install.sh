@@ -3,6 +3,7 @@ set -euo pipefail
 export PYTHONDONTWRITEBYTECODE=1
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+VERSION="$(<"$ROOT/VERSION")"
 DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 PANEL_ONLY=0
 APPLY_LAYOUT=0
@@ -214,7 +215,7 @@ install_notification_skin
   printf 'Warning: could not synchronize the Meta launcher shortcut yet. It can be changed from Launcher Settings.\n' >&2
 
 if (( PANEL_ONLY )); then
-  printf '\nInstalled Nothing Island + Dock v0.6.0-rc35, native Meta bridge, and Add Panel preset.\n'
+  printf '\nInstalled Nothing Island + Dock v%s, native Meta bridge, and Add Panel preset.\n' "$VERSION"
   exit 0
 fi
 
@@ -248,7 +249,7 @@ if command -v kbuildsycoca6 >/dev/null 2>&1; then
   kbuildsycoca6 >/dev/null 2>&1 || true
 fi
 
-printf '\nInstalled Nothing KDE v0.6.0-rc35.\n'
+printf '\nInstalled Nothing KDE v%s.\n' "$VERSION"
 printf 'Notifications: installed when native QML/API checks pass. On an existing layout run ./install.sh --notifications-only --restart-plasma\n'
 printf 'Panel containment: com.nothingplasma.panel\n'
 printf 'Meta launcher:     com.nothingplasma.launcherbridge\n'
