@@ -1,23 +1,30 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.private.mpris as Mpris
 import "."
+
+// The compact pill's player: the cover and three transport buttons in a
+// capsule tinted by the cover's dominant colour.
 Item {
     id: root
 
     readonly property var player: Media.player
-
-    readonly property int estado: player?.playbackStatus ?? Mpris.PlaybackStatus.Stopped
-    readonly property bool isPlaying: estado === Mpris.PlaybackStatus.Playing
-    readonly property bool active: Cfg.showMini && player !== null && estado !== Mpris.PlaybackStatus.Stopped
-
+    readonly property int playback: player?.playbackStatus ?? Mpris.PlaybackStatus.Stopped
+    readonly property bool isPlaying: playback === Mpris.PlaybackStatus.Playing
+    readonly property bool active: Cfg.showMini && player !== null && playback !== Mpris.PlaybackStatus.Stopped
     readonly property string artUrl: player?.artUrl ?? ""
 
-    implicitWidth: fila.implicitWidth + 10
+    // The tint waits for the cover; the ink takes whichever side reads on it.
+    readonly property color tint: coverSample.status === Image.Ready ? Theme.mix(Theme.surfaceAlt, coverColours.dominant, 0.30) : Theme.surfaceAlt
+    readonly property color ink: 0.2126 * tint.r + 0.7152 * tint.g + 0.0722 * tint.b > 0.55 ? "#393A37" : "#F2F2EF"
+
+    implicitWidth: buttons.implicitWidth + 10
     implicitHeight: 28
+
+    // A small hidden copy of the cover, only for its colours.
     Image {
-        id: cover
-        anchors.fill: parent
+        id: coverSample
         source: root.artUrl
         asynchronous: true
         cache: true
@@ -25,42 +32,59 @@ Item {
         sourceSize.height: 64
         visible: false
     }
-
     Kirigami.ImageColors {
-        id: paleta
-        source: cover.status === Image.Ready ? cover : null
+        id: coverColours
+        source: coverSample.status === Image.Ready ? coverSample : null
     }
-    readonly property color tono: cover.status === Image.Ready ? Theme.mix(Theme.surfaceAlt, paleta.dominant, 0.30) : Theme.surfaceAlt
-    readonly property color tinta: {
-        const c = root.tono;
-        const luz = 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b;
-        return luz > 0.55 ? "#393A37" : "#F2F2EF";
+
+    component TransportButton: Rectangle {
+        id: button
+        property string icon: ""
+        property int iconSize: 16
+        signal clicked
+        anchors.verticalCenter: parent.verticalCenter
+        width: 24
+        height: 24
+        radius: 12
+        color: area.containsMouse ? Qt.alpha(root.ink, 0.20) : "transparent"
+        scale: area.pressed ? 0.88 : 1.0
+        Behavior on color { ColorAnimation { duration: Theme.durShort } }
+        Behavior on scale { NumberAnimation { duration: Theme.durShort; easing.type: Easing.Bezier; easing.bezierCurve: Theme.emphasizedDecel } }
+        Text {
+            anchors.centerIn: parent
+            text: button.icon
+            color: root.ink
+            font.family: Theme.fontIcons
+            font.pixelSize: button.iconSize
+        }
+        MouseArea {
+            id: area
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: button.clicked()
+        }
     }
 
     Rectangle {
-        id: capsula
         anchors.fill: parent
         radius: height / 2
-        color: root.tono
-        Behavior on color {
-            ColorAnimation {
-                duration: Theme.durLong
-            }
-        }
+        color: root.tint
+        Behavior on color { ColorAnimation { duration: Theme.durLong } }
 
         Row {
-            id: fila
+            id: buttons
             anchors.centerIn: parent
             spacing: 2
+            // The cover in a circle, or a note while there is none.
             Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 22
                 height: 22
-
                 Rectangle {
                     anchors.fill: parent
                     radius: width / 2
-                    color: Qt.alpha(root.tinta, 0.18)
+                    color: Qt.alpha(root.ink, 0.18)
                 }
                 Kirigami.ShadowedImage {
                     anchors.fill: parent
@@ -72,74 +96,27 @@ Item {
                     sourceSize.height: 44
                     visible: status === Image.Ready
                 }
-
                 Text {
                     anchors.centerIn: parent
                     visible: root.artUrl === ""
                     text: Icons.music
-                    color: root.tinta
+                    color: root.ink
                     font.family: Theme.fontIcons
                     font.pixelSize: 13
                 }
             }
-
-            component MiniBtn: Rectangle {
-                id: mb
-                property string icono: ""
-                property int tam: 16
-                signal apretado
-
-                anchors.verticalCenter: parent.verticalCenter
-                width: 24
-                height: 24
-                radius: height / 2
-                color: mbMa.containsMouse ? Qt.alpha(root.tinta, 0.20) : "transparent"
-                scale: mbMa.pressed ? 0.88 : 1.0
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Theme.durShort
-                    }
-                }
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: Theme.durShort
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: Theme.emphasizedDecel
-                    }
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: mb.icono
-                    color: root.tinta
-                    font.family: Theme.fontIcons
-                    font.pixelSize: mb.tam
-                }
-
-                MouseArea {
-                    id: mbMa
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: mb.apretado()
-                }
+            TransportButton {
+                icon: Icons.prev
+                onClicked: root.player?.Previous()
             }
-
-            MiniBtn {
-                icono: Icons.prev
-                onApretado: root.player?.Previous()
+            TransportButton {
+                icon: root.isPlaying ? Icons.pause : Icons.play
+                iconSize: 18
+                onClicked: root.player?.PlayPause()
             }
-
-            MiniBtn {
-                icono: root.isPlaying ? Icons.pause : Icons.play
-                tam: 18
-                onApretado: root.player?.PlayPause()
-            }
-
-            MiniBtn {
-                icono: Icons.next
-                onApretado: root.player?.Next()
+            TransportButton {
+                icon: Icons.next
+                onClicked: root.player?.Next()
             }
         }
     }

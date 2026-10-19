@@ -78,6 +78,6 @@ class LockWallpaperTests(unittest.TestCase):
         controls = (ROOT / 'plasmoids/com.nothingplasma.panel/contents/ui/components/SystemControls.qml').read_text()
         self.assertIn('if (!root.autoWallpaper) return', controls)
         meter = (ROOT / 'plasmoids/com.nothingplasma.panel/contents/island/ui/Meters.qml').read_text()
-        temperatures = meter.split('id: tempRow', 1)[1].split('\n    Meter {', 1)[0]
+        temperatures = meter.split('id: heat', 1)[1].split('\n    Meter {', 1)[0]
         self.assertEqual(temperatures.count('color: Theme.primary'), 2)
         self.assertNotIn('Theme.alert', temperatures)
