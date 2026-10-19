@@ -1,6 +1,6 @@
 # Nothing KDE
 
-A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, eighteen desktop widgets,
+A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, nineteen desktop widgets,
 Glassy application styling, and optional application accent integrations. The UI is localized
 in Turkish and English; no custom daemon is required.
 
@@ -43,14 +43,16 @@ weather, media and photo (adapted from nothing-kde-widgets), and the Nothing KDE
 and notifies with Plasma's timer sound), **Devices** (the batteries of this computer, KDE Connect
 phones and Bluetooth headphones, mice and the like, as dot rings or filled circles),
 **Progress** (the year as a dot ring, or day, week, month and year bars), **Quick Toggles**
-(Wi-Fi, Bluetooth, airplane mode and volume, or a volume pill), **Greeting**, **Uptime**,
+(the ones you pick of Wi-Fi, Bluetooth, airplane mode, sound, microphone, do not disturb, night
+light, coffee mode, power profile and hotspot, over a volume bar, or a volume pill), **Greeting**, **Uptime**,
 **Visualizer**, **Glyph** (a glyph light that flashes on the beat; several play together), **Glyph
 Matrix** (a round dot matrix to draw on, with a clock, animations, or your own picture or GIF)
 and **Pet** (a dot-matrix cat, dog, hamster or robot).
 
 Most widgets also offer the designs of [EveryThing-UI](https://github.com/Prince-1652/EveryThing-UI)
 (Prince-1652, MIT) as styles: pills, circles and blocks for the clocks, date and calendar,
-battery, system status, CPU and network, the quick toggles, year progress and countdown,
+device batteries, system status, a CPU, GPU, memory or disk gauge and network, the quick
+toggles, year progress and countdown,
 player, photo frames, weather and a rotating mantra, plus four big wallpaper clocks drawn with
 our own faces. Choose them in each widget's settings.
 
