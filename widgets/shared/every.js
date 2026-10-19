@@ -55,16 +55,56 @@ function dot(cx, cy, r) {
         + "A" + n(r) + " " + n(r) + " 0 1 1 " + n(cx - r) + " " + n(cy) + "Z";
 }
 
-// A filled cell of the block face; corners whose two neighbours are empty are cut.
-function blockCell(rows, row, col, c) {
-    var filled = function(r, k) { return r >= 0 && r < rows.length && k >= 0 && k < rows[0].length && rows[r][k] === "#"; };
-    var up = !filled(row - 1, col), down = !filled(row + 1, col), left = !filled(row, col - 1), right = !filled(row, col + 1);
-    var x = col * c, y = row * c, k = c / 2, p = [];
-    if (up && left) p.push([x, y + k], [x + k, y]); else p.push([x, y]);
-    if (up && right) p.push([x + c - k, y], [x + c, y + k]); else p.push([x + c, y]);
-    if (down && right) p.push([x + c, y + c - k], [x + c - k, y + c]); else p.push([x + c, y + c]);
-    if (down && left) p.push([x + k, y + c], [x, y + c - k]); else p.push([x, y + c]);
-    return "M" + p.map(function(q) { return n(q[0]) + " " + n(q[1]); }).join("L") + "Z";
+// The block face's cells as one outline per connected part, holes running the
+// other way: cells drawn one by one leave gaps along their shared edges on
+// the GPU's curve renderer. Corners turning outward are cut at 45 degrees.
+function blockOutline(rows, c) {
+    // Every filled cell's edges, clockwise (y down); an edge two cells share cancels out.
+    var edges = {};
+    var point = function(x, y) { return x + "," + y; };
+    var add = function(x0, y0, x1, y1) {
+        var back = point(x1, y1) + ">" + point(x0, y0);
+        if (back in edges) delete edges[back];
+        else edges[point(x0, y0) + ">" + point(x1, y1)] = [x0, y0, x1, y1];
+    };
+    for (var r = 0; r < rows.length; ++r)
+        for (var k = 0; k < rows[r].length; ++k)
+            if (rows[r][k] === "#") {
+                add(k, r, k + 1, r); add(k + 1, r, k + 1, r + 1);
+                add(k + 1, r + 1, k, r + 1); add(k, r + 1, k, r);
+            }
+    var from = {};
+    for (var e in edges) from[point(edges[e][0], edges[e][1])] = edges[e];
+    var path = "";
+    for (var start in from) {
+        if (!from[start]) continue;
+        // Walk one loop, keeping only the points where it turns.
+        var loop = [], at = start;
+        do {
+            var edge = from[at]; from[at] = null;
+            loop.push([edge[0], edge[1], edge[2] - edge[0], edge[3] - edge[1]]);
+            at = point(edge[2], edge[3]);
+        } while (at !== start);
+        var turns = loop.filter(function(q, i) {
+            var p = loop[(i + loop.length - 1) % loop.length];
+            return p[2] !== q[2] || p[3] !== q[3];
+        });
+        var out = [];
+        for (var i = 0; i < turns.length; ++i) {
+            var q = turns[i], p = turns[(i + turns.length - 1) % turns.length];
+            var dx0 = Math.sign(p[2]), dy0 = Math.sign(p[3]), dx1 = Math.sign(q[2]), dy1 = Math.sign(q[3]);
+            // Turning right (y down) is an outer corner: cut it by half a cell each way.
+            if (dx0 * dy1 - dy0 * dx1 > 0) out.push([q[0] - dx0 / 2, q[1] - dy0 / 2], [q[0] + dx1 / 2, q[1] + dy1 / 2]);
+            else out.push([q[0], q[1]]);
+        }
+        // Two cuts on one cell's side meet in a point: draw it once.
+        out = out.filter(function(q, i) {
+            var p = out[(i + out.length - 1) % out.length];
+            return p[0] !== q[0] || p[1] !== q[1];
+        });
+        path += "M" + out.map(function(q) { return n(q[0] * c) + " " + n(q[1] * c); }).join("L") + "Z";
+    }
+    return path;
 }
 
 function bubbleCell(code, x, y, c) {
@@ -94,11 +134,7 @@ function glyph(face, ch, c) {
     }
     var rows = blocks[ch];
     if (!rows) return {width: c, height: 5 * c, fill: "", dots: ""};
-    var path = "";
-    for (var row = 0; row < rows.length; ++row)
-        for (var col = 0; col < rows[row].length; ++col)
-            if (rows[row][col] === "#") path += blockCell(rows, row, col, c);
-    return {width: rows[0].length * c, height: 5 * c, fill: path, dots: ""};
+    return {width: rows[0].length * c, height: 5 * c, fill: blockOutline(rows, c), dots: ""};
 }
 
 // Good morning until noon, afternoon until six, evening after.
