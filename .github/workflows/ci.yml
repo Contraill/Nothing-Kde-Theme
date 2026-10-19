@@ -1,0 +1,99 @@
+# Everything that runs without a desktop session: validate.sh (lint, Python and QML tests),
+# the translations, the packages, and every widget style rendered with real Plasma.
+# A v* tag publishes the packages as a GitHub release.
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  # The QML modules the island and the widgets import, and the tools the tests call.
+  PLASMA: >-
+    git python python-fonttools gettext zip unzip nodejs noto-fonts
+    qt6-declarative kpackage kconfig ki18n kirigami kcmutils kdeclarative kitemmodels
+    kwindowsystem knotifications libplasma plasma-workspace plasma5support plasma-nm
+    plasma-pa plasma-integration powerdevil bluez-qt libksysguard kpipewire prison kdeconnect
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      # Git before checkout, so the checkout is a repository the tests can list.
+      - name: Install Plasma, Qt and the test tools
+        run: pacman -Syu --noconfirm --needed $PLASMA
+      - uses: actions/checkout@v4
+      # The tests are written for a desktop user, not root: a login shell gives it its own HOME.
+      - name: Hand the checkout to a user
+        run: |
+          useradd -m tester && chown -R tester .
+          # A desktop session always has a runtime directory; Qt warns without one.
+          install -d -m 0700 -o tester /run/user/tester
+          echo 'export XDG_RUNTIME_DIR=/run/user/tester' >> /home/tester/.bash_profile
+      - name: A tag names the version in VERSION
+        if: github.ref_type == 'tag'
+        run: test "$GITHUB_REF_NAME" = "v$(cat VERSION)"
+      - name: Package
+        run: runuser -l tester -c "cd $GITHUB_WORKSPACE && ./package.sh"
+      - name: Validate, the packages included
+        run: runuser -l tester -c "cd $GITHUB_WORKSPACE && ./validate.sh"
+      - name: Translations
+        run: runuser -l tester -c "cd $GITHUB_WORKSPACE && python3 po/build.py --check"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: packages
+          path: dist/
+          if-no-files-found: error
+
+  widgets:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    steps:
+      - name: Install Plasma, Qt and the build tools
+        run: pacman -Syu --noconfirm --needed $PLASMA cmake gcc make extra-cmake-modules
+      - uses: actions/checkout@v4
+      - name: Hand the checkout to a user
+        run: |
+          useradd -m tester && chown -R tester .
+          # A desktop session always has a runtime directory; Qt warns without one.
+          install -d -m 0700 -o tester /run/user/tester
+          echo 'export XDG_RUNTIME_DIR=/run/user/tester' >> /home/tester/.bash_profile
+      - name: Build the widget renderer
+        run: |
+          runuser -l tester -c "cd $GITHUB_WORKSPACE && cmake -S tests/widget-render -B /tmp/widget-render -Wno-dev && cmake --build /tmp/widget-render"
+      - name: Render every widget style, dark and light
+        run: runuser -l tester -c "cd $GITHUB_WORKSPACE && python3 tests/check-widgets.py --renderer /tmp/widget-render/nothing-kde-widget-render --screenshots /tmp/widget-shots"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: widget-shots
+          path: /tmp/widget-shots/
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: [validate, widgets]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: dist
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          # The notes are this version's section of the changelog.
+          awk -v v="$version" '$0 ~ "^## \\[" v "\\]" {on=1; next} /^## \[/ {on=0} on' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "See CHANGELOG.md." > notes.md
+          case "$version" in *-rc*) pre=--prerelease ;; *) pre= ;; esac
+          gh release create "$GITHUB_REF_NAME" dist/* --title "Nothing KDE $version" --notes-file notes.md $pre
