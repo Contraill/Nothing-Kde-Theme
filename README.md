@@ -1,5 +1,9 @@
 # Nothing KDE
 
+[![CI](https://github.com/Contraill/Nothing-Kde-Theme/actions/workflows/ci.yml/badge.svg)](https://github.com/Contraill/Nothing-Kde-Theme/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Contraill/Nothing-Kde-Theme?include_prereleases)](https://github.com/Contraill/Nothing-Kde-Theme/releases)
+[![License: GPL-3.0-or-later](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)](LICENSE)
+
 A Nothing-inspired theme suite for Plasma 6: a top island, a bottom dock, nineteen desktop
 widgets, the Glassy application style and accent links for other apps. In English and
 Turkish, with no daemon of its own.
@@ -17,9 +21,18 @@ Turkish, with no daemon of its own.
 
 ## Install
 
-Needs Plasma 6.7, Qt 6.10+, Python 3, `kpackagetool6` and `qdbus6`. The island is built on
-Plasma's own components (plasma-nm, plasma-pa, bluez-qt, PowerDevil, libksysguard), and
-`install.sh` warns about any that are missing. KDE Connect and `powerprofilesctl` are optional.
+| | Supported | Tested with |
+| --- | --- | --- |
+| Plasma | 6.7 and 6.8 | 6.7.5, 6.8.0 |
+| Qt | 6.10 or later | 6.11, 6.12 |
+| KDE Frameworks | 6 | 6.31 |
+| Kvantum (Glassy) | 1.1 | 1.1.8 |
+| Session | Wayland | Wayland; X11 is untested |
+| Distribution | Arch Linux, CachyOS | CachyOS; Glassy's setup installs Kvantum through pacman |
+
+It also needs Python 3, `kpackagetool6` and `qdbus6`. The island is built on Plasma's own
+components (plasma-nm, plasma-pa, bluez-qt, PowerDevil, libksysguard), and `install.sh` warns
+about any that are missing. KDE Connect and `powerprofilesctl` are optional.
 
 For media playing in a browser, install the
 [Plasma Browser Integration](https://community.kde.org/Plasma/Browser_Integration) extension
@@ -35,7 +48,10 @@ cd Nothing-Kde-Theme
 ./uninstall.sh                # remove everything Nothing KDE installed
 ```
 
-Then choose **Nothing KDE** or **Nothing KDE Light** in System Settings.
+Then choose **Nothing KDE** or **Nothing KDE Light** in System Settings. What the installer
+changes, where it keeps the earlier state and how each part is undone:
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Releases, with every package and its checksum,
+are on the [releases page](https://github.com/Contraill/Nothing-Kde-Theme/releases).
 
 ## Island and dock
 
@@ -167,6 +183,19 @@ python3 tests/check-widgets.py --renderer /tmp/widget-render/nothing-kde-widget-
 
 Translations are gettext catalogs in `po/panel` and `po/widgets`; run `python3 po/build.py`
 after editing them, and add a language as a new `<lang>.po`.
+
+[CI](.github/workflows/ci.yml) runs all of this on every push and pull request: the packages,
+`validate.sh` with the packages included, the translations and every widget style.
+
+**Releases.** One [VERSION](VERSION) file holds the version, in
+[Semantic Versioning](https://semver.org/) (`-rcN` for release candidates); changes are kept
+in the [changelog](CHANGELOG.md). To release, write the version and the changelog's section,
+then push a tag; CI checks the tag against VERSION and publishes the packages:
+
+```sh
+python3 packaging/set-version.py 0.6.0      # VERSION and every package's metadata
+git commit -am "Release 0.6.0" && git tag v0.6.0 && git push origin main v0.6.0
+```
 
 ## Credits
 
