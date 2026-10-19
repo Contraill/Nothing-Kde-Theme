@@ -28,7 +28,7 @@ Glassy.EveryFrame {
     }
 
     // Pill
-    Label { visible: !f.square; px: 30; py: 25; pt: 18; upper: true; value: f.greeting; color: f.colors.accent; clipWidth: 310 }
+    Label { visible: !f.square; px: 30; py: 25; pt: 18; upper: true; value: f.greeting; clipWidth: 310 }
     Label { visible: !f.square; px: 30; py: 55; pt: 16; upper: true; value: f.clock24 ? f.hour + ":" + f.minute : Qt.formatTime(f.now, "hh:mm AP") }
     Rectangle {
         visible: !f.square
@@ -42,7 +42,7 @@ Glassy.EveryFrame {
         value: f.greeting.replace(" ", "\n")
         horizontalAlignment: Text.AlignHCenter
     }
-    Label { visible: f.square; px: 55; py: 120; pt: 30; align: "Center"; value: f.hour; color: f.colors.accent }
-    Label { visible: f.square; px: 95; py: 120; pt: 30; align: "Center"; value: ":"; color: f.track }
-    Label { visible: f.square; px: 135; py: 120; pt: 30; align: "Center"; value: f.minute; color: f.colors.accent }
+    Label { visible: f.square; px: 55; py: 120; pt: 30; align: "Center"; value: f.hour }
+    Label { visible: f.square; px: 95; py: 120; pt: 30; align: "Center"; value: ":"; color: f.colors.accent }
+    Label { visible: f.square; px: 135; py: 120; pt: 30; align: "Center"; value: f.minute }
 }

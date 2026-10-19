@@ -20,6 +20,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
     Glassy.DotFont { id: dotFont }
 
@@ -120,7 +121,6 @@ PlasmoidItem {
 
         EverySystem {
             anchors.fill: parent
-            anchors.margins: 4
             visible: root.every
             colors: nColors
             family: dotFont.name
@@ -221,7 +221,7 @@ PlasmoidItem {
                 Layout.preferredHeight: card.height - 24
                 count: 20
                 value: (cpu.value || 0) / 100
-                litColor: nColors.accent
+                litColor: (cpu.value || 0) >= 85 ? nColors.accent : nColors.textPrimary
                 dimColor: nColors.divider
             }
             Column {

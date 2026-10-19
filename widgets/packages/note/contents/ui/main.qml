@@ -19,6 +19,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
     Glassy.DotFont { id: dotFont }
     readonly property bool pill: Plasmoid.configuration.widgetVariant === 1
@@ -31,13 +32,12 @@ PlasmoidItem {
 
     fullRepresentation: Item {
         Layout.preferredWidth: root.mantra ? 400 : root.pill ? 260 : 240
-        Layout.preferredHeight: root.mantra ? 105 : root.pill ? 64 : 220
+        Layout.preferredHeight: root.mantra ? 115 : root.pill ? 64 : 220
         Layout.minimumWidth: 160
         Layout.minimumHeight: root.pill || root.mantra ? 52 : 140
 
         EveryMantra {
             anchors.fill: parent
-            anchors.margins: 4
             visible: root.mantra
             colors: nColors
             family: dotFont.name

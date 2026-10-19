@@ -33,9 +33,9 @@ Item {
                 model: [
                     { label: i18n("Digital Clock"), variant: 0 },
                     { label: i18n("World Clock"), variant: 1 },
-                    { label: i18n("EveryThing tall pill"), variant: 2 },
-                    { label: i18n("EveryThing wide pill"), variant: 3 },
-                    { label: i18n("EveryThing square"), variant: 4 }
+                    { label: i18n("Tall pill"), variant: 2 },
+                    { label: i18n("Wide pill"), variant: 3 },
+                    { label: i18n("Square"), variant: 4 }
                 ]
 
                 Text {

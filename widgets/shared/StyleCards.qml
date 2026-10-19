@@ -4,13 +4,19 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 
-// Settings cards for the styles adapted from EveryThing-UI, each a live
-// miniature of its design. `styles` lists {label, value, source, props};
-// `source` is the design's URL and `props` the sample values it shows.
+// The style picker of every widget's settings page: a card per style with its
+// miniature. `styles` lists {label, value} with either `source` and `props`
+// (a live design and the sample values it shows) or `image` (a rendered
+// preview, the -dark.png file; the -light.png one beside it in a light theme).
 ColumnLayout {
     id: cards
     property var styles: []
     property int selected: -1
+    property string title: i18n("Style:")
+    // The page's theme choices, so the miniatures show them.
+    property alias themeMode: cardColors.themeMode
+    property alias useSystemAccent: cardColors.useSystemAccent
+    property alias monochrome: cardColors.monochrome
     signal picked(int value)
     spacing: 6
 
@@ -18,7 +24,7 @@ ColumnLayout {
     DotFont { id: dots }
 
     QQC2.Label {
-        text: i18n("EveryThing-UI styles:")
+        text: cards.title
         font.weight: Font.Medium
     }
     Flow {
@@ -36,14 +42,29 @@ ColumnLayout {
                 color: chosen ? Qt.alpha(Kirigami.Theme.highlightColor, 0.15) : "transparent"
                 border.width: chosen ? 2 : 1
                 border.color: chosen ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
-                Loader {
+                Item {
+                    id: preview
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.margins: 6
                     height: 76
-                    Component.onCompleted: setSource(card.modelData.source,
-                        Object.assign({colors: cardColors, family: dots.name}, card.modelData.props || {}))
+                    Image {
+                        anchors.fill: parent
+                        visible: !!card.modelData.image
+                        source: card.modelData.image && cardColors.isLight ? String(card.modelData.image).replace(/-dark\.png$/, "-light.png") : card.modelData.image ?? ""
+                        fillMode: Image.PreserveAspectFit
+                        smooth: true
+                        mipmap: true
+                    }
+                    Loader {
+                        anchors.fill: parent
+                        active: !!card.modelData.source
+                        Component.onCompleted: if (active) setSource(card.modelData.source,
+                            Object.assign({colors: cardColors, family: dots.name}, card.modelData.props || {}))
+                        // The miniature fills its card, without the desktop margin.
+                        onLoaded: if ("inset" in item) item.inset = 0
+                    }
                 }
                 QQC2.Label {
                     anchors.bottom: parent.bottom
@@ -62,12 +83,5 @@ ColumnLayout {
                 }
             }
         }
-    }
-    QQC2.Label {
-        Layout.fillWidth: true
-        text: i18n("Designs adapted from EveryThing-UI by Prince-1652 (MIT).")
-        wrapMode: Text.Wrap
-        opacity: 0.7
-        font.pointSize: 8
     }
 }

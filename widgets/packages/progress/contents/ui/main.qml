@@ -19,6 +19,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
     Glassy.DotFont { id: dotFont }
 
@@ -48,7 +49,6 @@ PlasmoidItem {
 
         EveryProgress {
             anchors.fill: parent
-            anchors.margins: 4
             visible: root.every
             colors: nColors
             family: dotFont.name
@@ -81,7 +81,7 @@ PlasmoidItem {
                 height: width
                 count: 40
                 value: root.spans.year
-                litColor: nColors.accent
+                litColor: nColors.textPrimary
                 dimColor: nColors.divider
             }
             Column {
@@ -116,7 +116,7 @@ PlasmoidItem {
             anchors.fill: card
             anchors.margins: 16
             visible: root.variant === 1
-            spacing: 10
+            spacing: 6
             Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; alert: false; label: i18n("DAY"); percent: root.spans.day * 100 }
             Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; alert: false; label: i18n("WEEK"); percent: root.spans.week * 100 }
             Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; alert: false; label: i18n("MONTH"); percent: root.spans.month * 100 }

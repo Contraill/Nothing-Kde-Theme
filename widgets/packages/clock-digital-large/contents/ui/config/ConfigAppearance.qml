@@ -7,90 +7,33 @@ import "../../../../../shared" as Glassy
 KCM.SimpleKCM {
     id: configAppearance
 
-    property alias cfg_fontStyle: fontStyleCombo.currentIndex
+    property int cfg_fontStyle
     property alias cfg_showDate: showDateCheckbox.checked
     property alias cfg_use24HourFormat: use24HourCheckbox.checked
     property alias cfg_useDarkerFont: useDarkerFontCheckbox.checked
-    property alias cfg_themeMode: themeModeCombo.currentIndex
-    property alias cfg_useSystemAccent: useSystemAccentCheckbox.checked
+    property alias cfg_themeMode: theme.themeMode
+    property alias cfg_useSystemAccent: theme.useSystemAccent
+    property alias cfg_monochrome: theme.monochrome
 
     ColumnLayout {
         spacing: 10
 
-        RowLayout {
-            Label {
-                text: i18n("Font Style:")
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            ComboBox {
-                id: fontStyleCombo
-                model: [i18n("Dotted"), i18n("Dot Matrix"), i18n("Serif"), i18n("Segmented"), i18n("Segmented Sharp"),
-                    i18n("EveryThing blocks"), i18n("EveryThing blocks, two tone"), i18n("EveryThing dots"),
-                    i18n("EveryThing bubbles"), i18n("EveryThing bubbles, inverted"), i18n("EveryThing outline")]
-                Layout.fillWidth: true
-            }
-        }
-
-        Glassy.EveryStyleCards {
+        Glassy.StyleCards {
             Layout.fillWidth: true
-            selected: fontStyleCombo.currentIndex
-            onPicked: value => fontStyleCombo.currentIndex = value
-            styles: ["blocks", "blocks-dual", "dots", "bubbles", "bubbles-inverse", "outline"].map((face, i) => ({
+            title: i18n("Font Style:")
+            selected: configAppearance.cfg_fontStyle
+            onPicked: value => configAppearance.cfg_fontStyle = value
+            themeMode: theme.themeMode
+            useSystemAccent: theme.useSystemAccent
+            monochrome: theme.monochrome
+            styles: [i18n("Dotted"), i18n("Dot Matrix"), i18n("Serif"), i18n("Segmented"), i18n("Segmented Sharp")].map((label, i) => ({
+                label: label, value: i, image: Qt.resolvedUrl("../previews/style-" + i + "-dark.png")
+            })).concat(["blocks", "blocks-dual", "dots", "bubbles", "bubbles-inverse", "outline"].map((face, i) => ({
                 label: [i18n("Blocks"), i18n("Two tone"), i18n("Dots"), i18n("Bubbles"), i18n("Inverted"), i18n("Outline")][i],
                 value: 5 + i,
                 source: Qt.resolvedUrl("../everything/EveryBigClock.qml"),
                 props: {face: face, time: "10:09", dotFamily: "", outlineFamily: ""}
-            }))
-        }
-
-        Label {
-            text: i18n("Dotted: Bigger dots, cleaner look")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
-
-        Label {
-            text: i18n("Dot Matrix: Nothing's iconic dot matrix font")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
-
-        Label {
-            text: i18n("Serif: Nothing's new serif font")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
-
-        Label {
-            text: i18n("Segmented: Subway board inspired font that nothing designed")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
-
-        Label {
-            text: i18n("Segmented Sharp: Segmented but sharper")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
-
-        Label {
-            text: i18n("NOTE: Segmented fonts don't have separator (:)")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            Layout.topMargin: 4
-            wrapMode: Text.WordWrap
+            })))
         }
 
         Rectangle {
@@ -159,41 +102,7 @@ KCM.SimpleKCM {
             opacity: 0.3
         }
 
-        RowLayout {
-            Label {
-                text: i18n("Theme:")
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            ComboBox {
-                id: themeModeCombo
-                model: [i18n("Dark"), i18n("Light"), i18n("Follow System")]
-                Layout.fillWidth: true
-            }
-        }
-
-        Label {
-            text: i18n("Dark: Nothing's signature dark aesthetic. Light: Nothing's light palette. Follow System: Matches your KDE dark/light scheme.")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
-
-        RowLayout {
-            CheckBox {
-                id: useSystemAccentCheckbox
-                text: i18n("Use system accent color")
-            }
-        }
-
-        Label {
-            text: i18n("Replace Nothing's red accent with your KDE system highlight color while keeping the Nothing aesthetic.")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
+        Glassy.ThemeSettings { id: theme }
 
         Item {
             Layout.fillHeight: true

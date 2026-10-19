@@ -23,6 +23,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
     Glassy.DotFont { id: dotFont }
 
@@ -128,14 +129,13 @@ PlasmoidItem {
     }
 
     fullRepresentation: Item {
-        Layout.preferredWidth: root.every ? (root.everyRound && root.everyKind !== "volume" ? 105 : 200) : root.variant === 1 ? 190 : 270
-        Layout.preferredHeight: root.every ? (root.everyKind === "volume" && !root.everyRound ? 200 : 105) : root.variant === 1 ? 84 : 170
+        Layout.preferredWidth: root.every ? (root.everyRound && root.everyKind !== "volume" ? 115 : 200) : root.variant === 1 ? 190 : 270
+        Layout.preferredHeight: root.every ? (root.everyKind === "volume" && !root.everyRound ? 200 : root.everyRound && root.everyKind !== "volume" ? 115 : 110) : root.variant === 1 ? 84 : 170
         Layout.minimumWidth: root.every ? 80 : root.variant === 1 ? 150 : 240
         Layout.minimumHeight: root.every ? 80 : root.variant === 1 ? 64 : 150
 
         EveryToggle {
             anchors.fill: parent
-            anchors.margins: 4
             visible: root.every
             colors: nColors
             family: dotFont.name
@@ -238,7 +238,7 @@ PlasmoidItem {
                         anchors.fill: parent
                         count: 20
                         value: root.muted ? 0 : root.volume
-                        litColor: nColors.accent
+                        litColor: nColors.textPrimary
                         dimColor: nColors.divider
                     }
                     Glassy.DotGlyph {

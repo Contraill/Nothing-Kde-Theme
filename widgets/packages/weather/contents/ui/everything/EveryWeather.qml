@@ -28,7 +28,7 @@ Glassy.EveryFrame {
     Glassy.EveryText {
         s: f.s; px: 15; py: 140; pt: 18; clipWidth: 160; upper: true
         value: f.condition
-        color: f.colors.accent
+        color: f.colors.textSecondary
         font.family: f.family
     }
     // The icons, drawn as in the original on a 50 px box at (130, 13).
@@ -43,7 +43,7 @@ Glassy.EveryFrame {
         readonly property string cloud: "M14 40A9 9 0 0 1 14 22A13 13 0 0 1 39 21A9.5 9.5 0 0 1 40 40Z"
         ShapePath {
             strokeWidth: 4
-            strokeColor: f.colors.accent
+            strokeColor: f.colors.textPrimary
             fillColor: "transparent"
             capStyle: ShapePath.RoundCap
             joinStyle: ShapePath.RoundJoin

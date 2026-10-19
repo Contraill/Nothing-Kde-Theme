@@ -6,6 +6,8 @@ QtObject {
     function alpha(c, value) { return Qt.rgba(c.r, c.g, c.b, value) }
     property int themeMode: 2 // Legacy preference: dark / light / system.
     property bool useSystemAccent: true
+    // Monochrome: the accent marks become ink like everything else.
+    property bool monochrome: false
     readonly property bool useSystem: themeMode === 2
     readonly property color paletteBackground: Kirigami.Theme.backgroundColor
     readonly property color paletteText: Kirigami.Theme.textColor
@@ -21,8 +23,8 @@ QtObject {
     readonly property color textMuted: Qt.tint(background, alpha(textPrimary, 0.60))
     readonly property color textDisabled: Qt.tint(background, alpha(textPrimary, 0.45))
     readonly property color textPlaceholder: textMuted
-    readonly property color accent: useSystemAccent ? Kirigami.Theme.focusColor : "#ff4444"
-    readonly property color accentSecondHand: useSystemAccent ? Kirigami.Theme.focusColor : "#D71921"
+    readonly property color accent: monochrome ? textPrimary : useSystemAccent ? Kirigami.Theme.focusColor : "#ff4444"
+    readonly property color accentSecondHand: monochrome ? textPrimary : useSystemAccent ? Kirigami.Theme.focusColor : "#D71921"
     // Readable ink on an accent fill.
     readonly property color accentText: (0.2126 * accent.r + 0.7152 * accent.g + 0.0722 * accent.b) > 0.6 ? "#111111" : "#ffffff"
     readonly property color warning: Kirigami.Theme.neutralTextColor

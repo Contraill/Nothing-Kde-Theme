@@ -4,10 +4,11 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 
 // Theme rows shared by every widget's settings page; the page aliases
-// cfg_themeMode and cfg_useSystemAccent to these controls.
+// cfg_themeMode, cfg_useSystemAccent and cfg_monochrome to these controls.
 ColumnLayout {
     property alias themeMode: mode.currentIndex
     property alias useSystemAccent: accent.checked
+    property alias monochrome: mono.checked
     spacing: 6
 
     RowLayout {
@@ -19,12 +20,17 @@ ColumnLayout {
         }
     }
     QQC2.CheckBox {
+        id: mono
+        text: i18n("Monochrome")
+    }
+    QQC2.CheckBox {
         id: accent
+        enabled: !mono.checked
         text: i18n("Use system accent color")
     }
     QQC2.Label {
         Layout.fillWidth: true
-        text: i18n("Follow System matches the KDE light or dark scheme; the accent replaces Nothing red.")
+        text: i18n("Follow System matches the KDE light or dark scheme. Monochrome drops the red marks; the system accent replaces Nothing red.")
         wrapMode: Text.Wrap
         opacity: 0.7
         font.pointSize: 9

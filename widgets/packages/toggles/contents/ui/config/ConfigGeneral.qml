@@ -6,30 +6,27 @@ import org.kde.kcmutils as KCM
 import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
-    property alias cfg_widgetVariant: style.currentIndex
+    property int cfg_widgetVariant
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
+    property alias cfg_monochrome: theme.monochrome
 
     ColumnLayout {
         spacing: 10
-        RowLayout {
-            QQC2.Label { text: i18n("Style:") }
-            QQC2.ComboBox {
-                id: style
-                model: [i18n("Toggles and volume"), i18n("Volume pill"),
-                    i18n("EveryThing Wi-Fi"), i18n("EveryThing Wi-Fi circle"), i18n("EveryThing Bluetooth"), i18n("EveryThing Bluetooth circle"),
-                    i18n("EveryThing airplane mode"), i18n("EveryThing airplane mode circle"), i18n("EveryThing volume"), i18n("EveryThing volume pill")]
-            }
-        }
-        Glassy.EveryStyleCards {
+        Glassy.StyleCards {
             Layout.fillWidth: true
-            selected: style.currentIndex
-            onPicked: value => style.currentIndex = value
-            styles: [["wifi", false], ["wifi", true], ["bluetooth", false], ["bluetooth", true], ["airplane", false], ["airplane", true],
-                     ["volume", false], ["volume", true]].map((v, i) => ({
-                label: [i18n("Wi-Fi"), i18n("Wi-Fi circle"), i18n("Bluetooth"), i18n("Bluetooth circle"), i18n("Airplane"), i18n("Airplane circle"), i18n("Volume"), i18n("Volume pill")][i],
-                value: 2 + i, source: Qt.resolvedUrl("../everything/EveryToggle.qml"), props: {kind: v[0], round: v[1], on: i % 2 === 0, volume: 0.4}
-            }))
+            selected: cfg_widgetVariant
+            onPicked: value => cfg_widgetVariant = value
+            themeMode: theme.themeMode
+            useSystemAccent: theme.useSystemAccent
+            monochrome: theme.monochrome
+            styles: [{label: i18n("Toggles"), value: 0, image: Qt.resolvedUrl("../previews/style-0-dark.png")}, {label: i18n("Volume dots"), value: 1, image: Qt.resolvedUrl("../previews/style-1-dark.png")}].concat(
+                [["wifi", false], ["wifi", true], ["bluetooth", false], ["bluetooth", true], ["airplane", false], ["airplane", true],
+                 ["volume", false], ["volume", true]].map((v, i) => ({
+                    label: [i18n("Wi-Fi"), i18n("Wi-Fi circle"), i18n("Bluetooth"), i18n("Bluetooth circle"), i18n("Airplane"), i18n("Airplane circle"),
+                        i18n("Volume ring"), i18n("Volume pill")][i],
+                    value: 2 + i, source: Qt.resolvedUrl("../everything/EveryToggle.qml"), props: {kind: v[0], round: v[1], on: i % 2 === 0, volume: 0.4}
+                })))
         }
         Glassy.ThemeSettings { id: theme }
     }

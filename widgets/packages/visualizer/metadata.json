@@ -7,7 +7,7 @@
       }
     ],
     "Category": "Multimedia",
-    "Description": "Bars or a ring that move with the sound playing, after EveryThing-UI.",
+    "Description": "Bars or a ring that move with the sound playing.",
     "EnabledByDefault": true,
     "Icon": "view-media-visualization",
     "Id": "org.nothingkde.widget.visualizer",

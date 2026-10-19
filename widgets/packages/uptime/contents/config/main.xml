@@ -12,6 +12,9 @@
     <entry name="useSystemAccent" type="Bool">
       <default>true</default>
     </entry>
+    <entry name="monochrome" type="Bool">
+        <default>false</default>
+    </entry>
     <!-- JSON: YYYY-MM-DD -> seconds on, the last two weeks -->
     <entry name="history" type="String">
       <default></default>

@@ -58,7 +58,7 @@ Glassy.EveryFrame {
         s: f.s; cx: 95; cy: 85; inner: 58; outer: 70
         value: f.muted ? 0 : f.volume
         trackColor: f.track
-        fillColor: f.colors.accent
+        fillColor: f.colors.textPrimary
     }
     Glassy.EveryText {
         visible: f.isVolume && !f.round
@@ -80,7 +80,7 @@ Glassy.EveryFrame {
         s: f.s; cx: 47.5; cy: 47.5; radius: 32.5
         value: f.muted ? 0 : f.volume
         trackColor: f.track
-        fillColor: f.colors.accent
+        fillColor: f.colors.textPrimary
     }
     Glassy.EveryText {
         visible: f.isVolume && f.round
@@ -93,7 +93,7 @@ Glassy.EveryFrame {
         visible: f.isVolume && f.round
         s: f.s; px: 95; py: 57; pt: 16; align: "LeftTop"; upper: f.muted
         value: f.muted ? i18n("Muted") : "VOL"
-        color: f.colors.accent
+        color: f.muted ? f.colors.accent : f.colors.textSecondary
         font.family: f.family
     }
 }

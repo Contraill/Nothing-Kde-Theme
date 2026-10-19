@@ -58,7 +58,7 @@ Glassy.EveryFrame {
     Glassy.EveryText {
         s: f.s; px: f.pill ? 95 : 195; py: f.pill ? 42 : 65; pt: f.pill ? 10 : 12; clipWidth: f.pill ? 120 : 175; upper: true
         value: f.artist
-        color: f.colors.accent
+        color: f.colors.textSecondary
         font.family: f.family
     }
 

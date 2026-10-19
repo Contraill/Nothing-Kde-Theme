@@ -56,7 +56,8 @@ int main(int argc, char **argv)
     auto item = PlasmaQuick::AppletQuickItem::itemForApplet(applet);
     if (!item) return 5;
     QQuickWindow window;
-    window.setColor(QColor("#242424"));
+    // NOTHING_RENDER_BACKGROUND=transparent renders settings previews.
+    window.setColor(QColor(qEnvironmentVariable("NOTHING_RENDER_BACKGROUND", QStringLiteral("#242424"))));
     // NOTHING_RENDER_SIZE=WxH renders at the applet's own shape (pills, bars).
     QSize size(400, 400);
     const auto requested = qEnvironmentVariable("NOTHING_RENDER_SIZE").split(QLatin1Char('x'));

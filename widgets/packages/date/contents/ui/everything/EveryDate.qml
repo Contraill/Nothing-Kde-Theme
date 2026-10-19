@@ -41,7 +41,7 @@ Glassy.EveryFrame {
         visible: f.layout === "pill"
         px: 95; py: 57; pt: 11; align: "LeftTop"; upper: true; clipWidth: 85
         value: Qt.locale().dayName(f.now.getDay(), Locale.LongFormat)
-        color: f.colors.accent
+        color: f.colors.textSecondary
     }
 
     // Month grid

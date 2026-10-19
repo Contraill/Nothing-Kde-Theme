@@ -52,7 +52,7 @@ Item {
                 Layout.alignment: Qt.AlignRight | Qt.AlignTop
                 text: root.locale.toString(root.today, "ddd")
                 font.family: root.labelFont; font.pixelSize: Math.min(face.width, face.height) * 0.12
-                color: root.colors.accent
+                color: root.colors.textSecondary
             }
             Text {
                 Layout.fillWidth: true; Layout.fillHeight: true
@@ -78,7 +78,7 @@ Item {
                 Text {
                     Layout.fillWidth: true
                     text: root.locale.toString(root.monthDate, "MMMM yyyy")
-                    color: root.colors.accent; font.family: root.labelFont
+                    color: root.colors.textPrimary; font.family: root.labelFont
                     font.pixelSize: Math.max(10, Math.min(18, face.width * 0.055))
                     horizontalAlignment: Text.AlignHCenter; elide: Text.ElideRight
                 }

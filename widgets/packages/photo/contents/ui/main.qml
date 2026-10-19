@@ -18,6 +18,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
 
     // Configuration properties
@@ -84,7 +85,6 @@ PlasmoidItem {
 
         EveryPhoto {
             anchors.fill: parent
-            anchors.margins: 4
             visible: root.variant > 0
             z: 2
             colors: nColors

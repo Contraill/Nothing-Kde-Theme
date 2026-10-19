@@ -6,23 +6,20 @@ import org.kde.kcmutils as KCM
 import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
-    property alias cfg_widgetVariant: style.currentIndex
+    property int cfg_widgetVariant
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
+    property alias cfg_monochrome: theme.monochrome
 
     ColumnLayout {
         spacing: 10
-        RowLayout {
-            QQC2.Label { text: i18n("Style:") }
-            QQC2.ComboBox {
-                id: style
-                model: [i18n("Pill"), i18n("Square")]
-            }
-        }
-        Glassy.EveryStyleCards {
+        Glassy.StyleCards {
             Layout.fillWidth: true
-            selected: style.currentIndex
-            onPicked: value => style.currentIndex = value
+            selected: cfg_widgetVariant
+            onPicked: value => cfg_widgetVariant = value
+            themeMode: theme.themeMode
+            useSystemAccent: theme.useSystemAccent
+            monochrome: theme.monochrome
             styles: [
                 {label: i18n("Pill"), value: 0, source: Qt.resolvedUrl("../everything/EveryGreeting.qml"), props: {}},
                 {label: i18n("Square"), value: 1, source: Qt.resolvedUrl("../everything/EveryGreeting.qml"), props: {square: true}}

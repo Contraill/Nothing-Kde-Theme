@@ -7,7 +7,7 @@
       }
     ],
     "Category": "Fun and Games",
-    "Description": "A dot-matrix cat, dog, hamster or robot peeking over the edge, after EveryThing-UI.",
+    "Description": "A dot-matrix cat, dog, hamster or robot peeking over the edge.",
     "EnabledByDefault": true,
     "Icon": "face-smile",
     "Id": "org.nothingkde.widget.pet",

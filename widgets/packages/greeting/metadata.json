@@ -7,7 +7,7 @@
       }
     ],
     "Category": "Date and Time",
-    "Description": "Good morning, afternoon or evening with the time, after EveryThing-UI.",
+    "Description": "Good morning, afternoon or evening with the time.",
     "EnabledByDefault": true,
     "Icon": "user-identity",
     "Id": "org.nothingkde.widget.greeting",

@@ -19,6 +19,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
 
     readonly property int variant: Plasmoid.configuration.widgetVariant
@@ -41,7 +42,7 @@ PlasmoidItem {
         running: monitor.available && (monitor.volume > 0.005 || root.levels.some(v => v > 0.01))
         onTriggered: {
             root.phase += 0.04;
-            const level = Math.min(1, monitor.volume * 1.6);
+            const level = Math.min(1, monitor.volume * Plasmoid.configuration.sensitivity / 100);
             const out = [];
             for (let i = 0; i < root.bands; ++i) {
                 const shape = 0.55 + 0.45 * Math.sin(Math.PI * (i + 0.5) / root.bands);
@@ -57,7 +58,7 @@ PlasmoidItem {
 
     fullRepresentation: EveryVisualizer {
         Layout.preferredWidth: root.layout === "bars" ? 400 : 200
-        Layout.preferredHeight: root.layout === "circle" ? 200 : 105
+        Layout.preferredHeight: root.layout === "circle" ? 200 : 115
         Layout.minimumWidth: 150
         Layout.minimumHeight: 60
         colors: nColors

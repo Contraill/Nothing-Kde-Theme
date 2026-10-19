@@ -29,7 +29,7 @@ Glassy.EveryFrame {
             preferredRendererType: Shape.CurveRenderer
             ShapePath {
                 strokeWidth: 35 * f.s
-                strokeColor: f.colors.accent
+                strokeColor: f.colors.textPrimary
                 fillColor: "transparent"
                 capStyle: ShapePath.FlatCap
                 PathAngleArc {
@@ -54,7 +54,7 @@ Glassy.EveryFrame {
             width: 8 * f.s
             height: tall * f.s
             radius: 4 * f.s
-            color: f.colors.accent
+            color: f.colors.textPrimary
         }
     }
 }

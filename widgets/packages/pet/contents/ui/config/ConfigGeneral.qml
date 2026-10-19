@@ -6,24 +6,22 @@ import org.kde.kcmutils as KCM
 import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
-    property alias cfg_pet: pet.currentIndex
+    property int cfg_pet
     property alias cfg_transparent: transparent.checked
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
+    property alias cfg_monochrome: theme.monochrome
 
     ColumnLayout {
         spacing: 10
-        RowLayout {
-            QQC2.Label { text: i18n("Pet:") }
-            QQC2.ComboBox {
-                id: pet
-                model: [i18n("Cat"), i18n("Dog"), i18n("Hamster"), i18n("Robot")]
-            }
-        }
-        Glassy.EveryStyleCards {
+        Glassy.StyleCards {
             Layout.fillWidth: true
-            selected: pet.currentIndex
-            onPicked: value => pet.currentIndex = value
+            selected: cfg_pet
+            onPicked: value => cfg_pet = value
+            title: i18n("Pet:")
+            themeMode: theme.themeMode
+            useSystemAccent: theme.useSystemAccent
+            monochrome: theme.monochrome
             styles: ["cat", "dog", "hamster", "robo"].map((name, i) => ({
                 label: [i18n("Cat"), i18n("Dog"), i18n("Hamster"), i18n("Robot")][i], value: i,
                 source: Qt.resolvedUrl("../everything/EveryPet.qml"), props: {pet: name, transparent: transparent.checked}

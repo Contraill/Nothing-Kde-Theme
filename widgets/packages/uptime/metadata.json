@@ -7,7 +7,7 @@
       }
     ],
     "Category": "System Information",
-    "Description": "How long the computer has been on each day of the week, after EveryThing-UI.",
+    "Description": "How long the computer has been on each day of the week.",
     "EnabledByDefault": true,
     "Icon": "chronometer",
     "Id": "org.nothingkde.widget.uptime",

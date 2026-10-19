@@ -15,7 +15,6 @@ Item {
     readonly property bool active: player !== null
     readonly property bool isPlaying: (player?.playbackStatus ?? 0) === Mpris.PlaybackStatus.Playing
     readonly property string artUrl: player?.artUrl ?? ""
-    readonly property string appIcon: player?.iconName ?? ""
     // MPRIS counts microseconds.
     readonly property real length: (player?.length ?? 0) / 1000000
     readonly property real position: (player?.position ?? 0) / 1000000
@@ -237,17 +236,10 @@ Item {
                 sourceSize.height: 92
                 visible: coverSample.status === Image.Ready
             }
-            // No cover: the application's icon, else a note.
-            Kirigami.Icon {
-                anchors.centerIn: parent
-                width: 26
-                height: 26
-                visible: coverSample.status !== Image.Ready && root.appIcon !== ""
-                source: root.appIcon
-            }
+            // No cover (a browser video, say): a note, not the app's colourful icon.
             Text {
                 anchors.centerIn: parent
-                visible: coverSample.status !== Image.Ready && root.appIcon === ""
+                visible: coverSample.status !== Image.Ready
                 text: Icons.music
                 color: Theme.fgDim
                 font.family: Theme.fontIcons

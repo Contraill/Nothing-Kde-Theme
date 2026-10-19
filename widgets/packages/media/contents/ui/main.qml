@@ -19,6 +19,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
 
     // MPRIS2 Model
@@ -106,7 +107,6 @@ PlasmoidItem {
         // EveryThing-UI's players.
         EveryPlayer {
             anchors.fill: parent
-            anchors.margins: 4
             visible: root.variant > 0
             colors: nColors
             family: everyFont.name

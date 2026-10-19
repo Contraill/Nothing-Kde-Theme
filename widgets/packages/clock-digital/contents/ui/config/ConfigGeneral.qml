@@ -11,8 +11,9 @@ KCM.SimpleKCM {
 
     property int cfg_widgetVariant
     property alias cfg_use24HourFormat: use24HourCheckbox.checked
-    property alias cfg_themeMode: themeModeCombo.currentIndex
-    property alias cfg_useSystemAccent: useSystemAccentCheckbox.checked
+    property alias cfg_themeMode: theme.themeMode
+    property alias cfg_useSystemAccent: theme.useSystemAccent
+    property alias cfg_monochrome: theme.monochrome
     property alias cfg_cityName: cityNameField.text
     property string cfg_timeZone
 
@@ -69,102 +70,16 @@ KCM.SimpleKCM {
     ColumnLayout {
         spacing: 10
 
-        // --- Style selection ---
-        Label {
-            text: i18n("Style:")
-            font.weight: Font.Medium
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 120
-            spacing: 10
-
-            // Digital Clock card
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                color: cfg_widgetVariant === 0 ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15) : "transparent"
-                radius: 10
-                border.width: cfg_widgetVariant === 0 ? 2 : 1
-                border.color: cfg_widgetVariant === 0 ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 6
-                    spacing: 4
-
-                    Image {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        source: Qt.resolvedUrl("../previews/digital.png")
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                    }
-
-                    Label {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: i18n("Digital Clock")
-                        font.pointSize: 9
-                    }
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: cfg_widgetVariant = 0
-                }
-            }
-
-            // World Clock card
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                color: cfg_widgetVariant === 1 ? Qt.rgba(Kirigami.Theme.highlightColor.r, Kirigami.Theme.highlightColor.g, Kirigami.Theme.highlightColor.b, 0.15) : "transparent"
-                radius: 10
-                border.width: cfg_widgetVariant === 1 ? 2 : 1
-                border.color: cfg_widgetVariant === 1 ? Kirigami.Theme.highlightColor : Kirigami.Theme.disabledTextColor
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 6
-                    spacing: 4
-
-                    Image {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        source: Qt.resolvedUrl("../previews/world.png")
-                        fillMode: Image.PreserveAspectFit
-                        smooth: true
-                    }
-
-                    Label {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: i18n("World Clock")
-                        font.pointSize: 9
-                    }
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: cfg_widgetVariant = 1
-                }
-            }
-        }
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 1
-            color: "#333333"
-            opacity: 0.3
-        }
-
-        Glassy.EveryStyleCards {
+        Glassy.StyleCards {
             Layout.fillWidth: true
             selected: cfg_widgetVariant
             onPicked: value => cfg_widgetVariant = value
+            themeMode: theme.themeMode
+            useSystemAccent: theme.useSystemAccent
+            monochrome: theme.monochrome
             styles: [
+                {label: i18n("Digital Clock"), value: 0, image: Qt.resolvedUrl("../previews/style-0-dark.png")},
+                {label: i18n("World Clock"), value: 1, image: Qt.resolvedUrl("../previews/style-1-dark.png")},
                 {label: i18n("Tall pill"), value: 2, source: Qt.resolvedUrl("../everything/EveryDigital.qml"), props: {layout: "vertical", hour: "10", minute: "09"}},
                 {label: i18n("Wide pill"), value: 3, source: Qt.resolvedUrl("../everything/EveryDigital.qml"), props: {layout: "horizontal", hour: "10", minute: "09"}},
                 {label: i18n("Square"), value: 4, source: Qt.resolvedUrl("../everything/EveryDigital.qml"), props: {layout: "square", hour: "10", minute: "09"}}
@@ -267,42 +182,7 @@ KCM.SimpleKCM {
             opacity: 0.3
         }
 
-        // --- Theme (always visible) ---
-        RowLayout {
-            Label {
-                text: i18n("Theme:")
-                Layout.alignment: Qt.AlignLeft
-            }
-
-            ComboBox {
-                id: themeModeCombo
-                model: [i18n("Dark"), i18n("Light"), i18n("Follow System")]
-                Layout.fillWidth: true
-            }
-        }
-
-        Label {
-            text: i18n("Dark: Nothing's signature dark aesthetic. Light: Nothing's light palette. Follow System: Matches your KDE dark/light scheme.")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
-
-        RowLayout {
-            CheckBox {
-                id: useSystemAccentCheckbox
-                text: i18n("Use system accent color")
-            }
-        }
-
-        Label {
-            text: i18n("Replace Nothing's red accent with your KDE system highlight color while keeping the Nothing aesthetic.")
-            font.pointSize: 9
-            opacity: 0.7
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
+        Glassy.ThemeSettings { id: theme }
 
         Item {
             Layout.fillHeight: true

@@ -15,6 +15,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
     FontLoader { id: serifFont; source: Qt.resolvedUrl("../fonts/serif.otf") }
     FontLoader { id: serifLightFont; source: Qt.resolvedUrl("../fonts/serif-light.otf") }

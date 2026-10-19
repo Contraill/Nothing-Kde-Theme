@@ -8,11 +8,12 @@ import org.kde.kirigami as Kirigami
 Kirigami.FormLayout {
     id: generalPage
 
-    property alias cfg_widgetVariant: styleCombo.currentIndex
+    property int cfg_widgetVariant
     property alias cfg_deviceType: deviceTypeCombo.currentValue
     property alias cfg_updateInterval: updateIntervalSpin.value
-    property alias cfg_themeMode: themeModeCombo.currentIndex
-    property alias cfg_useSystemAccent: useSystemAccentCheckbox.checked
+    property alias cfg_themeMode: theme.themeMode
+    property alias cfg_useSystemAccent: theme.useSystemAccent
+    property alias cfg_monochrome: theme.monochrome
     property string cfg_customIconMappings: ""
     property string cfg_deviceHistory: ""
 
@@ -39,44 +40,22 @@ Kirigami.FormLayout {
         }
     }
 
-    QQC2.ComboBox {
-        id: styleCombo
-        Kirigami.FormData.label: i18n("Style:")
-        model: [i18n("Devices"), i18n("EveryThing circle"), i18n("EveryThing pill")]
-    }
-    Glassy.EveryStyleCards {
+    Glassy.StyleCards {
         Layout.fillWidth: true
-        selected: styleCombo.currentIndex
-        onPicked: value => styleCombo.currentIndex = value
+        selected: generalPage.cfg_widgetVariant
+        onPicked: value => generalPage.cfg_widgetVariant = value
+        themeMode: theme.themeMode
+        useSystemAccent: theme.useSystemAccent
+        monochrome: theme.monochrome
         styles: [
+            {label: i18n("Devices"), value: 0, image: Qt.resolvedUrl("../previews/style-0-dark.png")},
             {label: i18n("Circle"), value: 1, source: Qt.resolvedUrl("../everything/EveryBattery.qml"), props: {round: true, percent: 78, charging: true}},
             {label: i18n("Pill"), value: 2, source: Qt.resolvedUrl("../everything/EveryBattery.qml"), props: {round: false, percent: 78}}
         ]
     }
 
-    // Theme Section
-    Item {
-        Kirigami.FormData.isSection: true
-        Kirigami.FormData.label: i18n("Theme")
-    }
-
-    QQC2.ComboBox {
-        id: themeModeCombo
-        Kirigami.FormData.label: i18n("Theme:")
-        model: [i18n("Dark"), i18n("Light"), i18n("Follow System")]
-    }
-
-    QQC2.CheckBox {
-        id: useSystemAccentCheckbox
-        text: i18n("Use system accent color")
-        Kirigami.FormData.label: ""
-    }
-
-    QQC2.Label {
-        text: i18n("Replace Nothing's red accent with your KDE system highlight color while keeping the Nothing aesthetic.")
-        wrapMode: Text.WordWrap
-        font.pointSize: Kirigami.Theme.smallFont.pointSize
-        opacity: 0.6
+    Glassy.ThemeSettings {
+        id: theme
         Layout.fillWidth: true
     }
 

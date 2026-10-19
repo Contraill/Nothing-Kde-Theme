@@ -20,6 +20,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
     Glassy.DotFont { id: dotFont }
 
@@ -131,7 +132,7 @@ PlasmoidItem {
                     height: width
                     count: 60
                     value: 1 - root.remaining / root.total
-                    litColor: root.phase === 0 ? nColors.accent : nColors.textPrimary
+                    litColor: nColors.textPrimary
                     dimColor: nColors.divider
                 }
                 Column {

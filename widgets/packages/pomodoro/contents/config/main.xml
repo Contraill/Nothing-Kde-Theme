@@ -12,6 +12,9 @@
     <entry name="useSystemAccent" type="Bool">
       <default>true</default>
     </entry>
+    <entry name="monochrome" type="Bool">
+        <default>false</default>
+    </entry>
     <entry name="focusMinutes" type="Int">
       <default>25</default>
     </entry>

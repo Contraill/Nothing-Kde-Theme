@@ -30,7 +30,7 @@ Item {
         text: clock.time
         face: clock.face.startsWith("blocks") ? "blocks" : "bubbles"
         cell: clock.cell
-        color: clock.face === "bubbles" ? clock.colors.accent : clock.colors.textPrimary
+        color: clock.colors.textPrimary
         secondColor: clock.face === "blocks-dual" ? clock.colors.textMuted : color
         colonColor: clock.colors.accent
         dotColor: clock.face === "bubbles" ? clock.colors.background : clock.colors.accent

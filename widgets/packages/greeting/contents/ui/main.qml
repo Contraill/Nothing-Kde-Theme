@@ -17,6 +17,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
     Glassy.DotFont { id: dotFont }
 
@@ -33,7 +34,7 @@ PlasmoidItem {
 
     fullRepresentation: EveryGreeting {
         Layout.preferredWidth: root.square ? 200 : 400
-        Layout.preferredHeight: root.square ? 200 : 105
+        Layout.preferredHeight: root.square ? 200 : 115
         Layout.minimumWidth: root.square ? 150 : 240
         Layout.minimumHeight: root.square ? 150 : 60
         colors: nColors

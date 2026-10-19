@@ -6,11 +6,11 @@ import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCMUtils
 import org.kde.kdeconnect as KDEConnect
-import org.kde.plasma.plasma5support as P5Support
 import "../../../../shared" as Glassy
 
 // The first paired, reachable KDE Connect device, read the way Plasma's own
-// KDE Connect applet does (plugin checkers, then the plugin interfaces).
+// KDE Connect applet does: one delegate per device row, so a phone that drops
+// and comes back gets fresh plugin checkers instead of keeping stale ones.
 Item {
     id: root
     property QtObject colors
@@ -20,48 +20,12 @@ Item {
         id: devices
         displayFilter: KDEConnect.DevicesModel.Paired | KDEConnect.DevicesModel.Reachable
     }
-    readonly property string deviceId: devices.count > 0 ? String(devices.data(devices.index(0, 0), KDEConnect.DevicesModel.IdModelRole) ?? "") : ""
-    readonly property string deviceName: devices.count > 0 ? String(devices.data(devices.index(0, 0), KDEConnect.DevicesModel.NameModelRole) ?? "") : ""
-    readonly property KDEConnect.DeviceDbusInterface device: deviceId ? KDEConnect.DeviceDbusInterfaceFactory.create(deviceId) : null
-
-    readonly property KDEConnect.PluginChecker batteryPlugin: KDEConnect.PluginChecker { pluginName: "battery"; device: root.device }
-    readonly property KDEConnect.PluginChecker findPlugin: KDEConnect.PluginChecker { pluginName: "findmyphone"; device: root.device }
-    // PluginChecker only asks on creation; the device arrives later.
-    onDeviceChanged: { batteryPlugin.pluginsChanged(); findPlugin.pluginsChanged(); }
-    readonly property KDEConnect.BatteryDbusInterface battery: batteryPlugin.available ? KDEConnect.DeviceBatteryDbusInterfaceFactory.create(deviceId) : null
-    readonly property KDEConnect.FindMyPhoneDbusInterface finder: findPlugin.available ? KDEConnect.FindMyPhoneDbusInterfaceFactory.create(deviceId) : null
-    readonly property int charge: battery?.charge ?? -1
-    readonly property bool charging: battery?.isCharging ?? false
-
-    P5Support.DataSource {
-        id: launcher
-        engine: "executable"
-        onNewData: sourceName => disconnectSource(sourceName)
-    }
-
-    component ActionButton: QQC2.AbstractButton {
-        id: button
-        property string iconName: ""
-        implicitWidth: 36
-        implicitHeight: 36
-        background: Rectangle {
-            radius: width / 2
-            color: button.hovered ? root.colors.alpha(root.colors.textPrimary, 0.16) : root.colors.alpha(root.colors.textPrimary, 0.08)
-        }
-        contentItem: Kirigami.Icon {
-            source: button.iconName
-            isMask: true
-            color: root.colors.textPrimary
-            implicitWidth: 18
-            implicitHeight: 18
-        }
-    }
 
     // No phone: say so and offer the pairing settings.
     ColumnLayout {
         anchors.centerIn: parent
         width: parent.width
-        visible: !root.device
+        visible: phones.count === 0
         spacing: 10
         Kirigami.Icon {
             Layout.alignment: Qt.AlignHCenter
@@ -85,60 +49,83 @@ Item {
         }
     }
 
-    ColumnLayout {
-        anchors.fill: parent
-        visible: !!root.device
-        spacing: 8
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Glassy.DotRing {
-                id: ring
-                anchors.centerIn: parent
-                width: Math.min(parent.width, parent.height)
-                height: width
-                count: 36
-                value: Math.max(0, root.charge) / 100
-                // Low battery takes Nothing's red signal; charging the accent.
-                litColor: root.charging ? root.colors.accent : root.charge >= 0 && root.charge <= 15 ? root.colors.error : root.colors.textPrimary
-                dimColor: root.colors.divider
-            }
-            Column {
-                anchors.centerIn: ring
-                spacing: 2
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: root.charge >= 0 ? root.charge + "%" : "–"
-                    font.family: root.dotFamily
-                    font.pixelSize: ring.width * 0.24
-                    color: root.colors.textPrimary
+    Repeater {
+        id: phones
+        model: devices
+        delegate: ColumnLayout {
+            id: phone
+            required property int index
+            required property string deviceId
+            required property string name
+            readonly property KDEConnect.DeviceDbusInterface device: KDEConnect.DeviceDbusInterfaceFactory.create(deviceId)
+            readonly property KDEConnect.PluginChecker batteryPlugin: KDEConnect.PluginChecker { pluginName: "battery"; device: phone.device }
+            readonly property KDEConnect.PluginChecker findPlugin: KDEConnect.PluginChecker { pluginName: "findmyphone"; device: phone.device }
+            readonly property KDEConnect.BatteryDbusInterface battery: batteryPlugin.available ? KDEConnect.DeviceBatteryDbusInterfaceFactory.create(deviceId) : null
+            readonly property KDEConnect.FindMyPhoneDbusInterface finder: findPlugin.available ? KDEConnect.FindMyPhoneDbusInterfaceFactory.create(deviceId) : null
+            readonly property int charge: battery?.charge ?? -1
+            readonly property bool charging: battery?.isCharging ?? false
+            readonly property bool low: charge >= 0 && charge <= 15 && !charging
+
+            anchors.fill: parent
+            visible: index === 0
+            spacing: 8
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Glassy.DotRing {
+                    id: ring
+                    anchors.centerIn: parent
+                    width: Math.min(parent.width, parent.height)
+                    height: width
+                    count: 36
+                    value: Math.max(0, phone.charge) / 100
+                    // Ink; Nothing red only when the phone runs low.
+                    litColor: phone.low ? root.colors.accent : root.colors.textPrimary
+                    dimColor: root.colors.divider
                 }
-                Text {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    width: ring.width * 0.7
-                    text: root.charging ? i18n("CHARGING") : root.deviceName
-                    horizontalAlignment: Text.AlignHCenter
-                    elide: Text.ElideRight
-                    font.pixelSize: 10
-                    font.letterSpacing: 1.2
-                    color: root.charging ? root.colors.accent : root.colors.textSecondary
+                Column {
+                    anchors.centerIn: ring
+                    spacing: 2
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: phone.charge >= 0 ? phone.charge + "%" : "–"
+                        font.family: root.dotFamily
+                        font.pixelSize: ring.width * 0.24
+                        color: root.colors.textPrimary
+                    }
+                    Text {
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: ring.width * 0.7
+                        text: phone.charging ? i18n("CHARGING") : phone.name
+                        horizontalAlignment: Text.AlignHCenter
+                        elide: Text.ElideRight
+                        font.pixelSize: 10
+                        font.letterSpacing: 1.2
+                        color: phone.charging ? root.colors.accent : root.colors.textSecondary
+                    }
                 }
             }
-        }
-        RowLayout {
-            Layout.alignment: Qt.AlignHCenter
-            spacing: 14
-            ActionButton {
-                visible: !!root.finder
-                iconName: "audio-volume-high-symbolic"
+            QQC2.AbstractButton {
+                id: ringButton
+                Layout.alignment: Qt.AlignHCenter
+                visible: !!phone.finder
+                implicitWidth: 36
+                implicitHeight: 36
                 Accessible.name: i18n("Ring the phone")
-                onClicked: root.finder.ring()
-            }
-            ActionButton {
-                iconName: "kdeconnect-symbolic"
-                Accessible.name: i18n("Open KDE Connect")
-                // setsid: the app must not live and die with plasmashell.
-                onClicked: launcher.connectSource("setsid -f kdeconnect-app --device " + root.deviceId.replace(/[^A-Za-z0-9_]/g, ""))
+                QQC2.ToolTip.text: Accessible.name
+                QQC2.ToolTip.visible: hovered
+                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+                onClicked: phone.finder.ring()
+                background: Rectangle {
+                    radius: width / 2
+                    color: root.colors.alpha(root.colors.textPrimary, ringButton.hovered ? 0.16 : 0.08)
+                }
+                contentItem: Glassy.DotGlyph {
+                    name: "volume"
+                    color: root.colors.textPrimary
+                    implicitWidth: 18
+                    implicitHeight: 18
+                }
             }
         }
     }

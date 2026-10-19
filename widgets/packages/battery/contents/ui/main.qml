@@ -19,6 +19,7 @@ PlasmoidItem {
         id: nColors
         themeMode: Plasmoid.configuration.themeMode
         useSystemAccent: Plasmoid.configuration.useSystemAccent
+        monochrome: Plasmoid.configuration.monochrome
     }
 
     // Battery data properties
@@ -293,7 +294,6 @@ PlasmoidItem {
         // EveryThing-UI's circle and pill: this computer's battery.
         EveryBattery {
             anchors.fill: parent
-            anchors.margins: 4
             visible: root.variant > 0
             colors: nColors
             family: everyFont.name

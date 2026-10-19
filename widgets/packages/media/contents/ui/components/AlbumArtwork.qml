@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Effects
-import org.kde.kirigami as Kirigami
+import "../../../../../shared" as Glassy
 
 Item {
     id: artworkRoot
@@ -12,8 +12,7 @@ Item {
     property string artUrl: ""
     property int cornerRadius: 20
     property color backgroundColor: colors.background
-    property color fallbackIconColor: colors.textDisabled
-    property string fallbackIcon: "media-optical-audio"
+    property color fallbackIconColor: colors.textMuted
 
     // Source image (hidden)
     Image {
@@ -62,20 +61,14 @@ Item {
         z: 2
     }
 
-    // Fallback when no album art
-    Rectangle {
-        anchors.fill: parent
-        color: "transparent"
-        radius: artworkRoot.cornerRadius
+    // No cover (a browser video, say): the dot note, as on the other players.
+    Glassy.DotGlyph {
+        anchors.centerIn: parent
+        width: Math.min(parent.width, parent.height) * 0.4
+        height: width
         visible: albumCover.status !== Image.Ready
         z: 2
-
-        Kirigami.Icon {
-            anchors.centerIn: parent
-            width: parent.width * 0.4
-            height: parent.height * 0.4
-            source: artworkRoot.fallbackIcon
-            color: artworkRoot.fallbackIconColor
-        }
+        name: "note"
+        color: artworkRoot.fallbackIconColor
     }
 }

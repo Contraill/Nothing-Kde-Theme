@@ -43,7 +43,7 @@ Glassy.EveryFrame {
         visible: f.layout === "square"
         px: day.x / f.s + day.width / f.s + 8; py: 150 - 10; pt: 12; align: "LeftBottom"; upper: true
         value: Qt.locale().standaloneMonthName(f.now.getMonth(), Locale.LongFormat)
-        color: f.colors.accent
+        color: f.colors.textSecondary
     }
     Label {
         visible: f.layout === "square"
