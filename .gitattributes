@@ -1,0 +1,4 @@
+# GitHub's language bar shows the product: tests and KDE's own sources are left out.
+tests/** linguist-detectable=false
+notification-skin/tests/** linguist-detectable=false
+notification-skin/upstream-cache/** linguist-vendored
