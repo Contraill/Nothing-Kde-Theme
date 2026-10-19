@@ -12,6 +12,10 @@ Item {
     property string labelFont: "sans-serif"
     property var locale: Qt.locale()
     property int page: 0
+    // The month page: 0 its own grid, 1 a month of dots, 2 of numbers.
+    property int monthStyle: 0
+    property string dotFamily: ""
+    onPageChanged: if (page === 0 && month.item) month.item.monthOffset = 0
     property date monthDate: new Date(today.getFullYear(), today.getMonth(), 1, 12)
     readonly property bool turning: turn.running
     readonly property int firstWeekday: locale.firstDayOfWeek % 7
@@ -63,8 +67,25 @@ Item {
                 horizontalAlignment: Text.AlignHCenter; verticalAlignment: Text.AlignVCenter
             }
         }
-        ColumnLayout {
+        Loader {
+            id: month
+            anchors.fill: parent
+            anchors.margins: 6
+            anchors.bottomMargin: 26
+            active: root.monthStyle > 0
             visible: root.page === 1
+            Component.onCompleted: setSource(Qt.resolvedUrl("../everything/EveryDate.qml"), {colors: root.colors})
+            onLoaded: {
+                item.transparent = true;
+                item.inset = 0;
+                item.interactive = false;
+                item.layout = Qt.binding(() => root.monthStyle === 2 ? "numbers" : "dots");
+                item.family = Qt.binding(() => root.dotFamily);
+                item.now = Qt.binding(() => root.today);
+            }
+        }
+        ColumnLayout {
+            visible: root.page === 1 && root.monthStyle === 0
             anchors.fill: parent; anchors.margins: 12; anchors.bottomMargin: 32; spacing: 4
             RowLayout {
                 Layout.fillWidth: true; spacing: 2

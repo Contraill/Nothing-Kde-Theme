@@ -36,6 +36,9 @@ msgstr "Görselin çevresinde boşluk bırakarak arka planı çerçeve olarak g�
 msgid "Airplane"
 msgstr "Uçak"
 
+msgid "All glyph widgets, however many, play one show to the same beat: soft passages glow softly and hits flash. On every beat the lead moves on to the next light, in a walk that changes every eight beats; the zone is a tier of loudness, so harder hits light more zones and the hardest light all. Auto spreads the lights over the zones in the order they were added."
+msgstr "Kaç tane olursa olsun tüm glyph widget'ları aynı vuruşa tek bir gösteri sunar: sakin bölümler yumuşakça ışır, vuruşlar parlar. Her vuruşta öndeki ışık bir sonrakine geçer ve bu yürüyüş her sekiz vuruşta değişir; bölge bir şiddet kademesidir, vuruş sertleştikçe daha çok bölge yanar, en serti hepsini yakar. Otomatik, ışıkları eklenme sırasına göre bölgelere dağıtır."
+
 msgid "Animations made for the phone's Glyph Matrix can be shown as GIFs; Glyph Toys themselves are Android apps and cannot run here."
 msgstr "Telefonun Glyph Matrisi için yapılmış animasyonlar GIF olarak gösterilebilir; Glyph Toy'ların kendisi Android uygulamasıdır ve burada çalışamaz."
 
@@ -44,6 +47,9 @@ msgstr "Görünüm"
 
 msgid "Arc"
 msgstr "Yay"
+
+msgid "Arc length:"
+msgstr "Yay uzunluğu:"
 
 msgid "Auto"
 msgstr "Otomatik"
@@ -99,6 +105,9 @@ msgstr "ŞARJ OLUYOR"
 msgid "CPU"
 msgstr "CPU"
 
+msgid "Calendar:"
+msgstr "Takvim:"
+
 msgid "Cards"
 msgstr "Kartlar"
 
@@ -137,6 +146,9 @@ msgstr "Dairesel"
 
 msgid "City Name:"
 msgstr "Şehir adı:"
+
+msgid "Classic"
+msgstr "Klasik"
 
 msgid "Clear"
 msgstr "Açık"
@@ -276,6 +288,9 @@ msgstr "Fahrenhayt (°F)"
 msgid "Failed to load image"
 msgstr "Görsel yüklenemedi"
 
+msgid "Fill along with the beat, like a progress bar"
+msgstr "Vuruşla birlikte ilerleme çubuğu gibi dolsun"
+
 msgid "Fit (Show All)"
 msgstr "Sığdır (tamamını göster)"
 
@@ -323,9 +338,6 @@ msgstr "Oyun kumandası"
 
 msgid "General"
 msgstr "Genel"
-
-msgid "Glyph widgets hear the same beat: zone 1 flashes on every hit, zone 5 only on the strongest, so several together light further the harder the music hits. Auto numbers them in the order they were added."
-msgstr "Glyph widget'ları aynı vuruşu duyar: bölge 1 her vuruşta, bölge 5 yalnızca en güçlülerinde parlar; birkaçı birlikte, müzik sertleştikçe daha çok yanar. Otomatik, onları eklenme sırasına göre numaralar."
 
 msgid "Good afternoon"
 msgstr "İyi öğleden sonralar"
@@ -570,6 +582,9 @@ msgstr "Kalan"
 msgid "Reset"
 msgstr "Sıfırla"
 
+msgid "Resize the widget to make it longer: the line runs corner to corner and the strip gains lights."
+msgstr "Uzatmak için widget'ı yeniden boyutlandır: çizgi köşeden köşeye uzanır, şerit yeni ışıklar kazanır."
+
 msgid "Right-click to configure"
 msgstr "Ayarlamak için sağ tıklayın"
 
@@ -717,6 +732,9 @@ msgstr "Sıcaklık birimi:"
 msgid "The bands follow how loud the sound output is; raise the sensitivity for quiet sound."
 msgstr "Çubuklar ses çıkışının yüksekliğini izler; ses kısıkken hassasiyeti artır."
 
+msgid "The other diagonal"
+msgstr "Ters köşegen"
+
 msgid "Theme:"
 msgstr "Tema:"
 
@@ -740,6 +758,9 @@ msgstr "Geçiş:"
 
 msgid "Toggles"
 msgstr "Anahtarlar"
+
+msgid "Turn the page at its corner to see the calendar; the wheel leafs through the months."
+msgstr "Takvimi görmek için sayfayı köşesinden çevir; tekerlek aylar arasında gezdirir."
 
 msgid "Two tone"
 msgstr "İki ton"

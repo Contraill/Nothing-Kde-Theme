@@ -20,7 +20,9 @@ PlasmoidItem {
     FontLoader { id: serifFont; source: Qt.resolvedUrl("../fonts/serif.otf") }
     FontLoader { id: serifLightFont; source: Qt.resolvedUrl("../fonts/serif-light.otf") }
     Timer { interval: 60000; running: true; repeat: true; onTriggered: root.today = new Date() }
-    readonly property int variant: Plasmoid.configuration.widgetVariant
+    // 2 and 3, the month of dots and of numbers, are now the pages' calendar.
+    readonly property int variant: Plasmoid.configuration.widgetVariant === 1 ? 1 : 0
+    readonly property int monthStyle: Plasmoid.configuration.widgetVariant >= 2 ? Plasmoid.configuration.widgetVariant - 1 : Plasmoid.configuration.monthStyle
     Glassy.DotFont { id: dotFont }
     fullRepresentation: Loader {
         Layout.preferredWidth: 200; Layout.preferredHeight: root.variant === 1 ? 110 : 200
@@ -33,6 +35,8 @@ PlasmoidItem {
         id: pagesComponent
         DatePages {
             colors: nColors; today: root.today
+            monthStyle: root.monthStyle
+            dotFamily: dotFont.name
             numberFont: serifFont.status === FontLoader.Ready ? serifFont.name : "serif"
             labelFont: serifLightFont.status === FontLoader.Ready ? serifLightFont.name : "sans-serif"
         }
@@ -43,7 +47,7 @@ PlasmoidItem {
             colors: nColors
             family: dotFont.name
             now: root.today
-            layout: ["pill", "dots", "numbers"][root.variant - 1] ?? "pill"
+            layout: "pill"
         }
     }
 }

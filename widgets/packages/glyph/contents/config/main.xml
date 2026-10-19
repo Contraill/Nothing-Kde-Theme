@@ -10,9 +10,23 @@
     <entry name="widgetVariant" type="Int">
       <default>0</default>
     </entry>
-    <!-- The zone, 1 to 5; 0 numbers the glyph widgets in the order they were added -->
+    <!-- The zone, a tier of loudness from 1 to 5; 0 spreads the lights over the tiers in the order they were added -->
     <entry name="glyphZone" type="Int">
       <default>0</default>
+    </entry>
+    <!-- The line and the arc fill along with the beat instead of lighting whole -->
+    <entry name="progress" type="Bool">
+      <default>false</default>
+    </entry>
+    <!-- The line runs the other diagonal -->
+    <entry name="mirror" type="Bool">
+      <default>false</default>
+    </entry>
+    <!-- How far round the arc goes, in degrees -->
+    <entry name="arcSweep" type="Int">
+      <default>255</default>
+      <min>60</min>
+      <max>330</max>
     </entry>
     <!-- How readily a beat lights, in percent -->
     <entry name="sensitivity" type="Int">

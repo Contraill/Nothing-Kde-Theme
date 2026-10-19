@@ -33,6 +33,12 @@ STYLES = {
     'progress': ('widgetVariant', {0: '200x200', 1: '200x200'}),
     'toggles': ('widgetVariant', {0: '270x170', 1: '190x84'}),
 }
+# Faces a click shows, rendered by starting the widget on them: package:
+# [(file name, config key, value, size, staged file, text, replacement)].
+TURNED = {
+    'date': [('calendar-0', 'widgetVariant', 0, '200x200', 'contents/ui/components/DatePages.qml',
+              'property int page: 0\n', 'property int page: 1\n')],
+}
 # Their numbers come from ksystemstats on the session bus; nothing personal shows.
 SESSION_BUS = {'system'}
 # Twice the 120 x 76 preview area of a settings card.
@@ -51,9 +57,14 @@ def photo_frame(out):
     image.save(out, optimize=True)
 
 
-def render(renderer, package, key, style, size, mode, out):
+def render(renderer, package, key, style, size, mode, out, patch=None):
     with tempfile.TemporaryDirectory(prefix='nothing-preview-') as td:
         staged = prepare(ROOT / 'widgets/packages' / package, Path(td) / 'applet')
+        if patch:
+            path, text, replacement = patch
+            source = (staged / path).read_text()
+            assert text in source, (package, path, text)
+            (staged / path).write_text(source.replace(text, replacement))
         config = staged / 'contents/config/main.xml'
         text = config.read_text()
         for name, value in ((key, style), ('themeMode', mode)):
@@ -92,3 +103,9 @@ if __name__ == '__main__':
                 print(out.relative_to(ROOT), flush=True)
     for name in ('dark', 'light'):
         photo_frame(ROOT / f'widgets/packages/photo/contents/ui/previews/style-0-{name}.png')
+    for package, faces in TURNED.items():
+        for file, key, value, size, path, text, replacement in faces:
+            for mode, name in ((0, 'dark'), (1, 'light')):
+                out = ROOT / 'widgets/packages' / package / 'contents/ui/previews' / f'{file}-{name}.png'
+                render(args.renderer, package, key, value, size, mode, out, (path, text, replacement))
+                print(out.relative_to(ROOT), flush=True)

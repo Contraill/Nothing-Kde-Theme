@@ -6,8 +6,12 @@
   <kcfgfile name=""/>
 
   <group name="General">
-    <!-- 0 pages; EveryThing-UI: 1 pill, 2 month of dots, 3 month of numbers -->
+    <!-- 0 pages, 1 pill; 2 and 3 were the month of dots and of numbers, now a calendar of the pages -->
     <entry name="widgetVariant" type="Int">
+      <default>0</default>
+    </entry>
+    <!-- The pages' calendar: 0 its own grid, 1 a month of dots, 2 of numbers -->
+    <entry name="monthStyle" type="Int">
       <default>0</default>
     </entry>
     <entry name="themeMode" type="Int">

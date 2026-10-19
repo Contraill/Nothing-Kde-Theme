@@ -19,6 +19,8 @@ Glassy.EveryFrame {
 
     // 0 the front (the pill, the month), 1 the back (the week, the day).
     property int page: 0
+    // Off inside the pages: their corner turns them, not a click here.
+    property bool interactive: true
     property int monthOffset: 0
     readonly property bool turning: turn.running
     function togglePage() { if (!turning) turn.start() }
@@ -57,11 +59,11 @@ Glassy.EveryFrame {
 
     MouseArea {
         anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
+        cursorShape: f.interactive ? Qt.PointingHandCursor : Qt.ArrowCursor
         Accessible.role: Accessible.Button
         Accessible.name: f.layout === "pill" ? (f.page === 0 ? i18n("Show the week") : i18n("Show the date"))
             : f.page === 0 ? i18n("Show the day") : i18n("Show the month")
-        onClicked: f.togglePage()
+        onClicked: if (f.interactive) f.togglePage()
         // One notch a month, while the month shows.
         property real wheelRemainder: 0
         onWheel: wheel => {

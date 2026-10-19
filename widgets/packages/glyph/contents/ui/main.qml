@@ -3,13 +3,14 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.private.volume as PA
 import "components"
+import "."
 
-// One glyph light that flashes on the beat of what is playing. Every glyph
-// widget reads the same sound and steps the same way on each sample, so
-// several play together: each has a zone, a step of loudness to light at,
-// and the louder the beat the more zones flash.
+// One glyph light that plays the music with every other glyph widget: they
+// share one beat (Beat.qml), so together they put on one show. Soft passages
+// glow softly, hits flash sharply: the step from one to the other is the
+// point. On each beat the lead moves to the next zone, the louder a hit the
+// more zones join it, and the strongest light everything.
 PlasmoidItem {
     id: root
     preferredRepresentation: fullRepresentation
@@ -24,65 +25,69 @@ PlasmoidItem {
 
     readonly property string shape: ["ring", "arc", "strip", "line", "dot"][Plasmoid.configuration.widgetVariant] ?? "ring"
 
-    // Auto: the glyph widgets of this desktop numbered in the order they were added.
-    readonly property int autoZone: {
-        const ids = (Plasmoid.containment?.applets ?? []).filter(a => a.pluginName === Plasmoid.pluginName).map(a => a.id).sort((a, b) => a - b);
-        return Math.max(0, ids.indexOf(Plasmoid.id)) % 5;
-    }
-    readonly property int zone: Plasmoid.configuration.glyphZone > 0 ? Plasmoid.configuration.glyphZone - 1 : autoZone
-    // The loudness a zone lights at: zone 1 on every beat, zone 5 on the strongest.
-    readonly property real threshold: 0.25 + zone * 0.15
+    // This desktop's glyph widgets in the order they were added: each light's
+    // place in the show, however many there are.
+    readonly property var glyphs: (Plasmoid.containment?.applets ?? []).filter(a => a.pluginName === Plasmoid.pluginName).map(a => a.id).sort((a, b) => a - b)
+    readonly property int count: Math.max(1, glyphs.length)
+    readonly property int rank: Math.max(0, glyphs.indexOf(Plasmoid.id))
+    // The zone is a tier of loudness, 1 lighting on every hit and 5 on the
+    // hardest; Auto spreads the lights over the five tiers by their place.
+    readonly property int zone: Plasmoid.configuration.glyphZone > 0 ? Plasmoid.configuration.glyphZone - 1 : Math.min(4, Math.floor(rank * 5 / count))
 
-    // The model connects to PulseAudio; the monitor reads the output's peak.
-    readonly property PA.SinkModel sinks: PA.SinkModel {}
-    PA.VolumeMonitor {
-        id: monitor
-        target: PA.PreferredDevice.sink
-    }
-
-    // The beat: how far a sample stands over the song's own running loudness,
-    // and how fast it rose, so compressed music still shows its hits. A hit
-    // flashes at once and fades in a fifth of a second.
-    property real mean: 0
-    property real spread: 0.05
-    property real previous: 0
-    property real hit: 0
-    property double lastSample: 0
-    function step(level) {
-        mean += (level - mean) * 0.04;
-        spread += (Math.abs(level - mean) - spread) * 0.05;
-        const above = Math.max(0, level - mean) / Math.max(0.02, 2.2 * spread);
-        const rise = Math.max(0, level - previous) / Math.max(0.02, 3 * spread);
-        previous = level;
-        const gain = Plasmoid.configuration.sensitivity / 100;
-        hit = Math.max(hit * 0.62, Math.min(1, (above * 0.7 + rise * 0.6) * gain));
-    }
-    // Every widget steps on the same samples, so they stay in time.
-    Connections {
-        target: monitor
-        function onVolumeChanged() {
-            root.lastSample = Date.now();
-            root.step(monitor.volume);
+    // Whether this light leads on beat `b`. Every eight beats the walk
+    // changes, so many lights neither crowd nor repeat: forward along the
+    // lights, back, every other one, then out from the middle.
+    function leads(b) {
+        const n = count;
+        switch (Math.floor(b / 8) % 4) {
+        case 0: return b % n === rank;
+        case 1: return n - 1 - b % n === rank;
+        case 2: return n > 2 ? rank % 2 === b % 2 && Math.floor(rank / 2) % 2 === Math.floor(b / 2) % 2 : b % n === rank;
+        default: {
+            const middle = (n - 1) / 2;
+            return Math.round(Math.abs(rank - middle) - (middle % 1)) === b % Math.ceil(n / 2);
+        }
         }
     }
-    // A steady sample sends no signal: keep fading meanwhile.
-    Timer {
-        interval: 40
-        repeat: true
-        running: root.hit > 0.01
-        onTriggered: if (Date.now() - root.lastSample > 60) root.step(monitor.volume)
+
+    Component.onCompleted: Beat.users += 1
+    Component.onDestruction: Beat.users -= 1
+
+    readonly property real gain: Plasmoid.configuration.sensitivity / 100
+    readonly property real hit: Math.min(1, Beat.hit * gain)
+    readonly property real body: Math.min(1, Beat.body * gain)
+    readonly property double since: Beat.now - Beat.beatTime
+
+    // The light of part `n` of this widget (the ring has four; the rest one).
+    function light(n) {
+        // The ring's further parts need harder hits: all four only on the hardest.
+        const step = 0.30 + zone * 0.13 + n * 0.2;
+        // Soft: the music's body, a gentle glow well under a flash.
+        const soft = Math.max(0, Math.min(1, (body - zone * 0.12) / 0.6)) * 0.38;
+        // Sharp: the hit over this zone's step.
+        const sharp = Math.max(0, Math.min(1, (hit - step) / 0.1));
+        // In the ring the lead's flash turns from part to part.
+        const lead = leads(Beat.beats) && (shape !== "ring" || (Beat.beats + rank) % 4 === n);
+        const chase = lead ? Beat.fade(since, 300) * Math.min(1, Beat.beatStrength * gain * 1.1) : 0;
+        // The hardest hits, a few a minute, light everything at once.
+        const blast = Beat.beatStrength * gain > 1.25 ? Beat.fade(since, 170) : 0;
+        return Math.max(soft, sharp, chase, blast);
     }
 
     fullRepresentation: GlyphLight {
-        readonly property real side: root.shape === "dot" ? 60 : 160
-        Layout.preferredWidth: root.shape === "strip" ? 44 : side
-        Layout.preferredHeight: root.shape === "strip" ? 180 : side
+        readonly property real side: root.shape === "dot" ? 72 : 180
+        Layout.preferredWidth: root.shape === "strip" ? 64 : side
+        Layout.preferredHeight: root.shape === "strip" ? 200 : side
         Layout.minimumWidth: 24
         Layout.minimumHeight: 24
         colors: nColors
         shape: root.shape
         transparent: Plasmoid.configuration.transparent
-        level: root.hit
-        threshold: root.threshold
+        light: n => root.light(n)
+        // The strip, and the line and arc as a progress, fill with the beat.
+        fill: Math.max(root.hit, root.body * 0.6)
+        progress: Plasmoid.configuration.progress
+        sweep: Plasmoid.configuration.arcSweep
+        mirror: Plasmoid.configuration.mirror
     }
 }
