@@ -9,6 +9,7 @@ import "components"
 import "components/circle"
 import "components/square"
 import "components/wide"
+import "everything"
 
 PlasmoidItem {
     id: root
@@ -446,8 +447,22 @@ PlasmoidItem {
             if (root.widgetVariant === 0) return weatherFullComponent
             if (root.widgetVariant === 1) return circularSingleComponent
             if (root.widgetVariant === 2) return circularMultiComponent
+            if (root.widgetVariant === 3) return everyComponent
 
             return selectorComponent
+        }
+    }
+
+    // 3: EveryThing-UI's square.
+    Glassy.DotFont { id: everyFont }
+    Component {
+        id: everyComponent
+        EveryWeather {
+            colors: nColors
+            family: everyFont.name
+            temperature: root.currentTemp
+            condition: root.condition
+            code: root.weatherCode
         }
     }
 

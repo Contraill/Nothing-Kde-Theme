@@ -17,5 +17,12 @@
     "panel representations",
     "Bluetooth service configuration"
   ],
-  "storePublication": "blocked pending font/artwork permission"
+  "storePublication": "blocked pending font/artwork permission",
+  "everythingUi": {
+    "repository": "https://github.com/Prince-1652/EveryThing-UI",
+    "commit": "d9c042967b6739b6376b69d6eda54521df4022b7",
+    "license": "MIT (shared/EveryThing-UI-LICENSE.txt)",
+    "adapted": "Rainmeter skin layouts redrawn in QML (contents/ui/everything/), pet frames redrawn as dot sprites (assets/pets/build-pets.py)",
+    "notIncluded": "its fonts (Ndot 57, 8Digit Pin, Dot Font, E1, E2, LIBRARY 3 AM, Nothing Font 5x7), icons, wallpapers, settings skins and the recycle bin"
+  }
 }

@@ -7,3 +7,6 @@ arrow and dotted clock styles) are described as personal/non-commercial only; we
 artwork provenance is incomplete. Do NOT publish these bundled assets
 to KDE Store until permission or appropriately licensed replacements
 are obtained. The GPL code license does not clear those asset rights.
+
+Some styles are designs from EveryThing-UI by Prince-1652 (MIT; notice in
+contents/ui/glassy/EveryThing-UI-LICENSE.txt), redrawn in contents/ui/everything/.

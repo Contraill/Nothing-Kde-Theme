@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kcmutils as KCM
 import org.kde.kirigami as Kirigami
+import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
     id: configGeneral
@@ -141,6 +142,14 @@ KCM.SimpleKCM {
             Layout.preferredHeight: 1
             color: "#333333"
             opacity: 0.3
+        }
+
+        Glassy.EveryStyleCards {
+            Layout.fillWidth: true
+            selected: cfg_widgetVariant
+            onPicked: value => cfg_widgetVariant = value
+            styles: [{label: i18n("Square"), value: 3, source: Qt.resolvedUrl("../everything/EveryWeather.qml"),
+                props: {temperature: "17", condition: i18n("Clear"), code: 0}}]
         }
 
         // --- Location ---

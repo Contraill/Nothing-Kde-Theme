@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kcmutils as KCM
 import org.kde.kirigami as Kirigami
+import "../../../../../shared" as Glassy
 import "." as Config
 
 KCM.SimpleKCM {
@@ -159,9 +160,20 @@ KCM.SimpleKCM {
             opacity: 0.3
         }
 
-        // --- Digital clock settings (variant 0) ---
+        Glassy.EveryStyleCards {
+            Layout.fillWidth: true
+            selected: cfg_widgetVariant
+            onPicked: value => cfg_widgetVariant = value
+            styles: [
+                {label: i18n("Tall pill"), value: 2, source: Qt.resolvedUrl("../everything/EveryDigital.qml"), props: {layout: "vertical", hour: "10", minute: "09"}},
+                {label: i18n("Wide pill"), value: 3, source: Qt.resolvedUrl("../everything/EveryDigital.qml"), props: {layout: "horizontal", hour: "10", minute: "09"}},
+                {label: i18n("Square"), value: 4, source: Qt.resolvedUrl("../everything/EveryDigital.qml"), props: {layout: "square", hour: "10", minute: "09"}}
+            ]
+        }
+
+        // --- Digital clock settings (variant 0 and the EveryThing styles) ---
         RowLayout {
-            visible: cfg_widgetVariant === 0
+            visible: cfg_widgetVariant !== 1
             CheckBox {
                 id: use24HourCheckbox
                 text: i18n("Use 24-Hour Format")

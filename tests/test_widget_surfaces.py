@@ -17,7 +17,8 @@ class WidgetSurfaceTests(unittest.TestCase):
             if package.name == 'clock-digital-large':
                 self.assertNotIn('Glassy.GlassySurface {', qml)
             else:
-                self.assertIn('Glassy.GlassySurface {', qml, package.name)
+                # EveryThing-UI designs draw the same surface through EveryFrame.
+                self.assertTrue('Glassy.GlassySurface {' in qml or 'Glassy.EveryFrame {' in qml, package.name)
             self.assertIn('Glassy.WidgetColors {}', qml, package.name)
         surface = (ROOT / 'widgets/shared/GlassySurface.qml').read_text()
         self.assertIn('Kirigami.Theme.backgroundColor', surface)

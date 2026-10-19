@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kcmutils as KCM
+import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
     id: configAppearance
@@ -24,9 +25,23 @@ KCM.SimpleKCM {
 
             ComboBox {
                 id: fontStyleCombo
-                model: [i18n("Dotted"), i18n("Dot Matrix"), i18n("Serif"), i18n("Segmented"), i18n("Segmented Sharp")]
+                model: [i18n("Dotted"), i18n("Dot Matrix"), i18n("Serif"), i18n("Segmented"), i18n("Segmented Sharp"),
+                    i18n("EveryThing blocks"), i18n("EveryThing blocks, two tone"), i18n("EveryThing dots"),
+                    i18n("EveryThing bubbles"), i18n("EveryThing bubbles, inverted"), i18n("EveryThing outline")]
                 Layout.fillWidth: true
             }
+        }
+
+        Glassy.EveryStyleCards {
+            Layout.fillWidth: true
+            selected: fontStyleCombo.currentIndex
+            onPicked: value => fontStyleCombo.currentIndex = value
+            styles: ["blocks", "blocks-dual", "dots", "bubbles", "bubbles-inverse", "outline"].map((face, i) => ({
+                label: [i18n("Blocks"), i18n("Two tone"), i18n("Dots"), i18n("Bubbles"), i18n("Inverted"), i18n("Outline")][i],
+                value: 5 + i,
+                source: Qt.resolvedUrl("../everything/EveryBigClock.qml"),
+                props: {face: face, time: "10:09", dotFamily: "", outlineFamily: ""}
+            }))
         }
 
         Label {

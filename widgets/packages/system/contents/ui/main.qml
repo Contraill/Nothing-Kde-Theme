@@ -6,6 +6,8 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.ksysguard.sensors as Sensors
 import "../../../../shared" as Glassy
 import "components"
+import "everything"
+import org.kde.plasma.plasma5support as P5Support
 
 // CPU and memory as dot rings with temperature and network speed, as
 // dotted bars with the disk, or as a pill.
@@ -84,14 +86,58 @@ PlasmoidItem {
         }
     }
 
+    // EveryThing-UI's styles (3 to 7) and what they show beyond the sensors above.
+    readonly property bool every: variant >= 3
+    readonly property string everyLayout: ["status", "cpu", "cpu-pill", "network", "network-pill"][variant - 3] ?? "status"
+    readonly property bool everyPill: every && everyLayout.endsWith("pill")
+    P5Support.DataSource {
+        id: power
+        engine: "powermanagement"
+        connectedSources: root.every && root.everyLayout === "status" ? ["Battery"] : []
+    }
+    readonly property var battery: power.data["Battery"] ?? ({})
+    // The design's own properties share the sensors' names; read them from here.
+    readonly property real cpuNow: cpu.value || 0
+    readonly property real memoryNow: memory.value || 0
+    readonly property real diskUsedNow: diskUsed.value || 0
+    readonly property real diskTotalNow: diskTotal.value || 0
+    readonly property real downloadNow: download.value || 0
+    readonly property real uploadNow: upload.value || 0
+    // One decimal and a unit, as Rainmeter's AutoScale shows it.
+    function bytes(value) {
+        const v = Number(value) || 0;
+        const units = ["B", "KB", "MB", "GB"];
+        let i = 0, n = v;
+        while (n >= 1024 && i < units.length - 1) { n /= 1024; ++i; }
+        return Qt.locale().toString(n, "f", 1) + " " + units[i];
+    }
+
     fullRepresentation: Item {
-        Layout.preferredWidth: root.variant === 2 ? 260 : 220
-        Layout.preferredHeight: root.variant === 2 ? 96 : 220
-        Layout.minimumWidth: root.variant === 2 ? 180 : 170
-        Layout.minimumHeight: root.variant === 2 ? 72 : 170
+        Layout.preferredWidth: root.every ? (root.everyLayout === "status" ? 400 : 200) : root.variant === 2 ? 260 : 220
+        Layout.preferredHeight: root.everyPill ? 110 : root.every ? 200 : root.variant === 2 ? 96 : 220
+        Layout.minimumWidth: root.variant === 2 || root.everyPill ? 180 : 170
+        Layout.minimumHeight: root.variant === 2 || root.everyPill ? 72 : 170
+
+        EverySystem {
+            anchors.fill: parent
+            anchors.margins: 4
+            visible: root.every
+            colors: nColors
+            family: dotFont.name
+            layout: root.everyLayout
+            cpu: root.cpuNow
+            memory: root.memoryNow
+            diskUsed: root.diskUsedNow
+            diskTotal: root.diskTotalNow
+            battery: root.battery["Has Battery"] ? root.battery["Percent"] ?? -1 : -1
+            charging: root.battery["State"] === "Charging"
+            download: root.bytes(root.downloadNow)
+            upload: root.bytes(root.uploadNow)
+        }
 
         Glassy.GlassySurface {
             id: card
+            visible: !root.every
             anchors.fill: parent
             anchors.margins: 10
             cornerRadius: root.variant === 2 ? height / 2 : 20

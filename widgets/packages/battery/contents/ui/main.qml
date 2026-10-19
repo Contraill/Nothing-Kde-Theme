@@ -7,6 +7,7 @@ import org.kde.plasma.plasma5support as P5Support
 import org.kde.kirigami as Kirigami
 import org.kde.bluezqt as BluezQt
 import "components"
+import "everything"
 
 PlasmoidItem {
     id: root
@@ -280,15 +281,31 @@ PlasmoidItem {
 
 
 
+    readonly property int variant: Plasmoid.configuration.widgetVariant
+    Glassy.DotFont { id: everyFont }
+
     fullRepresentation: Item {
         Layout.preferredWidth: 200
-        Layout.preferredHeight: 200
-        Layout.minimumWidth: 200
-        Layout.minimumHeight: 200
+        Layout.preferredHeight: root.variant === 2 ? 110 : 200
+        Layout.minimumWidth: root.variant === 2 ? 150 : 200
+        Layout.minimumHeight: root.variant === 2 ? 80 : 200
+
+        // EveryThing-UI's circle and pill: this computer's battery.
+        EveryBattery {
+            anchors.fill: parent
+            anchors.margins: 4
+            visible: root.variant > 0
+            colors: nColors
+            family: everyFont.name
+            round: root.variant === 1
+            percent: root.batteryPercent
+            charging: root.isCharging
+        }
 
         // Main background
         Glassy.GlassySurface {
             id: mainBackground
+            visible: root.variant === 0
             anchors.fill: parent
             anchors.margins: 10
             backgroundColor: nColors.background

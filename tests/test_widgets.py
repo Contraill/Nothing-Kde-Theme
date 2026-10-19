@@ -17,7 +17,7 @@ class WidgetTests(unittest.TestCase):
         install = (ROOT / 'widgets/install.sh').read_text()
         uninstall = (ROOT / 'uninstall.sh').read_text()
         names = sorted(p.name for p in PACKAGES.iterdir())
-        self.assertEqual(len(names), 14)
+        self.assertEqual(len(names), 18)
         self.assertIn('for name in ' + ' '.join(names) + '; do', install)
         for name in names:
             self.assertIn('org.nothingkde.widget.' + name, uninstall)

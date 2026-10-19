@@ -1,0 +1,54 @@
+{
+  "cat": {
+    "frames": 80,
+    "frameWidth": 230,
+    "frameHeight": 145,
+    "columns": 8,
+    "frameDuration": 100,
+    "place": [
+      0.0719,
+      0.0417,
+      0.8562,
+      0.9583
+    ]
+  },
+  "dog": {
+    "frames": 80,
+    "frameWidth": 230,
+    "frameHeight": 140,
+    "columns": 8,
+    "frameDuration": 100,
+    "place": [
+      0.0563,
+      0.0264,
+      0.9039,
+      0.9736
+    ]
+  },
+  "hamster": {
+    "frames": 80,
+    "frameWidth": 230,
+    "frameHeight": 155,
+    "columns": 8,
+    "frameDuration": 100,
+    "place": [
+      0.1133,
+      0.0847,
+      0.7586,
+      0.9153
+    ]
+  },
+  "robo": {
+    "frames": 80,
+    "frameWidth": 230,
+    "frameHeight": 195,
+    "columns": 8,
+    "frameDuration": 100,
+    "place": [
+      0.1484,
+      0.0,
+      0.6672,
+      1.0
+    ]
+  }
+}

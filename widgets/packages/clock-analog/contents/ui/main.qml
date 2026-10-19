@@ -5,6 +5,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import "components"
+import "everything"
 
 PlasmoidItem {
     id: root
@@ -55,7 +56,19 @@ PlasmoidItem {
         Layout.minimumWidth: 200
         Layout.minimumHeight: 200
 
-        sourceComponent: root.variantChosen ? clockComponent : selectorComponent
+        sourceComponent: !root.variantChosen ? selectorComponent : root.widgetVariant >= 2 ? everyComponent : clockComponent
+    }
+
+    // 2 and 3: EveryThing-UI's circle and square.
+    Component {
+        id: everyComponent
+        EveryAnalog {
+            colors: nColors
+            round: root.widgetVariant === 2
+            hours: root.hours
+            minutes: root.minutes
+            seconds: root.seconds
+        }
     }
 
     Component {

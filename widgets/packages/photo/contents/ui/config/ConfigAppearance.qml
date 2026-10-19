@@ -2,10 +2,12 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kcmutils as KCM
+import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
     id: configAppearance
 
+    property alias cfg_widgetVariant: styleCombo.currentIndex
     property alias cfg_borderEnabled: borderEnabledCheckbox.checked
     property alias cfg_borderSize: borderSizeSlider.value
     property alias cfg_pillShapeEnabled: pillShapeCheckbox.checked
@@ -14,6 +16,24 @@ KCM.SimpleKCM {
 
     ColumnLayout {
         spacing: 10
+
+        RowLayout {
+            Label { text: i18n("Style:") }
+            ComboBox {
+                id: styleCombo
+                Layout.fillWidth: true
+                model: [i18n("Frame"), i18n("EveryThing square"), i18n("EveryThing circle"), i18n("EveryThing wide"), i18n("EveryThing wide pill")]
+            }
+        }
+        Glassy.EveryStyleCards {
+            Layout.fillWidth: true
+            selected: styleCombo.currentIndex
+            onPicked: value => styleCombo.currentIndex = value
+            styles: ["square", "circle", "wide", "wide-pill"].map((shape, i) => ({
+                label: [i18n("Square"), i18n("Circle"), i18n("Wide"), i18n("Wide pill")][i], value: i + 1,
+                source: Qt.resolvedUrl("../everything/EveryPhoto.qml"), props: {shape: shape}
+            }))
+        }
 
         // Border Settings Section
         Label {

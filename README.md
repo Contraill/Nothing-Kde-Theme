@@ -1,6 +1,6 @@
 # Nothing KDE
 
-A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, fourteen desktop widgets,
+A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, eighteen desktop widgets,
 Glassy application styling, and optional application accent integrations. The UI is localized
 in Turkish and English; no custom daemon is required.
 
@@ -41,8 +41,15 @@ weather, media, photo, devices and battery (adapted from nothing-kde-widgets), a
 KDE originals: **System Monitor** (dot rings, dotted bars with the disk, or a pill), **Note**
 (saves as you type, or a mantra pill), **Focus Timer** (pomodoro that survives restarts and
 notifies with Plasma's timer sound), **Phone** (the KDE Connect phone's battery, ring and open),
-**Progress** (the year as a dot ring, or day, week, month and year bars) and **Quick Toggles**
-(Wi-Fi, Bluetooth, airplane mode and volume, or a volume pill).
+**Progress** (the year as a dot ring, or day, week, month and year bars), **Quick Toggles**
+(Wi-Fi, Bluetooth, airplane mode and volume, or a volume pill), **Greeting**, **Uptime**,
+**Visualizer** and **Pet** (a dot-matrix cat, dog, hamster or robot).
+
+Most widgets also offer the designs of [EveryThing-UI](https://github.com/Prince-1652/EveryThing-UI)
+(Prince-1652, MIT) as styles: pills, circles and blocks for the clocks, date and calendar,
+battery, system status, CPU and network, the quick toggles, year progress and countdown,
+player, photo frames, weather and a rotating mantra, plus four big wallpaper clocks drawn with
+our own faces. Choose them in each widget's settings.
 
 ### Boot login wallpaper (Plasma Login Manager)
 
@@ -398,6 +405,7 @@ redistribution rights, and real Store IDs must be resolved first.
 License and attribution:
 [GPL](LICENSE),
 [Island attribution](plasmoids/com.nothingplasma.panel/contents/island/NOTICE.md),
-[widget sources](widgets/UPSTREAM.json), and each widget's `UPSTREAM-NOTICE.md`.
+[widget sources](widgets/UPSTREAM.json) (nothing-kde-widgets and EveryThing-UI, whose MIT notice is
+[widgets/shared/EveryThing-UI-LICENSE.txt](widgets/shared/EveryThing-UI-LICENSE.txt)), and each widget's `UPSTREAM-NOTICE.md`.
 
 Existing `com.nothingplasma.*` IDs remain stable to preserve panels and pinned applications.

@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "Fun and Games",
+    "Description": "A dot-matrix cat, dog, hamster or robot peeking over the edge, after EveryThing-UI.",
+    "EnabledByDefault": true,
+    "Icon": "face-smile",
+    "Id": "org.nothingkde.widget.pet",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Pet",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Evcil Hayvan"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

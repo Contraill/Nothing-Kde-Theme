@@ -6,6 +6,10 @@
   <kcfgfile name=""/>
 
   <group name="Image">
+    <!-- 0 frame; EveryThing-UI: 1 square, 2 circle, 3 wide, 4 wide pill -->
+    <entry name="widgetVariant" type="Int">
+      <default>0</default>
+    </entry>
     <entry name="imagePath" type="String">
       <default>default/nothing.png</default>
     </entry>

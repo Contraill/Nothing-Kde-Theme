@@ -9,6 +9,7 @@ import org.kde.plasma.networkmanagement as PlasmaNM
 import org.kde.plasma.private.volume as PA
 import "../../../../shared" as Glassy
 import "components"
+import "everything"
 
 // Wi-Fi, Bluetooth, airplane mode and sound as round tiles over a dotted
 // volume bar, or the volume alone as a pill. Plasma's own network, Bluetooth
@@ -112,14 +113,49 @@ PlasmoidItem {
         }
     }
 
+    // EveryThing-UI's single utilities: 2 to 7 are Wi-Fi, Bluetooth and
+    // airplane mode as a pill then a circle; 8 and 9 the volume block and pill.
+    readonly property bool every: variant >= 2
+    readonly property string everyKind: variant >= 8 ? "volume" : ["wifi", "bluetooth", "airplane"][Math.floor((variant - 2) / 2)] ?? "wifi"
+    readonly property bool everyRound: variant >= 8 ? variant === 9 : variant % 2 === 1
+    readonly property bool everyOn: everyKind === "wifi" ? connections.wirelessEnabled
+        : everyKind === "bluetooth" ? bluetooth.bluetoothOperational : everyKind === "airplane" ? airplane : !muted
+    function everyToggle() {
+        if (everyKind === "wifi") handler.enableWireless(!connections.wirelessEnabled);
+        else if (everyKind === "bluetooth") toggleBluetooth();
+        else if (everyKind === "airplane") toggleAirplane();
+        else if (sink) sink.muted = !sink.muted;
+    }
+
     fullRepresentation: Item {
-        Layout.preferredWidth: root.variant === 1 ? 190 : 270
-        Layout.preferredHeight: root.variant === 1 ? 84 : 170
-        Layout.minimumWidth: root.variant === 1 ? 150 : 240
-        Layout.minimumHeight: root.variant === 1 ? 64 : 150
+        Layout.preferredWidth: root.every ? (root.everyRound && root.everyKind !== "volume" ? 105 : 200) : root.variant === 1 ? 190 : 270
+        Layout.preferredHeight: root.every ? (root.everyKind === "volume" && !root.everyRound ? 200 : 105) : root.variant === 1 ? 84 : 170
+        Layout.minimumWidth: root.every ? 80 : root.variant === 1 ? 150 : 240
+        Layout.minimumHeight: root.every ? 80 : root.variant === 1 ? 64 : 150
+
+        EveryToggle {
+            anchors.fill: parent
+            anchors.margins: 4
+            visible: root.every
+            colors: nColors
+            family: dotFont.name
+            kind: root.everyKind
+            round: root.everyRound
+            on: root.everyOn
+            volume: root.volume
+            muted: root.muted
+            onToggled: root.everyToggle()
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                enabled: root.everyKind === "volume"
+                onWheel: wheel => root.wheel(wheel)
+            }
+        }
 
         Glassy.GlassySurface {
             id: card
+            visible: !root.every
             anchors.fill: parent
             anchors.margins: 10
             cornerRadius: root.variant === 1 ? height / 2 : 20

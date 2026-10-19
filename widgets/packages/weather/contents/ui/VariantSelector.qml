@@ -33,7 +33,8 @@ Item {
                 model: [
                     { label: i18n("Full"), variant: 0 },
                     { label: i18n("Circular"), variant: 1 },
-                    { label: i18n("Circle Pages"), variant: 2 }
+                    { label: i18n("Circle Pages"), variant: 2 },
+                    { label: i18n("EveryThing square"), variant: 3 }
                 ]
 
                 Text {

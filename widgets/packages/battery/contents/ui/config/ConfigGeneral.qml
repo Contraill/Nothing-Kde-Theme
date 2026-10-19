@@ -1,4 +1,5 @@
 import org.kde.plasma.plasmoid
+import "../../../../../shared" as Glassy
 import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
@@ -7,6 +8,7 @@ import org.kde.kirigami as Kirigami
 Kirigami.FormLayout {
     id: generalPage
 
+    property alias cfg_widgetVariant: styleCombo.currentIndex
     property alias cfg_deviceType: deviceTypeCombo.currentValue
     property alias cfg_updateInterval: updateIntervalSpin.value
     property alias cfg_themeMode: themeModeCombo.currentIndex
@@ -35,6 +37,21 @@ Kirigami.FormLayout {
         } catch (e) {
             return []
         }
+    }
+
+    QQC2.ComboBox {
+        id: styleCombo
+        Kirigami.FormData.label: i18n("Style:")
+        model: [i18n("Devices"), i18n("EveryThing circle"), i18n("EveryThing pill")]
+    }
+    Glassy.EveryStyleCards {
+        Layout.fillWidth: true
+        selected: styleCombo.currentIndex
+        onPicked: value => styleCombo.currentIndex = value
+        styles: [
+            {label: i18n("Circle"), value: 1, source: Qt.resolvedUrl("../everything/EveryBattery.qml"), props: {round: true, percent: 78, charging: true}},
+            {label: i18n("Pill"), value: 2, source: Qt.resolvedUrl("../everything/EveryBattery.qml"), props: {round: false, percent: 78}}
+        ]
     }
 
     // Theme Section

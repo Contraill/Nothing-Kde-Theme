@@ -1,0 +1,24 @@
+{
+  "KPackageStructure": "Plasma/Applet",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "Nothing KDE contributors"
+      }
+    ],
+    "Category": "System Information",
+    "Description": "How long the computer has been on each day of the week, after EveryThing-UI.",
+    "EnabledByDefault": true,
+    "Icon": "chronometer",
+    "Id": "org.nothingkde.widget.uptime",
+    "License": "GPL-3.0",
+    "Name": "Nothing KDE — Uptime",
+    "Version": "0.6.0-rc35",
+    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Name[tr]": "Nothing KDE — Çalışma Süresi"
+  },
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "X-Plasma-FormFactors": [
+    "planar"
+  ]
+}

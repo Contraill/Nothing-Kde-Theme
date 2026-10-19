@@ -6,6 +6,8 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.private.mpris as Mpris
 import org.kde.kirigami as Kirigami
 import "components" as Components
+import "everything"
+import "../../../../shared" as Glassy
 
 PlasmoidItem {
     id: root
@@ -92,15 +94,37 @@ PlasmoidItem {
         }
     }
 
+    readonly property int variant: Plasmoid.configuration.widgetVariant
+    Glassy.DotFont { id: everyFont }
+
     fullRepresentation: Item {
-        Layout.preferredWidth: 200
-        Layout.preferredHeight: 200
-        Layout.minimumWidth: 200
-        Layout.minimumHeight: 200
+        Layout.preferredWidth: root.variant > 0 ? 400 : 200
+        Layout.preferredHeight: root.variant === 2 ? 110 : 200
+        Layout.minimumWidth: root.variant > 0 ? 300 : 200
+        Layout.minimumHeight: root.variant === 2 ? 80 : 200
+
+        // EveryThing-UI's players.
+        EveryPlayer {
+            anchors.fill: parent
+            anchors.margins: 4
+            visible: root.variant > 0
+            colors: nColors
+            family: everyFont.name
+            pill: root.variant === 2
+            title: root.track
+            artist: root.artist
+            artUrl: root.albumArt
+            playing: root.isPlaying
+            progress: root.length > 0 ? root.position / root.length : 0
+            onPrevious: root.previous()
+            onPlayPause: root.togglePlaying()
+            onNext: root.next()
+        }
 
         // SwipeView container
         QQC2.SwipeView {
             id: swipeView
+            visible: root.variant === 0
             anchors.fill: parent
             currentIndex: 0
             clip: true
@@ -134,6 +158,7 @@ PlasmoidItem {
 
         // Horizontal Page Indicator (bottom)
         Row {
+            visible: root.variant === 0
             anchors {
                 bottom: parent.bottom
                 bottomMargin: 16

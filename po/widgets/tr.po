@@ -42,6 +42,9 @@ msgstr "Görselin çevresinde boşluk bırakarak arka planı çerçeve olarak g�
 msgid "Airplane"
 msgstr "Uçak"
 
+msgid "Airplane circle"
+msgstr "Uçak daire"
+
 msgid "Appearance"
 msgstr "Görünüm"
 
@@ -66,8 +69,14 @@ msgstr "Siyah beyaz"
 msgid "Block"
 msgstr "Blok"
 
+msgid "Blocks"
+msgstr "Bloklar"
+
 msgid "Bluetooth"
 msgstr "Bluetooth"
+
+msgid "Bluetooth circle"
+msgstr "Bluetooth daire"
 
 msgid "Bluetooth devices that have been connected to this system"
 msgstr "Bu sisteme daha önce bağlanmış Bluetooth cihazları"
@@ -93,17 +102,29 @@ msgstr "Göz at..."
 msgid "Browse…"
 msgstr "Gözat…"
 
+msgid "Bubbles"
+msgstr "Kabarcıklar"
+
 msgid "CHARGING"
 msgstr "ŞARJ OLUYOR"
 
 msgid "CPU"
 msgstr "CPU"
 
+msgid "CPU pill"
+msgstr "CPU hapı"
+
 msgid "Card behind the clock"
 msgstr "Saatin arkasında kart"
 
 msgid "Card with the cover"
 msgstr "Kapaklı kart"
+
+msgid "Cards"
+msgstr "Kartlar"
+
+msgid "Cat"
+msgstr "Kedi"
 
 msgid "Celsius (°C)"
 msgstr "Santigrat (°C)"
@@ -153,6 +174,15 @@ msgstr "Bulutlu"
 msgid "Convert the image to black and white (grayscale)"
 msgstr "Görseli siyah beyaza (gri tonlara) dönüştürür"
 
+msgid "Countdown"
+msgstr "Geri sayım"
+
+msgid "Countdown circle"
+msgstr "Geri sayım daire"
+
+msgid "Counts the time the computer is on, from when the widget first runs; a day's bar fills at 24 hours."
+msgstr "Bilgisayarın açık kaldığı süreyi widget ilk çalıştığı andan itibaren sayar; bir günün çubuğu 24 saatte dolar."
+
 msgid "Crop (Fill Frame)"
 msgstr "Kırp (çerçeveyi doldur)"
 
@@ -180,6 +210,9 @@ msgstr "Karanlık"
 msgid "Dark: Nothing's signature dark aesthetic. Light: Nothing's light palette. Follow System: Matches your KDE dark/light scheme."
 msgstr "Karanlık: Nothing'in koyu görünümü. Aydınlık: Nothing'in açık paleti. Sistemi izle: KDE açık/koyu temasına uyar."
 
+msgid "Day %1"
+msgstr "%1. gün"
+
 msgid "Day, week, month and year"
 msgstr "Gün, hafta, ay ve yıl"
 
@@ -191,6 +224,9 @@ msgstr "Yoğun çisenti"
 
 msgid "Depositing Rime Fog"
 msgstr "Kırağılı sis"
+
+msgid "Designs adapted from EveryThing-UI by Prince-1652 (MIT)."
+msgstr "Tasarımlar Prince-1652'nin EveryThing-UI projesinden uyarlandı (MIT)."
 
 msgid "Desktop"
 msgstr "Masaüstü"
@@ -216,8 +252,14 @@ msgstr "Aygıtlar"
 msgid "Digital Clock"
 msgstr "Dijital saat"
 
+msgid "Discharging"
+msgstr "Boşalıyor"
+
 msgid "Display the current date above the time (e.g., \"Thu, 31 Jan\")"
 msgstr "Güncel tarihi saatin üzerinde gösterir (ör. \"Per, 31 Oca\")"
+
+msgid "Dog"
+msgstr "Köpek"
 
 msgid "Dot Matrix"
 msgstr "Nokta matrisi"
@@ -234,11 +276,17 @@ msgstr "Noktalı"
 msgid "Dotted: Bigger dots, cleaner look"
 msgstr "Noktalı: Büyük noktalar, sade görünüm"
 
+msgid "Double-click to choose an image"
+msgstr "Görsel seçmek için çift tıklayın"
+
 msgid "Drizzle"
 msgstr "Çisenti"
 
 msgid "Effects"
 msgstr "Efektler"
+
+msgid "Embrace the void"
+msgstr "Boşluğu kucakla"
 
 msgid "Empty"
 msgstr "Boş"
@@ -251,6 +299,111 @@ msgstr "Şehir adı ve isteğe bağlı ülke girin (ör. 'İstanbul, Türkiye').
 
 msgid "Enter the city name to display on the widget."
 msgstr "Widget üzerinde gösterilecek şehir adını girin."
+
+msgid "EveryThing Bluetooth"
+msgstr "EveryThing Bluetooth"
+
+msgid "EveryThing Bluetooth circle"
+msgstr "EveryThing Bluetooth daire"
+
+msgid "EveryThing CPU"
+msgstr "EveryThing CPU"
+
+msgid "EveryThing CPU pill"
+msgstr "EveryThing CPU hapı"
+
+msgid "EveryThing Wi-Fi"
+msgstr "EveryThing Wi-Fi"
+
+msgid "EveryThing Wi-Fi circle"
+msgstr "EveryThing Wi-Fi daire"
+
+msgid "EveryThing airplane mode"
+msgstr "EveryThing uçak modu"
+
+msgid "EveryThing airplane mode circle"
+msgstr "EveryThing uçak modu daire"
+
+msgid "EveryThing blocks"
+msgstr "EveryThing bloklar"
+
+msgid "EveryThing blocks, two tone"
+msgstr "EveryThing bloklar, iki ton"
+
+msgid "EveryThing bubbles"
+msgstr "EveryThing kabarcıklar"
+
+msgid "EveryThing bubbles, inverted"
+msgstr "EveryThing kabarcıklar, ters"
+
+msgid "EveryThing circle"
+msgstr "EveryThing daire"
+
+msgid "EveryThing countdown"
+msgstr "EveryThing geri sayım"
+
+msgid "EveryThing countdown circle"
+msgstr "EveryThing geri sayım daire"
+
+msgid "EveryThing dots"
+msgstr "EveryThing noktalar"
+
+msgid "EveryThing mantra (one line at a time)"
+msgstr "EveryThing mantra (her seferinde bir satır)"
+
+msgid "EveryThing month of dots"
+msgstr "EveryThing noktalı ay"
+
+msgid "EveryThing month of numbers"
+msgstr "EveryThing sayılı ay"
+
+msgid "EveryThing network"
+msgstr "EveryThing ağ"
+
+msgid "EveryThing network pill"
+msgstr "EveryThing ağ hapı"
+
+msgid "EveryThing outline"
+msgstr "EveryThing dış hat"
+
+msgid "EveryThing pill"
+msgstr "EveryThing hap"
+
+msgid "EveryThing player"
+msgstr "EveryThing oynatıcı"
+
+msgid "EveryThing player pill"
+msgstr "EveryThing oynatıcı hapı"
+
+msgid "EveryThing square"
+msgstr "EveryThing kare"
+
+msgid "EveryThing status"
+msgstr "EveryThing durum"
+
+msgid "EveryThing tall pill"
+msgstr "EveryThing dikey hap"
+
+msgid "EveryThing volume"
+msgstr "EveryThing ses"
+
+msgid "EveryThing volume pill"
+msgstr "EveryThing ses hapı"
+
+msgid "EveryThing wide"
+msgstr "EveryThing geniş"
+
+msgid "EveryThing wide pill"
+msgstr "EveryThing geniş hap"
+
+msgid "EveryThing year"
+msgstr "EveryThing yıl"
+
+msgid "EveryThing year circle"
+msgstr "EveryThing yıl daire"
+
+msgid "EveryThing-UI styles:"
+msgstr "EveryThing-UI stilleri:"
 
 msgid "FOCUS"
 msgstr "ODAK"
@@ -300,6 +453,9 @@ msgstr "Yazı tipi:"
 msgid "Forecasts by Open-Meteo (open-meteo.com, CC BY 4.0); the city name or coordinates are sent there."
 msgstr "Tahminler Open-Meteo'dan (open-meteo.com, CC BY 4.0); şehir adı ya da koordinatlar oraya gönderilir."
 
+msgid "Frame"
+msgstr "Çerçeve"
+
 msgid "Freezing Drizzle"
 msgstr "Dondurucu çisenti"
 
@@ -318,6 +474,15 @@ msgstr "Tam dolu"
 msgid "General"
 msgstr "Genel"
 
+msgid "Good afternoon"
+msgstr "İyi öğleden sonralar"
+
+msgid "Good evening"
+msgstr "İyi akşamlar"
+
+msgid "Good morning"
+msgstr "Günaydın"
+
 msgid "Grayscale"
 msgstr "Gri tonlama"
 
@@ -326,6 +491,9 @@ msgstr "Grotesk"
 
 msgid "H"
 msgstr "S"
+
+msgid "Hamster"
+msgstr "Hamster"
 
 msgid "Heavy Rain"
 msgstr "Şiddetli yağmur"
@@ -365,6 +533,12 @@ msgstr "Görseller (*.png *.jpg *.jpeg *.webp *.bmp *.gif)"
 
 msgid "Install KDE Connect to see your phone here."
 msgstr "Telefonunu burada görmek için KDE Bağlan'ı kur."
+
+msgid "Inverted"
+msgstr "Ters"
+
+msgid "Keep going"
+msgstr "Devam et"
 
 msgid "LONG BREAK"
 msgstr "UZUN MOLA"
@@ -417,6 +591,9 @@ msgstr "SESSİZ"
 msgid "Mainly Clear"
 msgstr "Genellikle açık"
 
+msgid "Mantra"
+msgstr "Mantra"
+
 msgid "Mantra pill"
 msgstr "Mantra hapı"
 
@@ -432,11 +609,20 @@ msgstr "Noktalarla ay"
 msgid "Mostly clear"
 msgstr "Çoğunlukla açık"
 
+msgid "Muted"
+msgstr "Sessiz"
+
 msgid "NOTE"
 msgstr "NOT"
 
 msgid "NOTE: Segmented fonts don't have separator (:)"
 msgstr "NOT: Parçalı yazı tiplerinde ayırıcı (:) bulunmaz"
+
+msgid "Network"
+msgstr "Ağ"
+
+msgid "Network pill"
+msgstr "Ağ hapı"
 
 msgid "Next"
 msgstr "Sonraki"
@@ -448,6 +634,9 @@ msgid "No Image"
 msgstr "Görsel yok"
 
 msgid "No batteries"
+msgstr "Pil yok"
+
+msgid "No battery"
 msgstr "Pil yok"
 
 msgid "No devices found in history"
@@ -462,11 +651,23 @@ msgstr "Not"
 msgid "Nothing playing"
 msgstr "Çalan bir şey yok"
 
+msgid "Nothing to fear"
+msgstr "Korkacak bir şey yok"
+
+msgid "Numbers"
+msgstr "Sayılar"
+
+msgid "On the wallpaper, without a card"
+msgstr "Kart olmadan, doğrudan duvar kağıdında"
+
 msgid "Open KDE Connect"
 msgstr "KDE Bağlan'ı aç"
 
 msgid "Open the trash"
 msgstr "Çöp kutusunu aç"
+
+msgid "Outline"
+msgstr "Dış hat"
 
 msgid "Overcast"
 msgstr "Kapalı"
@@ -476,6 +677,9 @@ msgstr "PC"
 
 msgid "Page: the day, click for the month"
 msgstr "Sayfa: gün, tıklayınca ay"
+
+msgid "Pages"
+msgstr "Sayfalar"
 
 msgid "Pair a phone"
 msgstr "Telefon eşle"
@@ -488,6 +692,9 @@ msgstr "Parçalı bulutlu"
 
 msgid "Pause"
 msgstr "Duraklat"
+
+msgid "Pet:"
+msgstr "Evcil hayvan:"
 
 msgid "Pill"
 msgstr "Hap"
@@ -503,6 +710,9 @@ msgstr "Ayın ilerlemesiyle hap"
 
 msgid "Play"
 msgstr "Oynat"
+
+msgid "Player"
+msgstr "Oynatıcı"
 
 msgid "Plugged in, not charging"
 msgstr "Takılı, şarj olmuyor"
@@ -525,6 +735,9 @@ msgstr "Yağmur"
 msgid "Rain Showers"
 msgstr "Sağanak"
 
+msgid "Remaining"
+msgstr "Kalan"
+
 msgid "Replace Nothing's red accent with your KDE system highlight color while keeping the Nothing aesthetic."
 msgstr "Nothing görünümünü koruyarak kırmızı vurgu yerine KDE sistem vurgu rengini kullanır."
 
@@ -542,6 +755,9 @@ msgstr "Telefonu çaldır"
 
 msgid "Rings"
 msgstr "Halkalar"
+
+msgid "Robot"
+msgstr "Robot"
 
 msgid "Round frame"
 msgstr "Yuvarlak çerçeve"
@@ -591,6 +807,9 @@ msgstr "Serif: Nothing'in yeni serif yazı tipi"
 msgid "Shape Settings"
 msgstr "Şekil ayarları"
 
+msgid "Short pill"
+msgstr "Kısa hap"
+
 msgid "Show Date"
 msgstr "Tarihi göster"
 
@@ -636,8 +855,17 @@ msgstr "Daha yumuşak renk"
 msgid "Sound"
 msgstr "Ses"
 
+msgid "Square"
+msgstr "Kare"
+
 msgid "Start"
 msgstr "Başlat"
+
+msgid "Status"
+msgstr "Durum"
+
+msgid "Stay focused"
+msgstr "Odaklan"
 
 msgid "Stretch"
 msgstr "Uzat"
@@ -660,8 +888,14 @@ msgstr "ÇÖP"
 msgid "TUE"
 msgstr "SAL"
 
+msgid "Tall pill"
+msgstr "Dikey hap"
+
 msgid "Temperature Unit:"
 msgstr "Sıcaklık birimi:"
+
+msgid "The bands follow how loud the sound output is."
+msgstr "Çubuklar ses çıkışının yüksekliğini izler."
 
 msgid "The image could not be opened"
 msgstr "Görsel açılamadı"
@@ -693,6 +927,9 @@ msgstr "Mola zamanı."
 msgid "Toggles and volume"
 msgstr "Geçişler ve ses"
 
+msgid "Two tone"
+msgstr "İki ton"
+
 msgid "Two-tone dots"
 msgstr "İki tonlu noktalar"
 
@@ -702,11 +939,17 @@ msgstr "Birim:"
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
+msgid "Until midnight"
+msgstr "Gece yarısına"
+
 msgid "Update Interval (ms):"
 msgstr "Güncelleme aralığı (ms):"
 
 msgid "Update second hand every 50ms instead of 1000ms ( 1s ) for a smoother motion"
 msgstr "Daha akıcı hareket için saniye ibresini 1000 ms yerine 50 ms aralıklarla günceller"
+
+msgid "Uptime"
+msgstr "Çalışma süresi"
 
 msgid "Use 24-Hour Format"
 msgstr "24 saat biçimini kullan"
@@ -729,6 +972,9 @@ msgstr "SES DÜZEYİ"
 msgid "Violent Rain Showers"
 msgstr "Şiddetli sağanak"
 
+msgid "Volume"
+msgstr "Ses"
+
 msgid "Volume pill"
 msgstr "Ses hapı"
 
@@ -743,6 +989,15 @@ msgstr "Hava durumu alınamıyor"
 
 msgid "Wi-Fi"
 msgstr "Wi-Fi"
+
+msgid "Wi-Fi circle"
+msgstr "Wi-Fi daire"
+
+msgid "Wide"
+msgstr "Geniş"
+
+msgid "Wide pill"
+msgstr "Geniş hap"
 
 msgid "World Clock"
 msgstr "Dünya saati"
@@ -762,11 +1017,20 @@ msgstr "Bir şeyler yaz…"
 msgid "YEAR"
 msgstr "YIL"
 
+msgid "Year"
+msgstr "Yıl"
+
+msgid "Year circle"
+msgstr "Yıl daire"
+
 msgid "Year ring"
 msgstr "Yıl halkası"
 
 msgid "You can change it later in the settings."
 msgstr "Bunu sonra ayarlardan değiştirebilirsin."
+
+msgid "You got this"
+msgstr "Başarırsın"
 
 msgid "can be changed later in configuration"
 msgstr "daha sonra ayarlardan değiştirilebilir"

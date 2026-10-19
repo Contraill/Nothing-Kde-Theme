@@ -5,6 +5,7 @@ import QtQuick.Controls as QQC2
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import "components"
+import "everything"
 import "config" as Config
 
 PlasmoidItem {
@@ -71,6 +72,7 @@ PlasmoidItem {
     property string dayOfWeek: "Friday"
     property string hourDifference: "+0.0"
     property int currentSeconds: 0
+    property date currentDate: new Date()
     Config.TimezonesData {
         id: timezonesDataSource
     }
@@ -271,11 +273,12 @@ PlasmoidItem {
         running: true
         repeat: true
         onTriggered: {
-            root.currentSeconds = new Date().getSeconds()
-            if (root.widgetVariant === 0) {
-                root.updateDigitalTime()
-            } else if (root.widgetVariant === 1) {
+            root.currentDate = new Date()
+            root.currentSeconds = root.currentDate.getSeconds()
+            if (root.widgetVariant === 1) {
                 root.updateWorldTime()
+            } else {
+                root.updateDigitalTime()
             }
         }
     }
@@ -284,7 +287,7 @@ PlasmoidItem {
         loadTimezones()
         if (widgetVariant === 1) {
             updateWorldTime()
-        } else if (widgetVariant === 0) {
+        } else {
             updateDigitalTime()
         }
     }
@@ -313,7 +316,22 @@ PlasmoidItem {
             if (!root.variantChosen) return selectorComponent
             if (root.widgetVariant === 0) return digitalFullComponent
             if (root.widgetVariant === 1) return worldFullComponent
+            if (root.widgetVariant >= 2) return everyComponent
             return selectorComponent
+        }
+    }
+
+    // 2 to 4: EveryThing-UI's tall pill, wide pill and square.
+    Glassy.DotFont { id: everyFont }
+    Component {
+        id: everyComponent
+        EveryDigital {
+            colors: nColors
+            family: everyFont.name
+            layout: ["vertical", "horizontal", "square"][root.widgetVariant - 2] ?? "vertical"
+            hour: root.currentHours
+            minute: root.currentMinutes
+            now: root.currentDate
         }
     }
 

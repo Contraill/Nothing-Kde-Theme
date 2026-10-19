@@ -18,7 +18,8 @@ def prepare(package, output):
         target = output / source.relative_to(package)
         new = os.path.relpath(shared, target.parent)
         text = target.read_text()
-        updated = text.replace(f'import "{old}" as Glassy', f'import "{new}" as Glassy')
+        # The shared directory itself and files in it (import "../shared/every.js").
+        updated = text.replace(f'import "{old}"', f'import "{new}"').replace(f'import "{old}/', f'import "{new}/')
         if updated != text:
             target.write_text(updated)
     return output

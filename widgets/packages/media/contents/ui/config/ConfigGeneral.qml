@@ -2,15 +2,35 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kcmutils as KCM
+import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
     id: configGeneral
 
+    property alias cfg_widgetVariant: styleCombo.currentIndex
     property alias cfg_themeMode: themeModeCombo.currentIndex
     property alias cfg_useSystemAccent: useSystemAccentCheckbox.checked
 
     ColumnLayout {
         spacing: 10
+
+        RowLayout {
+            Label { text: i18n("Style:") }
+            ComboBox {
+                id: styleCombo
+                Layout.fillWidth: true
+                model: [i18n("Cards"), i18n("EveryThing player"), i18n("EveryThing player pill")]
+            }
+        }
+        Glassy.EveryStyleCards {
+            Layout.fillWidth: true
+            selected: styleCombo.currentIndex
+            onPicked: value => styleCombo.currentIndex = value
+            styles: [
+                {label: i18n("Player"), value: 1, source: Qt.resolvedUrl("../everything/EveryPlayer.qml"), props: {title: "Nothing KDE", artist: "EveryThing-UI", progress: 0.4}},
+                {label: i18n("Pill"), value: 2, source: Qt.resolvedUrl("../everything/EveryPlayer.qml"), props: {pill: true, title: "Nothing KDE", artist: "EveryThing-UI", progress: 0.4}}
+            ]
+        }
 
         RowLayout {
             Label {

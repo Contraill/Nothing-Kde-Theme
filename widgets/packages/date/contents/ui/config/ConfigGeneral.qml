@@ -2,15 +2,35 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kcmutils as KCM
+import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
     id: configGeneral
 
+    property alias cfg_widgetVariant: styleCombo.currentIndex
     property alias cfg_themeMode: themeModeCombo.currentIndex
     property alias cfg_useSystemAccent: useSystemAccentCheckbox.checked
 
     ColumnLayout {
         spacing: 10
+
+        RowLayout {
+            Label { text: i18n("Style:") }
+            ComboBox {
+                id: styleCombo
+                Layout.fillWidth: true
+                model: [i18n("Pages"), i18n("EveryThing pill"), i18n("EveryThing month of dots"), i18n("EveryThing month of numbers")]
+            }
+        }
+        Glassy.EveryStyleCards {
+            Layout.fillWidth: true
+            selected: styleCombo.currentIndex
+            onPicked: value => styleCombo.currentIndex = value
+            styles: ["pill", "dots", "numbers"].map((layout, i) => ({
+                label: [i18n("Pill"), i18n("Dots"), i18n("Numbers")][i], value: i + 1,
+                source: Qt.resolvedUrl("../everything/EveryDate.qml"), props: {layout: layout}
+            }))
+        }
 
         RowLayout {
             Label {

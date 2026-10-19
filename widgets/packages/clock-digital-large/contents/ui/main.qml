@@ -4,6 +4,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.components as PlasmaComponents
 import "components"
+import "everything"
 import "../../../../shared" as Glassy
 
 PlasmoidItem {
@@ -55,6 +56,12 @@ PlasmoidItem {
         source: Qt.resolvedUrl("../fonts/arrow_shape_f.ttf")
     }
 
+    // Faces for EveryThing-UI's clocks (fontStyle 5 to 10).
+    Glassy.DotFont { id: everyDots; light: true }
+    Glassy.GroteskFont { id: everyOutline }
+    property string everyTime: "00:00"
+    readonly property bool everyStyle: fontStyle >= 5
+
     FontLoader {
         id: robotoFont
         source: Qt.resolvedUrl("../fonts/roboto.ttf")
@@ -71,6 +78,7 @@ PlasmoidItem {
 
     function updateDateTime() {
         var now = new Date()
+        root.everyTime = Qt.formatTime(now, root.use24HourFormat ? "HH:mm" : "hh:mm")
         root.currentDate = Qt.locale().toString(now, "ddd, dd MMM")
 
         // Arrow Subway font (fontStyle 3) uses format without separator
@@ -134,9 +142,21 @@ PlasmoidItem {
                 Layout.bottomMargin: 0
             }
 
+            EveryBigClock {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: root.everyStyle
+                colors: nColors
+                face: ["blocks", "blocks-dual", "dots", "bubbles", "bubbles-inverse", "outline"][root.fontStyle - 5] ?? "blocks"
+                time: root.everyTime
+                dotFamily: everyDots.name
+                outlineFamily: everyOutline.name
+            }
+
             // Time display
             Text {
                 id: timeLabel
+                visible: !root.everyStyle
                 Layout.alignment: Qt.AlignHCenter
                 Layout.fillWidth: true
                 Layout.fillHeight: false

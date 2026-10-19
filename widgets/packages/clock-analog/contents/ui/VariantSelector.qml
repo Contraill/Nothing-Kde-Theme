@@ -32,7 +32,9 @@ Item {
             Repeater {
                 model: [
                     { label: i18n("Swiss Railway"), variant: 0 },
-                    { label: i18n("Minimalist"), variant: 1 }
+                    { label: i18n("Minimalist"), variant: 1 },
+                    { label: i18n("EveryThing circle"), variant: 2 },
+                    { label: i18n("EveryThing square"), variant: 3 }
                 ]
 
                 Text {

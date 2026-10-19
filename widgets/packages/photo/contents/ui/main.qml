@@ -6,6 +6,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import "components"
+import "everything"
 
 PlasmoidItem {
     id: root
@@ -69,16 +70,34 @@ PlasmoidItem {
         }
     }
 
+    readonly property int variant: Plasmoid.configuration.widgetVariant
+    // The picture as the frame below resolves it, for EveryThing-UI's frames.
+    readonly property string imageUrl: !imagePath ? "" : imagePath === "default/sample.jpeg" ? Qt.resolvedUrl("../default/nothing.png")
+        : imagePath.startsWith("/") || imagePath.startsWith("file://") ? imagePath : Qt.resolvedUrl("../" + imagePath)
+
     fullRepresentation: Item {
-        Layout.preferredWidth: 200
+        Layout.preferredWidth: root.variant >= 3 ? 400 : 200
         Layout.preferredHeight: 200
         Layout.minimumWidth: 200
         Layout.minimumHeight: 200
         anchors.margins: 10
 
+        EveryPhoto {
+            anchors.fill: parent
+            anchors.margins: 4
+            visible: root.variant > 0
+            z: 2
+            colors: nColors
+            shape: ["square", "circle", "wide", "wide-pill"][root.variant - 1] ?? "square"
+            source: root.imageUrl
+            fillMode: root.qmlFillMode
+            onChoose: Plasmoid.internalAction("configure").trigger()
+        }
+
         // Outer background rectangle (always visible to show the border)
         Glassy.GlassySurface {
             id: outerBackground
+            visible: root.variant === 0
             anchors.fill: parent
             backgroundColor: nColors.background
             foregroundColor: nColors.textPrimary
@@ -88,6 +107,7 @@ PlasmoidItem {
         // Main content rectangle with configurable margin
         Rectangle {
             id: mainRect
+            visible: root.variant === 0
             anchors.fill: parent
             anchors.margins: borderEnabled ? borderSize : 0
             color: "transparent"

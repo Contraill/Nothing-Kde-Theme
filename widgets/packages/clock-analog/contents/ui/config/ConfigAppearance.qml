@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import org.kde.kcmutils as KCM
 import org.kde.kirigami as Kirigami
+import "../../../../../shared" as Glassy
 
 KCM.SimpleKCM {
     id: configAppearance
@@ -104,6 +105,16 @@ KCM.SimpleKCM {
             Layout.preferredHeight: 1
             color: "#333333"
             opacity: 0.3
+        }
+
+        Glassy.EveryStyleCards {
+            Layout.fillWidth: true
+            selected: cfg_widgetVariant
+            onPicked: value => cfg_widgetVariant = value
+            styles: [
+                {label: i18n("Circle"), value: 2, source: Qt.resolvedUrl("../everything/EveryAnalog.qml"), props: {round: true, hours: 10, minutes: 9}},
+                {label: i18n("Square"), value: 3, source: Qt.resolvedUrl("../everything/EveryAnalog.qml"), props: {round: false, hours: 10, minutes: 9}}
+            ]
         }
 
         // --- Smooth hands ---

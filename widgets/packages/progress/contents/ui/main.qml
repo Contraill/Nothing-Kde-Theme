@@ -5,6 +5,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import "../../../../shared" as Glassy
 import "components"
+import "everything"
 import "progress.js" as Progress
 
 // How much of the year has gone, as a dot ring; or the day, week, month and
@@ -26,11 +27,16 @@ PlasmoidItem {
     readonly property var spans: Progress.spans(now, Qt.locale().firstDayOfWeek % 7)
     readonly property int minutesLeft: Progress.minutesToMidnight(now)
 
-    // Wakes on the minute so the numbers turn over with the clock.
+    // EveryThing-UI's year (2, 3) and countdown (4, 5), each as a block then a circle.
+    readonly property bool every: variant >= 2
+    readonly property bool countdown: variant >= 4
+
+    // Wakes on the minute so the numbers turn over with the clock; the
+    // countdown block shows seconds, so it ticks every second.
     Timer {
         running: true
         repeat: true
-        interval: 60000 - root.now.getSeconds() * 1000
+        interval: root.variant === 4 ? 1000 : 60000 - root.now.getSeconds() * 1000
         onTriggered: root.now = new Date()
     }
 
@@ -40,8 +46,23 @@ PlasmoidItem {
         Layout.minimumWidth: 150
         Layout.minimumHeight: 150
 
+        EveryProgress {
+            anchors.fill: parent
+            anchors.margins: 4
+            visible: root.every
+            colors: nColors
+            family: dotFont.name
+            kind: root.countdown ? "countdown" : "year"
+            round: root.variant === 3 || root.variant === 5
+            now: root.now
+            yearFraction: root.spans.year
+            dayFraction: root.spans.day
+            dayOfYear: Progress.dayOfYear(root.now)
+        }
+
         Glassy.GlassySurface {
             id: card
+            visible: !root.every
             anchors.fill: parent
             anchors.margins: 10
             backgroundColor: nColors.background

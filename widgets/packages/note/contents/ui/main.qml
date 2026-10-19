@@ -6,6 +6,7 @@ import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import "../../../../shared" as Glassy
 import "components"
+import "everything"
 
 // A sticky note, or its first line as a mantra pill; the text is kept in
 // the widget's own configuration.
@@ -21,15 +22,31 @@ PlasmoidItem {
     }
     Glassy.DotFont { id: dotFont }
     readonly property bool pill: Plasmoid.configuration.widgetVariant === 1
+    // 2: EveryThing-UI's mantra, cycling through the note's lines.
+    readonly property bool mantra: Plasmoid.configuration.widgetVariant === 2
+    readonly property var phrases: {
+        const lines = Plasmoid.configuration.noteText.split("\n").map(l => l.trim()).filter(l => l.length);
+        return lines.length ? lines : [i18n("Stay focused"), i18n("Keep going"), i18n("You got this"), i18n("Embrace the void"), i18n("Nothing to fear")];
+    }
 
     fullRepresentation: Item {
-        Layout.preferredWidth: root.pill ? 260 : 240
-        Layout.preferredHeight: root.pill ? 64 : 220
+        Layout.preferredWidth: root.mantra ? 400 : root.pill ? 260 : 240
+        Layout.preferredHeight: root.mantra ? 105 : root.pill ? 64 : 220
         Layout.minimumWidth: 160
-        Layout.minimumHeight: root.pill ? 52 : 140
+        Layout.minimumHeight: root.pill || root.mantra ? 52 : 140
+
+        EveryMantra {
+            anchors.fill: parent
+            anchors.margins: 4
+            visible: root.mantra
+            colors: nColors
+            family: dotFont.name
+            phrases: root.phrases
+        }
 
         Glassy.GlassySurface {
             id: card
+            visible: !root.mantra
             anchors.fill: parent
             anchors.margins: 10
             cornerRadius: root.pill ? height / 2 : 20
@@ -40,7 +57,7 @@ PlasmoidItem {
             anchors.fill: card
             anchors.margins: 14
             spacing: 6
-            visible: !root.pill
+            visible: !root.pill && !root.mantra
             RowLayout {
                 Layout.fillWidth: true
                 Text {
