@@ -116,5 +116,6 @@ PlasmoidItem {
         sweep: Plasmoid.configuration.arcSweep
         mirror: Plasmoid.configuration.mirror
         corner: Plasmoid.configuration.corner
+        segments: Plasmoid.configuration.segments
     }
 }

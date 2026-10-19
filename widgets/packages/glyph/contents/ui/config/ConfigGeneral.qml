@@ -14,6 +14,7 @@ KCM.SimpleKCM {
     property alias cfg_arcSweep: sweep.value
     property alias cfg_mirror: mirror.checked
     property int cfg_corner
+    property alias cfg_segments: segments.value
     readonly property int shape: cfg_widgetVariant
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
@@ -33,7 +34,7 @@ KCM.SimpleKCM {
                 label: [i18n("Ring"), i18n("Arc"), i18n("Strip"), i18n("Line"), i18n("Dot"), i18n("Corner"), i18n("Dot ring")][i], value: i,
                 source: Qt.resolvedUrl("../GlyphLight.qml"),
                 props: {shape: shape, light: n => shape === "dots" ? Math.max(0, 1 - Math.min(n, 12 - n) / 3) : [0.95, 0.45, 0.8, 0.25][n % 4],
-                        fill: 0.6, progress: progress.checked, sweep: sweep.value, mirror: mirror.checked, corner: page.cfg_corner, transparent: theme.transparent}
+                        fill: 0.6, progress: progress.checked, sweep: sweep.value, mirror: mirror.checked, corner: page.cfg_corner, segments: segments.value, transparent: theme.transparent}
             }))
         }
         QQC2.CheckBox {
@@ -53,6 +54,19 @@ KCM.SimpleKCM {
             wrapMode: Text.Wrap
             opacity: 0.7
             font.pointSize: 9
+        }
+        RowLayout {
+            visible: page.shape === 2
+            QQC2.Label { text: i18n("Segments:") }
+            // 1 never shows: the step from Auto goes straight to two.
+            QQC2.SpinBox {
+                id: segments
+                from: 0
+                to: 16
+                textFromValue: value => value === 0 ? i18n("Auto") : String(value)
+                valueFromText: text => text === i18n("Auto") ? 0 : Math.max(2, Number(text) || 0)
+                onValueModified: if (value === 1) value = up.pressed ? 2 : 0
+            }
         }
         // Where the corner sits; four of them frame something.
         RowLayout {

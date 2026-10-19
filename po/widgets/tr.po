@@ -627,6 +627,9 @@ msgstr "Parçalı"
 msgid "Segmented Sharp"
 msgstr "Keskin parçalı"
 
+msgid "Segments:"
+msgstr "Bölüm sayısı:"
+
 msgid "Select a photo to display in the widget (PNG, JPG, JPEG, WebP)"
 msgstr "Widget üzerinde gösterilecek fotoğrafı seçin (PNG, JPG, JPEG, WebP)"
 

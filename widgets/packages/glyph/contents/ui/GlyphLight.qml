@@ -28,6 +28,8 @@ Glassy.EveryFrame {
     property bool mirror: false
     // The corner: 0 top left, 1 top right, 2 bottom left, 3 bottom right.
     property int corner: 0
+    // The strip's segments; 0 picks them from its length.
+    property int segments: 0
 
     // Each round shape's own box; the line and strip use the widget's pixels.
     readonly property bool stretch: ["line", "strip", "corner"].includes(shape)
@@ -133,7 +135,7 @@ Glassy.EveryFrame {
             readonly property bool across: lights.width > lights.height
             readonly property real length: across ? lights.width : lights.height
             readonly property real gap: Math.max(1.5, f.thickness * 0.14)
-            readonly property int count: Math.max(3, Math.round(length / (f.thickness * 1.8)))
+            readonly property int count: f.segments > 0 ? f.segments : Math.max(3, Math.round(length / (f.thickness * 1.8)))
             readonly property real piece: (length - (count - 1) * gap) / count
             readonly property real reach: f.fill * count
             model: f.shape === "strip" ? count : 0

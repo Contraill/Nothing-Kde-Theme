@@ -43,7 +43,8 @@ QtObject {
     }
     // A beat is a hit that rises out of a quiet moment.
     property int beats: 0
-    property double beatTime: 0
+    // Long ago, so no light takes the start for a beat.
+    property double beatTime: -1e9
     property real beatStrength: 0
     property bool armed: true
     // The clock the lights fade by; ticks while anything is lit.

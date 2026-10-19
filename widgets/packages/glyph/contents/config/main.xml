@@ -26,6 +26,12 @@
     <entry name="corner" type="Int">
       <default>0</default>
     </entry>
+    <!-- The strip's segments, 2 to 16; 0 picks them from its length -->
+    <entry name="segments" type="Int">
+      <default>0</default>
+      <min>0</min>
+      <max>16</max>
+    </entry>
     <!-- How far round the arc goes, in degrees -->
     <entry name="arcSweep" type="Int">
       <default>255</default>
