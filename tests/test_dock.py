@@ -17,8 +17,8 @@ class DockTests(unittest.TestCase):
 
     def test_expanded_clock_keeps_seconds_next_to_narrow_digits(self):
         text = (UI.parent / 'island/ui/ExpandedPanel.qml').read_text()
-        clock = text.split('id: horaTxt', 1)[1].split('TextMetrics', 1)[0]
-        self.assertIn('width: moldeHora.width', clock)
+        clock = text.split('id: time\n', 1)[1].split('TextMetrics', 1)[0]
+        self.assertIn('width: timeWidth.width', clock)
         self.assertIn('horizontalAlignment: Text.AlignRight', clock)
 
     def test_dock_keeps_native_pinning_and_tree_grouping(self):

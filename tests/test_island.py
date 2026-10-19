@@ -162,7 +162,7 @@ class IslandTests(unittest.TestCase):
         compact = (UI / 'CompactPill.qml').read_text()
         self.assertLess(compact.index('id: persistentBattery'), compact.index('id: rightGroup'))
         self.assertIn('anchors.right: persistentBattery.visible ? persistentBattery.left', compact)
-        self.assertIn('id: headerBattery', (UI / 'ExpandedPanel.qml').read_text())
+        self.assertIn('id: battery\n', (UI / 'ExpandedPanel.qml').read_text())
         self.assertIn('root.percent + "%"', (UI / 'Battery.qml').read_text())
 
     def test_brightness_overlay_requires_native_capability(self):

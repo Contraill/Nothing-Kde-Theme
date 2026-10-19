@@ -1,359 +1,260 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick
 import org.kde.plasma.plasmoid
 import org.kde.plasma.plasma5support as P5Support
 import "."
+
+// Lock, log out, sleep, hibernate, restart and shut down through the
+// session's own D-Bus services. Whatever ends the session asks once more,
+// unless the island settings turn that off.
 Item {
-    id: popup
+    id: root
 
     signal closed
+    signal actionRequested(string command)
     property var panelConfig: Plasmoid.configuration
     readonly property bool confirmPowerActions: panelConfig?.confirmPowerActions ?? true
-    signal actionRequested(string command)
-    onActionRequested: command => correr(command)
-    onConfirmPowerActionsChanged: confirmando = ""
+    readonly property bool executing: ControlHub.busy
+    // The title of the action waiting for a yes.
+    property string pending: ""
+    property bool canSuspend: false
+    property bool canHibernate: false
+
+    onConfirmPowerActionsChanged: pending = ""
+    onActionRequested: command => run(command)
+
+    // A second click on the same action takes the question back.
     function requestAction(title, command, confirmable) {
         if (executing) return;
-        if (!confirmable || !confirmPowerActions) {
-            confirmando = "";
+        if (confirmable && confirmPowerActions) {
+            pending = pending === title ? "" : title;
+        } else {
+            pending = "";
             actionRequested(command);
-        } else confirmando = confirmando === title ? "" : title;
+        }
     }
-    readonly property int listaMax: 344
+    function run(command) {
+        if (Backend.preview || executing) return;
+        Exec.run(command);
+        closed();
+    }
 
-    implicitHeight: col.implicitHeight + 30
-    property string confirmando: ""
-    property bool puedeSuspender: false
-    property bool puedeHibernar: false
-    readonly property bool executing: ControlHub.busy
+    readonly property string session: "busctl --user call org.kde.Shutdown /Shutdown org.kde.Shutdown "
+    readonly property string power: "busctl --user call org.freedesktop.PowerManagement /org/freedesktop/PowerManagement org.freedesktop.PowerManagement "
+    readonly property var actions: [
+        {icon: "lock", title: "LOCK", detail: "Asks for the password on return", confirm: false, shown: true,
+            command: "busctl --user call org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver Lock"},
+        {icon: "logout", title: "LOG OUT", detail: "Closes the open programs", confirm: true, shown: true, command: session + "logout"},
+        {icon: "bedtime", title: "SLEEP", detail: "Screen off, everything stays as it is", confirm: true, shown: canSuspend, command: power + "Suspend"},
+        {icon: "downloading", title: "HIBERNATE", detail: "Saves everything to disk and powers off", confirm: true, shown: canHibernate, command: power + "Hibernate"},
+        {icon: "restart_alt", title: "RESTART", detail: "Powers off and starts again", confirm: true, shown: true, command: session + "logoutAndReboot"},
+        {icon: "power_settings_new", title: "SHUT DOWN", detail: "Powers off the computer", confirm: true, shown: true, command: session + "logoutAndShutdown"}
+    ]
 
-    readonly property string cmdPuede: 'busctl --user --json=short call org.freedesktop.PowerManagement /org/freedesktop/PowerManagement org.freedesktop.PowerManagement CanSuspend; echo ---; busctl --user --json=short call org.freedesktop.PowerManagement /org/freedesktop/PowerManagement org.freedesktop.PowerManagement CanHibernate'
-
-    Component.onCompleted: if (!Backend.preview) popup.consulta.connectSource(Exec.command(popup.cmdPuede))
-    readonly property P5Support.DataSource consulta: P5Support.DataSource {
+    // PowerDevil knows whether this machine can sleep or hibernate.
+    readonly property string capabilityQuery: 'busctl --user --json=short call org.freedesktop.PowerManagement /org/freedesktop/PowerManagement org.freedesktop.PowerManagement CanSuspend; echo ---; busctl --user --json=short call org.freedesktop.PowerManagement /org/freedesktop/PowerManagement org.freedesktop.PowerManagement CanHibernate'
+    readonly property P5Support.DataSource capabilities: P5Support.DataSource {
         engine: "executable"
-        connectedSources: []
+        onNewData: (source, data) => {
+            disconnectSource(source);
+            const answers = String(data.stdout ?? "").split("---");
+            root.canSuspend = answers[0].includes("true");
+            root.canHibernate = (answers[1] ?? "").includes("true");
+        }
+    }
+    Component.onCompleted: if (!Backend.preview) capabilities.connectSource(Exec.command(capabilityQuery))
 
-        onNewData: (cmd, data) => {
-            disconnectSource(cmd);
-            const partes = String(data["stdout"] ?? "").split("---");
-            popup.puedeSuspender = partes.length > 0 && partes[0].indexOf("true") >= 0;
-            popup.puedeHibernar = partes.length > 1 && partes[1].indexOf("true") >= 0;
+    implicitHeight: content.implicitHeight + 30
+
+    component PillButton: Rectangle {
+        id: pill
+        property string label
+        property bool filled: false
+        signal clicked
+        width: caption.implicitWidth + 24
+        height: 28
+        radius: 14
+        color: filled ? (area.containsMouse ? Qt.lighter(Theme.alert, 1.15) : Theme.alert)
+            : Qt.alpha(Theme.fg, area.containsMouse ? Theme.stateHover : 0)
+        border.width: filled ? 0 : 1
+        border.color: Theme.outline
+        Behavior on color { ColorAnimation { duration: Theme.durShort } }
+        Text {
+            id: caption
+            anchors.centerIn: parent
+            text: pill.label
+            color: Theme.fg
+            font.family: Theme.font
+            font.pixelSize: Theme.labelSmall
+            font.weight: Font.Medium
+            font.letterSpacing: Theme.labelSpacing
+        }
+        MouseArea {
+            id: area
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: pill.clicked()
         }
     }
 
-    function correr(cmd) {
-        if (Backend.preview || executing) return;
-        Exec.run(cmd);
-        popup.closed();
-    }
+    Column {
+        id: content
+        anchors.left: parent.left
+        anchors.right: parent.right
+        spacing: 10
 
-    Item {
-        id: card
-        anchors.fill: parent
-
-        Column {
-            id: col
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            spacing: 10
-            Item {
-                width: parent.width
+        Item {
+            width: parent.width
+            height: 26
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                text: Cfg.t("POWER")
+                color: Theme.fgFaint
+                font.family: Theme.font
+                font.pixelSize: Theme.labelSmall
+                font.letterSpacing: Theme.labelSpacing
+            }
+            Rectangle {
+                anchors.right: parent.right
+                width: 26
                 height: 26
-
+                radius: 13
+                color: closeArea.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
+                Behavior on color { ColorAnimation { duration: Theme.durShort } }
                 Text {
-                    anchors.left: parent.left
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: Cfg.t("POWER")
-                    color: Theme.fgFaint
-                    font.family: Theme.font
-                    font.pixelSize: Theme.labelSmall
-                    font.letterSpacing: Theme.labelSpacing
+                    anchors.centerIn: parent
+                    text: "close"
+                    color: closeArea.containsMouse ? Theme.fg : Theme.fgDim
+                    font.family: Theme.fontIcons
+                    font.pixelSize: 15
                 }
-
-                Rectangle {
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    width: 26
-                    height: 26
-                    radius: height / 2
-                    color: closeMa.containsMouse ? Theme.surfaceHigh : Theme.surfaceAlt
-
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: Theme.durShort
-                        }
-                    }
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: "close"
-                        color: closeMa.containsMouse ? Theme.fg : Theme.fgDim
-                        font.family: Theme.fontIcons
-                        font.pixelSize: 15
-                    }
-
-                    MouseArea {
-                        id: closeMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: popup.closed()
-                    }
+                MouseArea {
+                    id: closeArea
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: root.closed()
                 }
             }
-            component Opcion: Rectangle {
-                id: op
-                property string icono: ""
-                property string titulo: ""
-                property string detalle: ""
-                property string comando: ""
-                property bool pesada: false
-                enabled: !popup.executing
+        }
 
-                readonly property bool preguntando: popup.confirmando === op.titulo
-
-                width: lista.width
-                height: preguntando ? 78 : 44
-                radius: Theme.shapeMd
-                color: opMa.containsMouse || op.preguntando ? Theme.surfaceHigh : Theme.surfaceAlt
-
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Theme.durShort
-                    }
-                }
-                Behavior on height {
-                    NumberAnimation {
-                        duration: Theme.durMedium
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: Theme.emphasized
-                    }
-                }
-
-                Item {
-                    id: fila
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    height: 44
-
-                    Text {
-                        id: opIcon
-                        anchors.left: parent.left
-                        anchors.leftMargin: 14
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: op.icono
-                        color: op.pesada ? Theme.alert : Theme.fg
-                        font.family: Theme.fontIcons
-                        font.pixelSize: 20
-                    }
-
-                    Column {
-                        anchors.left: opIcon.right
-                        anchors.leftMargin: 12
-                        anchors.right: parent.right
-                        anchors.rightMargin: 12
-                        anchors.verticalCenter: parent.verticalCenter
-                        spacing: 0
-
-                        Text {
-                            width: parent.width
-                            text: op.titulo
-                            color: Theme.fg
-                            font.family: Theme.font
-                            font.pixelSize: Theme.bodySmall
-                            font.weight: Font.Medium
-                            font.letterSpacing: Theme.labelSpacing
-                            elide: Text.ElideRight
-                        }
-
-                        Text {
-                            width: parent.width
-                            visible: op.detalle !== ""
-                            text: op.detalle
-                            color: Theme.fgDim
-                            font.family: Theme.font
-                            font.pixelSize: Theme.labelSmall
-                            elide: Text.ElideRight
-                        }
-                    }
-
-                    MouseArea {
-                        id: opMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            popup.requestAction(op.titulo, op.comando, op.pesada);
-                        }
-                    }
-                }
-                Row {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 46
-                    anchors.top: fila.bottom
-                    anchors.topMargin: 2
+        // Scrolls once the list outgrows the island.
+        Item {
+            width: parent.width
+            height: Math.min(344, list.contentHeight)
+            Flickable {
+                id: list
+                anchors.fill: parent
+                contentHeight: options.implicitHeight
+                clip: true
+                boundsBehavior: Flickable.StopAtBounds
+                flickDeceleration: 3500
+                Column {
+                    id: options
+                    width: list.width
                     spacing: 6
-                    visible: op.preguntando
+                    Repeater {
+                        model: root.actions
+                        Rectangle {
+                            id: option
+                            required property var modelData
+                            readonly property string title: Cfg.t(modelData.title)
+                            readonly property string command: modelData.command
+                            readonly property bool asking: root.pending === title
+                            visible: modelData.shown
+                            enabled: !root.executing
+                            width: options.width
+                            height: asking ? 78 : 44
+                            radius: Theme.shapeMd
+                            color: area.containsMouse || asking ? Theme.surfaceHigh : Theme.surfaceAlt
+                            Behavior on color { ColorAnimation { duration: Theme.durShort } }
+                            Behavior on height { NumberAnimation { duration: Theme.durMedium; easing.type: Easing.Bezier; easing.bezierCurve: Theme.emphasized } }
 
-                    Rectangle {
-                        width: siTxt.implicitWidth + 24
-                        height: 28
-                        radius: height / 2
-                        color: siMa.containsMouse ? Qt.lighter(Theme.alert, 1.15) : Theme.alert
-
-                        Behavior on color {
-                            ColorAnimation {
-                                duration: Theme.durShort
+                            Item {
+                                id: row
+                                width: parent.width
+                                height: 44
+                                Text {
+                                    id: icon
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: 14
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    text: option.modelData.icon
+                                    // Red for whatever ends the session.
+                                    color: option.modelData.confirm ? Theme.alert : Theme.fg
+                                    font.family: Theme.fontIcons
+                                    font.pixelSize: 20
+                                }
+                                Column {
+                                    anchors.left: icon.right
+                                    anchors.right: parent.right
+                                    anchors.leftMargin: 12
+                                    anchors.rightMargin: 12
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    Text {
+                                        width: parent.width
+                                        text: option.title
+                                        color: Theme.fg
+                                        font.family: Theme.font
+                                        font.pixelSize: Theme.bodySmall
+                                        font.weight: Font.Medium
+                                        font.letterSpacing: Theme.labelSpacing
+                                        elide: Text.ElideRight
+                                    }
+                                    Text {
+                                        width: parent.width
+                                        text: Cfg.t(option.modelData.detail)
+                                        color: Theme.fgDim
+                                        font.family: Theme.font
+                                        font.pixelSize: Theme.labelSmall
+                                        elide: Text.ElideRight
+                                    }
+                                }
+                                MouseArea {
+                                    id: area
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: root.requestAction(option.title, option.command, option.modelData.confirm)
+                                }
+                            }
+                            // The question: yes in red, or cancel.
+                            Row {
+                                x: 46
+                                anchors.top: row.bottom
+                                anchors.topMargin: 2
+                                spacing: 6
+                                visible: option.asking
+                                PillButton { label: Cfg.t("YES"); filled: true; onClicked: root.actionRequested(option.command) }
+                                PillButton { label: Cfg.t("CANCEL"); onClicked: root.pending = "" }
                             }
                         }
-
-                        Text {
-                            id: siTxt
-                            anchors.centerIn: parent
-                            text: Cfg.t("YES")
-                            color: Theme.fg
-                            font.family: Theme.font
-                            font.pixelSize: Theme.labelSmall
-                            font.weight: Font.Medium
-                            font.letterSpacing: Theme.labelSpacing
-                        }
-
-                        MouseArea {
-                            id: siMa
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: popup.actionRequested(op.comando)
-                        }
-                    }
-
-                    Rectangle {
-                        width: noTxt.implicitWidth + 24
-                        height: 28
-                        radius: height / 2
-                        color: noMa.containsMouse ? Qt.alpha(Theme.fg, Theme.stateHover) : Qt.alpha(Theme.fg, 0)
-                        border.width: 1
-                        border.color: Theme.outline
-
-                        Text {
-                            id: noTxt
-                            anchors.centerIn: parent
-                            text: Cfg.t("CANCEL")
-                            color: Theme.fg
-                            font.family: Theme.font
-                            font.pixelSize: Theme.labelSmall
-                            font.weight: Font.Medium
-                            font.letterSpacing: Theme.labelSpacing
-                        }
-
-                        MouseArea {
-                            id: noMa
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            cursorShape: Qt.PointingHandCursor
-                            onClicked: popup.confirmando = ""
-                        }
                     }
                 }
             }
-            Item {
-                width: parent.width
-                height: Math.min(popup.listaMax, lista.contentHeight)
-
-                Flickable {
-                    id: lista
-                    anchors.fill: parent
-                    contentHeight: dentro.implicitHeight
-                    clip: true
-                    boundsBehavior: Flickable.StopAtBounds
-                    flickDeceleration: 3500
-
-                    Column {
-                        id: dentro
-                        width: lista.width
-                        spacing: 6
-
-            Opcion {
-                icono: "lock"
-                titulo: Cfg.t("LOCK")
-                detalle: Cfg.t("Asks for the password on return")
-                comando: "busctl --user call org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver Lock"
+            // A thin scroll indicator, brighter while the list moves.
+            Rectangle {
+                anchors.right: parent.right
+                anchors.rightMargin: 1
+                visible: list.contentHeight > list.height
+                width: 3
+                radius: 1.5
+                height: Math.max(24, list.height * list.height / list.contentHeight)
+                y: list.contentHeight > list.height ? list.contentY / (list.contentHeight - list.height) * (list.height - height) : 0
+                color: Theme.fgFaint
+                opacity: list.moving ? 0.9 : 0.25
+                Behavior on opacity { NumberAnimation { duration: Theme.durMedium } }
             }
-
-            Opcion {
-                icono: "logout"
-                titulo: Cfg.t("LOG OUT")
-                detalle: Cfg.t("Closes the open programs")
-                comando: "busctl --user call org.kde.Shutdown /Shutdown org.kde.Shutdown logout"
-                pesada: true
-            }
-
-            Opcion {
-                icono: "bedtime"
-                titulo: Cfg.t("SLEEP")
-                detalle: Cfg.t("Screen off, everything stays as it is")
-                comando: "busctl --user call org.freedesktop.PowerManagement /org/freedesktop/PowerManagement org.freedesktop.PowerManagement Suspend"
-                visible: popup.puedeSuspender
-                pesada: true
-            }
-
-            Opcion {
-                icono: "downloading"
-                titulo: Cfg.t("HIBERNATE")
-                detalle: Cfg.t("Saves everything to disk and powers off")
-                comando: "busctl --user call org.freedesktop.PowerManagement /org/freedesktop/PowerManagement org.freedesktop.PowerManagement Hibernate"
-                visible: popup.puedeHibernar
-                pesada: true
-            }
-
-            Opcion {
-                icono: "restart_alt"
-                titulo: Cfg.t("RESTART")
-                detalle: Cfg.t("Powers off and starts again")
-                comando: "busctl --user call org.kde.Shutdown /Shutdown org.kde.Shutdown logoutAndReboot"
-                pesada: true
-            }
-
-            Opcion {
-                icono: "power_settings_new"
-                titulo: Cfg.t("SHUT DOWN")
-                detalle: Cfg.t("Powers off the computer")
-                comando: "busctl --user call org.kde.Shutdown /Shutdown org.kde.Shutdown logoutAndShutdown"
-                pesada: true
-            }
-                    }
-                }
-                Rectangle {
-                    anchors.right: parent.right
-                    anchors.rightMargin: 1
-                    width: 3
-                    radius: 1.5
-                    color: Theme.fgFaint
-
-                    visible: lista.contentHeight > lista.height
-                    height: Math.max(24, lista.height * (lista.height / lista.contentHeight))
-                    y: (lista.contentHeight <= lista.height) ? 0 : (lista.contentY / (lista.contentHeight - lista.height)) * (lista.height - height)
-
-                    opacity: lista.moving ? 0.9 : 0.25
-
-                    Behavior on opacity {
-                        NumberAnimation {
-                            duration: Theme.durMedium
-                        }
-                    }
-                }
-            }
-            Text {
-                width: parent.width
-                text: popup.executing ? Cfg.t("WORKING") : ""
-                visible: text.length > 0
-                color: Theme.alert
-                font.family: Theme.font
-                font.pixelSize: Theme.bodySmall
-                wrapMode: Text.WordWrap
-            }
+        }
+        Text {
+            width: parent.width
+            visible: root.executing
+            text: Cfg.t("WORKING")
+            color: Theme.alert
+            font.family: Theme.font
+            font.pixelSize: Theme.bodySmall
+            wrapMode: Text.WordWrap
         }
     }
 }

@@ -22,16 +22,16 @@ Item {
         }
         function test_actions(data) {
             page.requestAction(data.action,"test-only",true);
-            compare(spy.count,0);compare(page.confirmando,data.action);
-            page.requestAction(data.action,"test-only",true);compare(page.confirmando,"");
+            compare(spy.count,0);compare(page.pending,data.action);
+            page.requestAction(data.action,"test-only",true);compare(page.pending,"");
             config.confirmPowerActions=false;
             page.requestAction(data.action,"test-only",true);
-            compare(spy.count,1);compare(page.confirmando,"");
+            compare(spy.count,1);compare(page.pending,"");
         }
         function test_menu_contains_only_native_session_actions() {
             const commands = [];
             function collect(item) {
-                if (item.comando !== undefined) commands.push(item.comando);
+                if (item.command !== undefined) commands.push(item.command);
                 for (const child of item.children || []) collect(child);
             }
             collect(page);
@@ -52,7 +52,7 @@ Item {
         }
         function test_confirmation_change_clears_pending() {
             page.requestAction("Shutdown","test-only",true);
-            config.confirmPowerActions=false;compare(page.confirmando,"");compare(spy.count,0);
+            config.confirmPowerActions=false;compare(page.pending,"");compare(spy.count,0);
         }
         function test_settings_toggle_saves_and_reloads() {
             let settings=settingsFactory.createObject(parent);

@@ -20,10 +20,10 @@ class FinalSettings(unittest.TestCase):
             self.assertNotIn('[Icons]',defaults.read_text())
     def test_power_backend_keeps_native_authority(self):
         text=(ROOT/'plasmoids/com.nothingplasma.panel/contents/island/ui/PowerView.qml').read_text()
-        for action in ('logoutAndShutdown','logoutAndReboot','PowerManagement Suspend'):
+        for action in ('logoutAndShutdown','logoutAndReboot','org.freedesktop.PowerManagement /org/freedesktop/PowerManagement','power + "Suspend"'):
             self.assertIn(action,text)
         self.assertNotIn('--force',text)
         self.assertNotIn('--ignore-inhibitors',text)
-        self.assertIn('popup.requestAction(op.titulo, op.comando, op.pesada)',text)
+        self.assertIn('root.requestAction(option.title, option.command, option.modelData.confirm)',text)
 
 if __name__=='__main__': unittest.main()
