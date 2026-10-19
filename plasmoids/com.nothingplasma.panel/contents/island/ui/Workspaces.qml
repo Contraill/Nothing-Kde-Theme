@@ -1,93 +1,66 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
 import QtQuick
 import org.kde.taskmanager as TaskManager
 import org.kde.plasma.workspace.dbus as DBus
 import "."
+
+// Virtual desktops as dots: the current one a wide accent pill, the ones
+// with windows brighter. Click a dot to go there, scroll to step.
 Item {
     id: root
-
     implicitWidth: dots.implicitWidth
     implicitHeight: dots.implicitHeight
 
-    function activate(id) {
-        if (!id)
-            return;
-        if (Backend.preview) return;
-        // Set KWin's property over D-Bus directly instead of spawning qdbus6.
-        DBus.SessionBus.asyncCall({service: "org.kde.KWin", path: "/VirtualDesktopManager",
-            iface: "org.freedesktop.DBus.Properties", member: "Set", signature: "(ssv)",
-            arguments: ["org.kde.KWin.VirtualDesktopManager", "current", new DBus.variant(String(id))]});
-    }
-
-    function step(delta) {
-        const ids = desktops.desktopIds;
-        if (ids.length === 0)
-            return;
-        let idx = ids.indexOf(desktops.currentDesktop);
-        if (idx === -1)
-            idx = 0;
-        idx = Math.max(0, Math.min(ids.length - 1, idx + delta));
-        root.activate(ids[idx]);
-    }
-
-    TaskManager.VirtualDesktopInfo {
-        id: desktops
-    }
+    TaskManager.VirtualDesktopInfo { id: desktops }
     TaskManager.TasksModel {
         id: tasks
         groupMode: TaskManager.TasksModel.GroupDisabled
     }
-
+    // Desktop id -> true for every desktop that has a window.
     readonly property var occupied: {
-        const set = {};
-        for (var i = 0; i < tasks.count; i++) {
-            const vd = tasks.data(tasks.index(i, 0), TaskManager.AbstractTasksModel.VirtualDesktops);
-            if (!vd)
-                continue;
-            for (var j = 0; j < vd.length; j++)
-                set[vd[j]] = true;
-        }
-        return set;
+        const used = {};
+        for (let i = 0; i < tasks.count; ++i)
+            for (const id of tasks.data(tasks.index(i, 0), TaskManager.AbstractTasksModel.VirtualDesktops) ?? [])
+                used[id] = true;
+        return used;
+    }
+
+    // KWin's property is set over D-Bus directly rather than through qdbus6.
+    function activate(id) {
+        if (!id || Backend.preview) return;
+        DBus.SessionBus.asyncCall({service: "org.kde.KWin", path: "/VirtualDesktopManager",
+            iface: "org.freedesktop.DBus.Properties", member: "Set", signature: "(ssv)",
+            arguments: ["org.kde.KWin.VirtualDesktopManager", "current", new DBus.variant(String(id))]});
+    }
+    function step(delta) {
+        const ids = desktops.desktopIds;
+        if (ids.length === 0) return;
+        const here = Math.max(0, ids.indexOf(desktops.currentDesktop));
+        activate(ids[Math.max(0, Math.min(ids.length - 1, here + delta))]);
     }
 
     Row {
         id: dots
         anchors.verticalCenter: parent.verticalCenter
         spacing: 6
-
         Repeater {
             model: desktops.desktopIds
-
             Rectangle {
-                required property int index
+                id: dot
                 required property var modelData
-
-                readonly property bool focused: desktops.currentDesktop === modelData
-                readonly property bool occupied: root.occupied[modelData] === true
-
-                width: focused ? 22 : 8
-                height: 8
-                radius: height / 2
+                readonly property bool current: desktops.currentDesktop === modelData
                 anchors.verticalCenter: parent.verticalCenter
-                color: focused ? Theme.primary : occupied ? Theme.fgDim : Theme.surfaceHigh
-
-                Behavior on width {
-                    NumberAnimation {
-                        duration: Theme.durMedium
-                        easing.type: Easing.Bezier
-                        easing.bezierCurve: Theme.emphasized
-                    }
-                }
-                Behavior on color {
-                    ColorAnimation {
-                        duration: Theme.durShort
-                    }
-                }
-
+                width: current ? 22 : 8
+                height: 8
+                radius: 4
+                color: current ? Theme.primary : root.occupied[modelData] === true ? Theme.fgDim : Theme.surfaceHigh
+                Behavior on width { NumberAnimation { duration: Theme.durMedium; easing.type: Easing.Bezier; easing.bezierCurve: Theme.emphasized } }
+                Behavior on color { ColorAnimation { duration: Theme.durShort } }
                 MouseArea {
                     anchors.fill: parent
                     anchors.margins: -4
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: root.activate(parent.modelData)
+                    onClicked: root.activate(dot.modelData)
                 }
             }
         }
