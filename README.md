@@ -192,5 +192,5 @@ what was taken from where. This is not an official Nothing product.
 
 ## License
 
-[GPL](LICENSE). Store publication is not cleared yet: font, artwork and wallpaper rights
-come first.
+[GPL](LICENSE). Store publication waits on two pieces of upstream artwork, the weather
+icons and the device pictures.

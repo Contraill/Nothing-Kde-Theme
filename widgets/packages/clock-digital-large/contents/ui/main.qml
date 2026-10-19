@@ -31,25 +31,22 @@ PlasmoidItem {
     property string currentDate: ""
     property string currentTime: ""
 
-    // Font loaders for the three variants
+    // The grid faces are drawn for Nothing KDE (assets/fonts/build-clockfaces.py, SIL OFL 1.1).
     FontLoader {
         id: dottedFont
-        source: Qt.resolvedUrl("../fonts/close_dotted.ttf")
+        source: Qt.resolvedUrl("../fonts/NothingDotted.ttf")
+    }
+
+    Glassy.SerifFont { id: serifFont }
+
+    FontLoader {
+        id: tilesFont
+        source: Qt.resolvedUrl("../fonts/NothingTiles.ttf")
     }
 
     FontLoader {
-        id: serifFont
-        source: Qt.resolvedUrl("../fonts/serif.otf")
-    }
-
-    FontLoader {
-        id: arrowSubwayFont
-        source: Qt.resolvedUrl("../fonts/arrow_subway.ttf")
-    }
-
-    FontLoader {
-        id: arrowSharpFont
-        source: Qt.resolvedUrl("../fonts/arrow_shape_f.ttf")
+        id: stencilFont
+        source: Qt.resolvedUrl("../fonts/NothingStencil.ttf")
     }
 
     // Faces for EveryThing-UI's clocks (fontStyle 5 to 10).
@@ -77,7 +74,7 @@ PlasmoidItem {
         root.everyTime = Qt.formatTime(now, root.use24HourFormat ? "HH:mm" : "hh:mm")
         root.currentDate = Qt.locale().toString(now, "ddd, dd MMM")
 
-        // Arrow Subway font (fontStyle 3) uses format without separator
+        // The tiles and the stencil (fontStyle 3 and 4) show no separator
         if (root.fontStyle === 3 || root.fontStyle == 4) {
             var hours = now.getHours()
             var minutes = now.getMinutes()
@@ -170,12 +167,15 @@ PlasmoidItem {
                     switch (root.fontStyle) {
                         case 0: return dottedFont.name
                         case 2: return serifFont.name
-                        case 3: return arrowSubwayFont.name
-                        case 4: return arrowSharpFont.name
+                        case 3: return tilesFont.name
+                        case 4: return stencilFont.name
                         default: return dottedFont.name
                     }
                 }
 
+                // The size below is the largest; a longer time ("1:18 AM") shrinks to fit.
+                fontSizeMode: Text.HorizontalFit
+                minimumPixelSize: 8
                 // Adjust font size based on available space
                 font.pixelSize: {
                     var availableHeight = parent.height - (root.showDate ? dateLabel.Layout.preferredHeight : 0)
@@ -186,7 +186,7 @@ PlasmoidItem {
                     if (root.fontStyle === 0) {
                         return Math.min(availableHeight * 0.6, availableWidth / 3.5)
                     } else if (root.fontStyle === 3) {
-                        // Arrow Subway font needs more space (no colon separator)
+                        // The tiles need more space (no colon separator)
                         return Math.min(availableHeight * 0.6, availableWidth / 4.0)
                     } else {
                         // Serif font is more compact
@@ -199,7 +199,7 @@ PlasmoidItem {
                     if (root.fontStyle === 2) {
                         return 8  // Tighter spacing for serif
                     } else if (root.fontStyle === 3 || root.fontStyle == 4) {
-                        return 0  // Negative spacing for arrow subway to make numbers touch
+                        return 0  // The tiles and the stencil keep their own gap
                     } else {
                         return 12  // More spacing for dotted/matrix fonts
                     }

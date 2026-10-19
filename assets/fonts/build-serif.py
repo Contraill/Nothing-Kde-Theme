@@ -2,7 +2,7 @@
 """Build "Nothing Serif" from Google Fonts' variable Fraunces (SIL OFL 1.1).
 
 Source: https://github.com/google/fonts/raw/main/ofl/fraunces/Fraunces%5BSOFT%2CWONK%2Copsz%2Cwght%5D.ttf
-Two static display instances with plain (not "wonky") shapes, renamed so a
+Static instances (two display, one text) with plain (not "wonky") shapes, renamed so a
 system Fraunces never shadows them:
 
   build-serif.py Fraunces[SOFT,WONK,opsz,wght].ttf OUTPUT_DIR
@@ -15,6 +15,8 @@ from fontTools.varLib import instancer
 INSTANCES = {
     'NothingSerif.ttf': ('Nothing Serif', {'opsz': 144, 'wght': 500, 'SOFT': 0, 'WONK': 0}),
     'NothingSerifLight.ttf': ('Nothing Serif Light', {'opsz': 72, 'wght': 300, 'SOFT': 0, 'WONK': 0}),
+    # Text optical size: sturdy hairlines for calendars and labels at 9 to 18 px.
+    'NothingSerifText.ttf': ('Nothing Serif Text', {'opsz': 12, 'wght': 450, 'SOFT': 0, 'WONK': 0}),
 }
 
 

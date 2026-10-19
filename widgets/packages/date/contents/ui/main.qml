@@ -17,8 +17,8 @@ PlasmoidItem {
         useSystemAccent: Plasmoid.configuration.useSystemAccent
         monochrome: Plasmoid.configuration.monochrome
     }
-    FontLoader { id: serifFont; source: Qt.resolvedUrl("../fonts/serif.otf") }
-    FontLoader { id: serifLightFont; source: Qt.resolvedUrl("../fonts/serif-light.otf") }
+    Glassy.SerifFont { id: serifFont }
+    Glassy.SerifFont { id: serifLightFont; small: true }
     Timer { interval: 60000; running: true; repeat: true; onTriggered: root.today = new Date() }
     // 2 and 3, the month of dots and of numbers, are now the pages' calendar.
     readonly property int variant: Plasmoid.configuration.widgetVariant === 1 ? 1 : 0

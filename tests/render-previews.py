@@ -39,6 +39,10 @@ TURNED = {
     'date': [('calendar-0', 'widgetVariant', 0, '200x200', 'contents/ui/components/DatePages.qml',
               'property int page: 0\n', 'property int page: 1\n')],
 }
+# Clocks shown at a fixed time, as the EveryThing faces' previews (10:09).
+PINNED = {
+    'clock-digital-large': ('contents/ui/main.qml', 'var now = new Date()\n', 'var now = new Date(2026, 9, 19, 10, 9)\n'),
+}
 # Their numbers come from ksystemstats on the session bus; nothing personal shows.
 SESSION_BUS = {'system'}
 # Twice the 120 x 76 preview area of a settings card.
@@ -88,22 +92,26 @@ def render(renderer, package, key, style, size, mode, out, patch=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--renderer', type=Path, required=True)
+    parser.add_argument('packages', nargs='*', help='only these widgets (default: all)')
     args = parser.parse_args()
+    wanted = lambda package: not args.packages or package in args.packages
     # The devices widget reads Bluetooth on the system bus: their names would land in the pictures.
     connected = subprocess.run(['bluetoothctl', 'devices', 'Connected'], capture_output=True, text=True).stdout.strip()
     if connected:
         sys.exit('Disconnect Bluetooth devices first; their names would show in the previews.')
     for package, (key, styles) in STYLES.items():
+        if not wanted(package): continue
         folder = ROOT / 'widgets/packages' / package / 'contents/ui/previews'
         folder.mkdir(exist_ok=True)
         for style, size in styles.items():
             for mode, name in ((0, 'dark'), (1, 'light')):
                 out = folder / f'style-{style}-{name}.png'
-                render(args.renderer, package, key, style, size, mode, out)
+                render(args.renderer, package, key, style, size, mode, out, PINNED.get(package))
                 print(out.relative_to(ROOT), flush=True)
-    for name in ('dark', 'light'):
+    for name in ('dark', 'light') if wanted('photo') else ():
         photo_frame(ROOT / f'widgets/packages/photo/contents/ui/previews/style-0-{name}.png')
     for package, faces in TURNED.items():
+        if not wanted(package): continue
         for file, key, value, size, path, text, replacement in faces:
             for mode, name in ((0, 'dark'), (1, 'light')):
                 out = ROOT / 'widgets/packages' / package / 'contents/ui/previews' / f'{file}-{name}.png'

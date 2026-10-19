@@ -17,7 +17,7 @@
     "panel representations",
     "Bluetooth service configuration"
   ],
-  "storePublication": "blocked pending font/artwork permission",
+  "storePublication": "blocked pending artwork permission: the weather icons and the device pictures",
   "everythingUi": {
     "repository": "https://github.com/Prince-1652/EveryThing-UI",
     "commit": "d9c042967b6739b6376b69d6eda54521df4022b7",
