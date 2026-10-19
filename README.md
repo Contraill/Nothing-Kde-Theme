@@ -33,28 +33,121 @@ cd Nothing-Kde-Theme
 ./install.sh                  # install / upgrade
 ./install.sh --apply-layout   # create/repair the two panels; Plasma is reloaded
 ./install.sh --widgets-only   # desktop widgets only
+./uninstall.sh                # remove everything Nothing KDE installed
 ```
 
-Choose **Nothing KDE** (dark) or **Nothing KDE Light** in System Settings. Add the desktop
-widgets through **Add Widgets**: clocks (analog, digital and world, large), date and calendar,
-weather, media and photo (adapted from nothing-kde-widgets), and the Nothing KDE originals:
-**System Monitor** (the CPU, GPU, memory and disk you pick, as dot rings, dotted bars or a pill),
-**Note** (saves as you type, or a mantra pill), **Focus Timer** (pomodoro that survives restarts
-and notifies with Plasma's timer sound), **Devices** (the batteries of this computer, KDE Connect
-phones and Bluetooth headphones, mice and the like, as dot rings or filled circles),
-**Progress** (the year as a dot ring, or day, week, month and year bars), **Quick Toggles**
-(the ones you pick of Wi-Fi, Bluetooth, airplane mode, sound, microphone, do not disturb, night
-light, coffee mode, power profile and hotspot, over a volume bar, or a volume pill), **Greeting**, **Uptime**,
-**Visualizer**, **Glyph** (a glyph light that flashes on the beat; several play together), **Glyph
-Matrix** (a round dot matrix to draw on, with a clock, animations, or your own picture or GIF)
-and **Pet** (a dot-matrix cat, dog, hamster or robot).
+Choose **Nothing KDE** (dark) or **Nothing KDE Light** in System Settings. Existing panels are
+retained; `--apply-layout` creates a backup first and removes only retired Nothing side panels.
 
-Most widgets also offer the designs of [EveryThing-UI](https://github.com/Prince-1652/EveryThing-UI)
-(Prince-1652, MIT) as styles: pills, circles and blocks for the clocks, date and calendar,
-device batteries, system status, a CPU, GPU, memory or disk gauge and network, the quick
-toggles, year progress and countdown,
-player, photo frames, weather and a rotating mantra, plus four big wallpaper clocks drawn with
-our own faces. Choose them in each widget's settings.
+## Island and dock
+
+The compact island shows workspaces, weather, the clock, media, and live activities: file
+transfer progress, a microphone-in-use dot and the phone's battery from KDE Connect. Volume,
+mute and microphone changes briefly replace the clock (Plasma's own audio OSD is turned off
+while this is enabled). Workspaces, weather, clock, player, network, volume, battery and
+phone can each be hidden in island settings.
+
+The expanded island's cards open detail pages with the chevron or a right-click: Wi-Fi
+(join, forget, share as QR code, hotspot, airplane mode), Bluetooth (pair, connect, battery),
+output and input device selection with both volumes and a live microphone level, and
+brightness for every display plus the keyboard. Hovering the battery shows the remaining time and battery health.
+
+Notifications support actions, inline replies and grouping by application. Do Not Disturb
+stays on until it is turned off. The calendar marks holidays (Plasma's holiday regions) and,
+optionally, moon phases.
+
+Click the island weather area to choose a city or refresh the data. Open-Meteo receives the
+city search/coordinates and your IP; no API key is needed.
+[Weather data](https://open-meteo.com/) uses CC BY 4.0. The selected location is stored in
+panel configuration.
+
+Launcher settings list installed applications; visibility choices apply to this launcher and
+its search results.
+
+The island's appearance settings include **Show system tray** and **Configure tray items**.
+The latter opens KDE's native per-application visibility settings and remains available when
+the entire tray is hidden. These choices persist in Plasma configuration; updating Nothing
+does not reset an existing tray. Application icons appear between the player and battery.
+
+Meta+1 … Meta+9 open or cycle the dock's applications, the mouse wheel cycles an icon's
+windows, and dropping files on an icon opens them with that application. Icons show unread
+notification badges (following Plasma's task-manager badge settings), a progress ring for
+running transfers and a window count. Launcher settings can limit the dock to the current
+desktop or screen. The launcher's top row lists the most used applications, and typing
+anywhere starts a search.
+
+Middle-click a window preview to close that window; the application's other windows stay
+open.
+
+Drag dock icons to preview a new order; releasing commits it once. Releasing above or below
+the dock cancels the move. Right-click menus include actions supplied by the application's
+desktop entry, when available (for example Steam's Big Picture action).
+An icon with windows on another workspace has an accent-colored dot. In the window preview,
+each window on another workspace is dimmed and labeled with that workspace's name. Windows
+shown on all workspaces are not marked. Right-click
+the launcher's settings button to open KDE System Settings; left-click opens launcher settings.
+
+With automatic wallpaper enabled, Nothing reapplies its light/dark pair after panel startup,
+screen changes and activity changes. Custom images and other wallpaper plugins are preserved,
+including overrides on previously themed screens. Empty wallpaper settings and KDE's stock
+`Next` wallpaper are treated as unconfigured desktops. To deliberately keep `Next`, turn off
+automatic wallpaper in Nothing's settings.
+
+## Desktop widgets
+
+Add them through **Add Widgets**. Clocks, date, weather, media and photo are adapted from
+nothing-kde-widgets; the rest are Nothing KDE originals.
+
+| Widget | What it shows |
+| --- | --- |
+| Analog, Digital and World, Large Clock | the time; the large clock has ten faces, from dotted and serif to blocks, bubbles and outline |
+| Date | a page that turns to a calendar (classic, dots or numbers), or a pill that turns to its week |
+| Weather | the forecast, as pages or circles (Open-Meteo) |
+| Media | the playing track as cover pages, a player or a pill |
+| Photo | your picture in a frame, a circle or a wide pill |
+| System Monitor | the CPU, GPU, memory and disk you pick, as dot rings, dotted bars, a pill or one gauge; a sleeping graphics card is never woken to be read |
+| Devices | the batteries of this computer, KDE Connect phones and Bluetooth devices, each of a kind you choose, as dot rings or filled circles |
+| Quick Toggles | the ones you pick of Wi-Fi, Bluetooth, airplane mode, sound, microphone, do not disturb, night light, coffee mode, power profile and hotspot, over a volume bar; or the volume alone |
+| Note | a note that saves as you type, or a rotating mantra |
+| Focus Timer | a pomodoro that survives restarts and notifies with Plasma's timer sound |
+| Progress | the year as a dot ring, day-to-year bars, or a countdown to midnight |
+| Greeting | good morning, afternoon or evening, with or without the time |
+| Uptime | how long the computer has been on, day by day through the week |
+| Visualizer | bands that move with the sound |
+| Glyph | one light of a glyph interface (ring, arc, strip, line, dot, corner, dot ring) that flashes on the beat; any number of them play one show together |
+| Glyph Matrix | a round 25 × 25 dot matrix to draw on, with a clock, animations, or a picture or GIF |
+| Pet | a dot-matrix cat, dog, hamster or robot peeking over the edge |
+
+Each widget's settings show its styles as cards with a preview. One shared row sets the
+theme (dark, light or following KDE), **Monochrome**, the system accent and, where it fits,
+**On the wallpaper, without a card**. The accent marks what matters — rings, bars, icons, the
+current page — while numbers stay plain. Many styles are designs from
+[EveryThing-UI](https://github.com/Prince-1652/EveryThing-UI) (Prince-1652, MIT), redrawn with
+our own faces.
+
+Normal desktop applets share the wallpaper's window, so the widget surface uses translucency
+rather than fake blur or an external effect
+([KDE desktop view](https://invent.kde.org/plasma/plasma-workspace/-/blob/master/shell/desktopview.cpp)).
+
+## Login, splash and boot
+
+### Splash and boot animation
+
+Both show the same ring of dots: a comet in the KDE accent circles, then the ring fills.
+The Plasma splash is a single entry, **Nothing KDE**, used by the light and dark themes and
+drawn in the active colours.
+
+The boot animation is a Plymouth theme drawn by `runtime/bootsplash.py` (no foreign
+images). Installing needs the administrator password once:
+
+```sh
+./install.sh --boot-splash install   # or remove; rebuilds the initramfs
+```
+
+It installs a root-owned helper and a polkit rule that lets the active session recolour the
+boot animation, and nothing else, without a password: when the KDE accent changes, the
+island redraws it and rebuilds the initramfs in the background with the distribution's own
+`plymouth-set-default-theme -R`. Removing restores the previous Plymouth theme.
 
 ### Boot login wallpaper (Plasma Login Manager)
 
@@ -75,32 +168,6 @@ wallpaper is a fixed selection; changing a user's desktop mode does not change t
 login screen. Uninstall removes the optional integration and exposes the previous settings;
 files edited after installation are preserved with an error rather than overwritten.
 SDDM uses a different configuration and is not changed by this command.
-
-Desktop widgets share a palette-driven Glassy surface; images and artwork keep their own
-content. Normal desktop applets share the wallpaper's window, so the widget surface uses
-translucency rather than fake blur or an external effect
-([KDE desktop view](https://invent.kde.org/plasma/plasma-workspace/-/blob/master/shell/desktopview.cpp)).
-
-Existing panels are retained. `--apply-layout` creates a backup first and removes only
-retired Nothing side panels.
-
-## Splash and boot animation
-
-Both show the same ring of dots: a comet in the KDE accent circles, then the ring fills.
-The Plasma splash is a single entry, **Nothing KDE**, used by the light and dark themes and
-drawn in the active colours.
-
-The boot animation is a Plymouth theme drawn by `runtime/bootsplash.py` (no foreign
-images). Installing needs the administrator password once:
-
-```sh
-./install.sh --boot-splash install   # or remove; rebuilds the initramfs
-```
-
-It installs a root-owned helper and a polkit rule that lets the active session recolour the
-boot animation, and nothing else, without a password: when the KDE accent changes, the
-island redraws it and rebuilds the initramfs in the background with the distribution's own
-`plymouth-set-default-theme -R`. Removing restores the previous Plymouth theme.
 
 ## Sounds
 
@@ -318,60 +385,6 @@ Store-only recovery helper:
 ~/.local/share/plasma/plasmoids/com.nothingplasma.panel/contents/tools/privacy.py
 ```
 
-## Island and dock
-
-The compact island shows workspaces, weather, the clock, media, and live activities: file
-transfer progress, a microphone-in-use dot and the phone's battery from KDE Connect. Volume,
-mute and microphone changes briefly replace the clock (Plasma's own audio OSD is turned off
-while this is enabled). Workspaces, weather, clock, player, network, volume, battery and
-phone can each be hidden in island settings.
-
-The expanded island's cards open detail pages with the chevron or a right-click: Wi-Fi
-(join, forget, share as QR code, hotspot, airplane mode), Bluetooth (pair, connect, battery),
-output and input device selection with both volumes and a live microphone level, and
-brightness for every display plus the keyboard. Hovering the battery shows the remaining time and battery health.
-
-Notifications support actions, inline replies and grouping by application. Do Not Disturb
-stays on until it is turned off. The calendar marks holidays (Plasma's holiday regions) and,
-optionally, moon phases.
-
-Click the island weather area to choose a city or refresh the data. Open-Meteo receives the
-city search/coordinates and your IP; no API key is needed.
-[Weather data](https://open-meteo.com/) uses CC BY 4.0. The selected location is stored in
-panel configuration.
-
-Launcher settings list installed applications; visibility choices apply to this launcher and
-its search results.
-
-The island's appearance settings include **Show system tray** and **Configure tray items**.
-The latter opens KDE's native per-application visibility settings and remains available when
-the entire tray is hidden. These choices persist in Plasma configuration; updating Nothing
-does not reset an existing tray. Application icons appear between the player and battery.
-
-Meta+1 … Meta+9 open or cycle the dock's applications, the mouse wheel cycles an icon's
-windows, and dropping files on an icon opens them with that application. Icons show unread
-notification badges (following Plasma's task-manager badge settings), a progress ring for
-running transfers and a window count. Launcher settings can limit the dock to the current
-desktop or screen. The launcher's top row lists the most used applications, and typing
-anywhere starts a search.
-
-Middle-click a window preview to close that window; the application's other windows stay
-open.
-
-Drag dock icons to preview a new order; releasing commits it once. Releasing above or below
-the dock cancels the move. Right-click menus include actions supplied by the application's
-desktop entry, when available (for example Steam's Big Picture action).
-An icon with windows on another workspace has an accent-colored dot. In the window preview,
-each window on another workspace is dimmed and labeled with that workspace's name. Windows
-shown on all workspaces are not marked. Right-click
-the launcher's settings button to open KDE System Settings; left-click opens launcher settings.
-
-With automatic wallpaper enabled, Nothing reapplies its light/dark pair after panel startup,
-screen changes and activity changes. Custom images and other wallpaper plugins are preserved,
-including overrides on previously themed screens. Empty wallpaper settings and KDE's stock
-`Next` wallpaper are treated as unconfigured desktops. To deliberately keep `Next`, turn off
-automatic wallpaper in Nothing's settings.
-
 ## Test and package
 
 ```sh
@@ -387,6 +400,18 @@ NOTHING_NATIVE_QML_RUNNER=/tmp/nothing-native-tests/nothing-native-quick ./valid
 ```
 
 Qt QML tools enable lint and interaction tests.
+
+The desktop widgets are loaded with real Plasma by a small renderer, every style in dark and
+light, without touching your desktop; the same renderer draws the settings previews of the
+styles that are not live:
+
+```sh
+cmake -S tests/widget-render -B /tmp/nothing-widget-render
+cmake --build /tmp/nothing-widget-render
+python3 tests/check-widgets.py --renderer /tmp/nothing-widget-render/nothing-kde-widget-render \
+  --screenshots /tmp/nothing-widget-shots
+python3 tests/render-previews.py --renderer /tmp/nothing-widget-render/nothing-kde-widget-render
+```
 
 Translations are gettext catalogs in `po/`: `po/panel` for the island and dock (the
 `msgctxt` is the key the QML passes to `Cfg.t()`, the `msgid` the English text) and
