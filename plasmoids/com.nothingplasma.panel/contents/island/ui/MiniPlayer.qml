@@ -13,7 +13,7 @@ Item {
     readonly property int playback: player?.playbackStatus ?? Mpris.PlaybackStatus.Stopped
     readonly property bool isPlaying: playback === Mpris.PlaybackStatus.Playing
     readonly property bool active: Cfg.showMini && player !== null && playback !== Mpris.PlaybackStatus.Stopped
-    readonly property string artUrl: player?.artUrl ?? ""
+    readonly property string artUrl: Media.artUrl
 
     // The tint waits for the cover; the ink takes whichever side reads on it.
     readonly property color tint: coverSample.status === Image.Ready ? Theme.mix(Theme.surfaceAlt, coverColours.dominant, 0.30) : Theme.surfaceAlt
@@ -103,6 +103,15 @@ Item {
                     color: root.ink
                     font.family: Theme.fontIcons
                     font.pixelSize: 13
+                }
+                // The cover opens the player's window.
+                MouseArea {
+                    anchors.fill: parent
+                    enabled: root.player?.canRaise ?? false
+                    cursorShape: Qt.PointingHandCursor
+                    Accessible.role: Accessible.Button
+                    Accessible.name: Cfg.t("OPEN PLAYER")
+                    onClicked: Media.raise()
                 }
             }
             TransportButton {

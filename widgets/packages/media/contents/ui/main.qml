@@ -4,6 +4,7 @@ import QtQuick.Controls as QQC2
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.plasma.private.mpris as Mpris
+import org.kde.plasma.plasma5support as P5Support
 import org.kde.kirigami as Kirigami
 import "components" as Components
 import "everything"
@@ -31,7 +32,32 @@ PlasmoidItem {
     readonly property string track: mpris2Model.currentPlayer?.track ?? ""
     readonly property string artist: mpris2Model.currentPlayer?.artist ?? ""
     readonly property string album: mpris2Model.currentPlayer?.album ?? ""
-    readonly property string albumArt: mpris2Model.currentPlayer?.artUrl ?? ""
+    // Players that send no cover (a browser playing YouTube) get the video's
+    // thumbnail, from the address the player reports over MPRIS, which
+    // Plasma's model does not pass on.
+    readonly property string albumArt: (mpris2Model.currentPlayer?.artUrl ?? "") || thumbnail
+    property string thumbnail: ""
+    P5Support.DataSource {
+        id: shell
+        engine: "executable"
+        onNewData: (source, data) => {
+            disconnectSource(source);
+            if (source !== root.urlQuery) return;
+            const id = (String(data.stdout ?? "").match(/(?:youtube\.com\/(?:watch\?(?:\S*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/) ?? [])[1];
+            root.thumbnail = id ? "https://i.ytimg.com/vi/" + id + "/mqdefault.jpg" : "";
+        }
+    }
+    // The address of whichever player plays this title.
+    readonly property string urlQuery: "t='" + track.replace(/'/g, "'\\''") + "'; q=$(command -v qdbus6 || command -v qdbus) || exit 0; "
+        + "for s in $($q | grep -o 'org\\.mpris\\.MediaPlayer2\\.[^ ]*'); do "
+        + "m=$($q \"$s\" /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Metadata 2>/dev/null) || continue; "
+        + "printf '%s\\n' \"$m\" | grep -qxF \"xesam:title: $t\" && { printf '%s\\n' \"$m\" | grep '^xesam:url: '; exit 0; }; done"
+    // The address lands a moment after the title.
+    Timer {
+        id: lookUp
+        interval: 700
+        onTriggered: if (root.track && !(mpris2Model.currentPlayer?.artUrl ?? "")) shell.connectSource(root.urlQuery)
+    }
     readonly property string playerIconName: mpris2Model.currentPlayer?.iconName ?? ""
     readonly property int playbackStatus: mpris2Model.currentPlayer?.playbackStatus ?? 0
     readonly property bool isPlaying: root.playbackStatus === Mpris.PlaybackStatus.Playing
@@ -69,6 +95,8 @@ PlasmoidItem {
     // Reset position when track changes
     onTrackChanged: {
         root.position = mpris2Model.currentPlayer?.position ?? 0
+        root.thumbnail = ""
+        lookUp.restart()
     }
 
     // Sync position when playback starts/stops

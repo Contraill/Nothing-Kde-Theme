@@ -14,7 +14,7 @@ Item {
     readonly property var player: Media.player
     readonly property bool active: player !== null
     readonly property bool isPlaying: (player?.playbackStatus ?? 0) === Mpris.PlaybackStatus.Playing
-    readonly property string artUrl: player?.artUrl ?? ""
+    readonly property string artUrl: Media.artUrl
     // MPRIS counts microseconds.
     readonly property real length: (player?.length ?? 0) / 1000000
     readonly property real position: (player?.position ?? 0) / 1000000
