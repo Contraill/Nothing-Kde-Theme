@@ -160,7 +160,7 @@ class IslandTests(unittest.TestCase):
 
     def test_battery_is_outside_media_replacement_and_has_percentage(self):
         compact = (UI / 'CompactPill.qml').read_text()
-        self.assertLess(compact.index('id: persistentBattery'), compact.index('id: rightGroup'))
+        self.assertLess(compact.index('id: persistentBattery'), compact.index('id: statusGroup'))
         self.assertIn('anchors.right: persistentBattery.visible ? persistentBattery.left', compact)
         self.assertIn('id: battery\n', (UI / 'ExpandedPanel.qml').read_text())
         self.assertIn('root.percent + "%"', (UI / 'Battery.qml').read_text())
