@@ -65,7 +65,7 @@ class PackageTests(unittest.TestCase):
             self.assertNotIn('nothing-kde/notification-skin/apply.py', package.namelist())
             self.assertNotIn('nothing-kde/theme-state/nothing-plasma.state.json', package.namelist())
             for name in ('dolphin/manage.py', 'dolphin/profile.json', 'dolphin/style.qss', 'runtime/jsonc_edit.py',
-                         'widgets/packages/date/contents/ui/components/DatePage.qml'):
+                         'widgets/packages/date/contents/ui/components/DatePages.qml'):
                 self.assertIn('nothing-kde/' + name, package.namelist())
 
     def test_checksums_match(self):
@@ -111,7 +111,7 @@ class PackageTests(unittest.TestCase):
                 with zipfile.ZipFile(archive) as package:
                     plugin = json.loads(package.read('metadata.json'))['KPlugin']['Id']
                     if plugin.endswith('.photo'):
-                        self.assertIn('contents/default/halftone.png', package.namelist())
+                        self.assertIn('contents/default/nothing.png', package.namelist())
                         self.assertNotIn('contents/default/sample.jpeg', package.namelist())
                 for action, target in (('--install', str(archive)), ('--upgrade', str(archive)), ('--remove', plugin)):
                     result = subprocess.run(['kpackagetool6', '--type', 'Plasma/Applet', action, target],

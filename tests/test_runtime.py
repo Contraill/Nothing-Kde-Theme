@@ -72,6 +72,7 @@ assert(tray);assert.equal(tray.values.extraItems.length,0);
 tray.values.hiddenItems=['custom-app'];tray.values.extraItems=['user-widget'];
 let ids=first.map(p=>p.id);let second=run();
 assert.equal(top.widgets('org.kde.plasma.systemtray').length,1);
+assert.equal(top.widgets('org.kde.plasma.clipboard').length,1);
 assert.deepEqual(tray.values.hiddenItems,['custom-app']);assert.deepEqual(tray.values.extraItems,['user-widget']);assert.deepEqual(second.map(p=>p.id),ids);assert.equal(panels.length,4);
 assert.equal(panels[0].id,foreignId);
 assert.equal(panels.filter(p=>p.type==='com.nothingplasma.panel').find(p=>p.location==='bottom').widgets('com.nothingplasma.launcherbridge').length,1);

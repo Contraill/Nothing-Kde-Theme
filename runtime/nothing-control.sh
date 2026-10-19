@@ -518,11 +518,14 @@ case "${1:-}" in
     plasma_eval "for (const id of panelIds) {
       const p = panelById(id);
       if (!p || p.type !== 'com.nothingplasma.panel' || p.location !== 'top') continue;
-      if (p.widgets('org.kde.plasma.systemtray').length) continue;
-      const tray = p.addWidget('org.kde.plasma.systemtray');
-      tray.currentConfigGroup = ['General'];
-      tray.writeConfig('extraItems', []);
-      tray.reloadConfig();
+      if (!p.widgets('org.kde.plasma.systemtray').length) {
+        const tray = p.addWidget('org.kde.plasma.systemtray');
+        tray.currentConfigGroup = ['General'];
+        tray.writeConfig('extraItems', []);
+        tray.reloadConfig();
+      }
+      // Klipper lives in Plasma's clipboard applet: one, unseen, serves Meta+V and the clipboard tile.
+      if (!p.widgets('org.kde.plasma.clipboard').length) p.addWidget('org.kde.plasma.clipboard');
     }" >/dev/null
     ;;
   wallpaper)

@@ -3,7 +3,8 @@
   "KPlugin": {
     "Authors": [
       {
-        "Name": "Nothing KDE contributors"
+        "Email": "zinczorphin@email.com",
+        "Name": "Jack Faith"
       }
     ],
     "Category": "Graphics",
@@ -14,7 +15,7 @@
     "License": "GPL-3.0",
     "Name": "Nothing KDE — Photo",
     "Version": "0.6.0-rc35",
-    "Website": "https://github.com/Contraill/Nothing-Kde-Theme",
+    "Website": "https://github.com/jaxparrow07/nothing-kde-widgets",
     "Name[tr]": "Nothing KDE — Fotoğraf"
   },
   "X-Plasma-API-Minimum-Version": "6.0",

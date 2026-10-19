@@ -49,6 +49,10 @@
             if (!p.widgets('org.kde.plasma.notifications').length) {
                 p.addWidget('org.kde.plasma.notifications');
             }
+            // Klipper lives in Plasma's clipboard applet: one, unseen, serves Meta+V and the clipboard tile.
+            if (!p.widgets('org.kde.plasma.clipboard').length) {
+                p.addWidget('org.kde.plasma.clipboard');
+            }
             if (typeof knownWidgetTypes !== 'undefined'
                 && knownWidgetTypes.includes('com.nothingplasma.notificationbridge')
                 && !p.widgets('com.nothingplasma.notificationbridge').length) {

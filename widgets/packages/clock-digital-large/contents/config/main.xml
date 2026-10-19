@@ -6,7 +6,6 @@
   <kcfgfile name=""/>
 
   <group name="Appearance">
-    <!-- 0 dots, 1 two-tone dots, 2 serif, 3 grotesk -->
     <entry name="fontStyle" type="Int">
       <default>0</default>
     </entry>
@@ -17,10 +16,6 @@
       <default>true</default>
     </entry>
     <entry name="useDarkerFont" type="Bool">
-      <default>false</default>
-    </entry>
-    <!-- A Glassy card behind the time, for busy or same-coloured wallpapers -->
-    <entry name="showBackground" type="Bool">
       <default>false</default>
     </entry>
     <entry name="themeMode" type="Int">

@@ -14,8 +14,9 @@ class WidgetSurfaceTests(unittest.TestCase):
     def test_each_widget_uses_shared_surface_and_palette(self):
         for package in (ROOT / 'widgets/packages').iterdir():
             qml = '\n'.join(p.read_text() for p in package.rglob('*.qml'))
-            # The photo is its own card; the large clock's card is optional.
-            if package.name != 'photo':
+            if package.name == 'clock-digital-large':
+                self.assertNotIn('Glassy.GlassySurface {', qml)
+            else:
                 self.assertIn('Glassy.GlassySurface {', qml, package.name)
             self.assertIn('Glassy.WidgetColors {}', qml, package.name)
         surface = (ROOT / 'widgets/shared/GlassySurface.qml').read_text()
@@ -42,9 +43,9 @@ class WidgetSurfaceTests(unittest.TestCase):
     def test_no_double_photo_background_or_media_gradient(self):
         photo = (ROOT / 'widgets/packages/photo/contents/ui/main.qml').read_text()
         self.assertNotIn('color: nColors.background', photo)
-        self.assertIn('maskEnabled: true', photo)
-        media = (ROOT / 'widgets/packages/media/contents/ui/main.qml').read_text()
+        media = (ROOT / 'widgets/packages/media/contents/ui/components/CompactPlayer.qml').read_text()
         self.assertNotIn('GradientStop', media)
-        # The empty cover is a faint wash over the card, not an opaque square.
-        self.assertIn('color: nColors.alpha(nColors.textPrimary, 0.06)', media)
-        self.assertIn('visible: cover.status === Image.Ready', media)
+        self.assertNotIn('opacity: 0.95', media)
+        artwork = (ROOT / 'widgets/packages/media/contents/ui/components/AlbumArtwork.qml').read_text()
+        self.assertNotIn('color: artworkRoot.colors.surface', artwork)
+        self.assertIn('visible: albumCover.status === Image.Ready', artwork)

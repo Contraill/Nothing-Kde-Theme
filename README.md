@@ -1,6 +1,6 @@
 # Nothing KDE
 
-A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, fifteen desktop widgets,
+A Nothing-inspired Plasma 6 theme suite with a top island, bottom dock, fourteen desktop widgets,
 Glassy application styling, and optional application accent integrations. The UI is localized
 in Turkish and English; no custom daemon is required.
 
@@ -36,14 +36,13 @@ cd Nothing-Kde-Theme
 ```
 
 Choose **Nothing KDE** (dark) or **Nothing KDE Light** in System Settings. Add the desktop
-widgets through **Add Widgets**; most offer several styles in their settings: clocks (analog,
-digital and world, large), date and calendar, weather (Open-Meteo), media, photo, devices and
-battery, **System Monitor** (dot rings, dotted bars with the disk, or a pill), **Note** (saves
-as you type, or a mantra pill), **Focus Timer** (pomodoro that survives restarts and notifies
-with Plasma's timer sound), **Phone** (the KDE Connect phone's battery, ring and open),
-**Progress** (the year as a dot ring, or day, week, month and year bars), **Quick Toggles**
-(Wi-Fi, Bluetooth, airplane mode and volume, or a volume pill) and **Trash** (item count and
-size; click to open).
+widgets through **Add Widgets**: clocks (analog, digital and world, large), date and calendar,
+weather, media, photo, devices and battery (adapted from nothing-kde-widgets), and the Nothing
+KDE originals: **System Monitor** (dot rings, dotted bars with the disk, or a pill), **Note**
+(saves as you type, or a mantra pill), **Focus Timer** (pomodoro that survives restarts and
+notifies with Plasma's timer sound), **Phone** (the KDE Connect phone's battery, ring and open),
+**Progress** (the year as a dot ring, or day, week, month and year bars) and **Quick Toggles**
+(Wi-Fi, Bluetooth, airplane mode and volume, or a volume pill).
 
 ### Boot login wallpaper (Plasma Login Manager)
 
@@ -393,14 +392,12 @@ Store dependencies can be prepared with:
 
 Use the structure in `packaging/store-ids.example.json` and real published component IDs.
 
-**Store publication is not yet cleared.** Wallpaper redistribution rights and real Store
-IDs must be resolved first.
+**Store publication is not yet cleared.** Widget font/artwork permissions, wallpaper
+redistribution rights, and real Store IDs must be resolved first.
 
 License and attribution:
 [GPL](LICENSE),
 [Island attribution](plasmoids/com.nothingplasma.panel/contents/island/NOTICE.md),
-and each widget's `NOTICE.md`. The first versions of the clock, date, weather, media, photo
-and battery widgets were adapted from [nothing-kde-widgets](https://github.com/jaxparrow07/nothing-kde-widgets)
-by Jack Faith; they have since been rewritten for Nothing KDE.
+[widget sources](widgets/UPSTREAM.json), and each widget's `UPSTREAM-NOTICE.md`.
 
 Existing `com.nothingplasma.*` IDs remain stable to preserve panels and pinned applications.

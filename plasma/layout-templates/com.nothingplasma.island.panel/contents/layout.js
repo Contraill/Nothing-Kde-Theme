@@ -17,6 +17,8 @@ function configureRole(panel, role, location, thickness, hiding) {
 var topPanel = new Panel("com.nothingplasma.panel");
 configureRole(topPanel, "top", "top", 50, "dodgewindows");
 topPanel.addWidget("org.kde.plasma.notifications");
+// Klipper lives in Plasma's clipboard applet: one, unseen, serves Meta+V and the clipboard tile.
+topPanel.addWidget("org.kde.plasma.clipboard");
 var tray = topPanel.addWidget("org.kde.plasma.systemtray");
 tray.currentConfigGroup = ["General"];
 tray.writeConfig("extraItems", []);

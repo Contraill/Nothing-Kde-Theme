@@ -1,43 +1,46 @@
 import QtQuick
 import QtTest
-import "../../widgets/packages/date/contents/ui/components" as DateWidget
+import "../../widgets/packages/date/contents/ui/components" as Calendar
 
 Item {
     width: 300; height: 300
-    DateWidget.NothingColors { id: colors; themeMode: 0; useSystemAccent: false }
-    DateWidget.DatePage { id: page; anchors.fill: parent; colors: colors; today: new Date(2024, 1, 29, 12); locale: Qt.locale("tr_TR") }
+    Calendar.NothingColors { id: colors; themeMode: 0; useSystemAccent: false }
+    Calendar.DatePages { id: page; anchors.fill: parent; colors: colors; today: new Date(2024, 1, 29, 12) }
     TestCase {
-        name: "DatePage"
+        name: "DatePages"
         when: windowShown
-        function init() { page.back = false; page.locale = Qt.locale("tr_TR"); }
-        function test_click_turns_the_page_and_back() {
-            mouseClick(page)
-            verify(page.back)
-            mouseClick(page)
-            verify(!page.back)
+        function init() {
+            tryCompare(page, "turning", false)
+            page.page = 0; page.monthDate = new Date(2024, 1, 1, 12); page.locale = Qt.locale("tr_TR")
         }
-        function test_month_steps_roll_over_the_year() {
-            page.back = true
-            page.month = new Date(2024, 11, 1)
-            wait(300) // the month fades in before its arrows take clicks
-            mouseClick(findChild(page, "nextMonth"))
-            compare(page.month.getFullYear(), 2025); compare(page.month.getMonth(), 0)
-            verify(page.back) // the arrows do not turn the page
-            mouseClick(findChild(page, "previousMonth"))
-            compare(page.month.getFullYear(), 2024); compare(page.month.getMonth(), 11)
-            page.back = false
-            compare(page.month.getMonth(), 1) // turning back returns to the current month
+        function test_corner_click_animates_and_returns() {
+            const button = findChild(page, "calendarFlip")
+            mouseClick(button)
+            verify(page.turning)
+            verify(!button.enabled)
+            page.togglePage() // no double-trigger halfway through a turn
+            tryCompare(page, "turning", false)
+            compare(page.page, 1)
+            button.forceActiveFocus(); keyClick(Qt.Key_Space)
+            tryCompare(page, "turning", false)
+            compare(page.page, 0)
+        }
+        function test_month_navigation_and_year_rollover() {
+            page.page = 1; page.monthDate = new Date(2024, 11, 1, 12)
+            mouseClick(findChild(page, "calendarNext"))
+            compare(page.monthDate.getFullYear(), 2025); compare(page.monthDate.getMonth(), 0)
+            mouseClick(findChild(page, "calendarPrevious"))
+            compare(page.monthDate.getFullYear(), 2024); compare(page.monthDate.getMonth(), 11)
         }
         function test_locale_week_start_and_leap_day() {
-            const grid = findChild(page, "monthGrid")
-            page.month = new Date(2024, 1, 1)
-            compare(grid.dayAt(0).getDay(), 1) // Monday first in Turkish
-            compare(grid.days, 29)
-            compare(grid.dayAt(grid.offset + 28).getDate(), 29)
+            compare(page.firstWeekday, 1)
+            compare(page.dayAt(0).getDay(), 1)
+            verify(page.sameDate(page.dayAt(page.offset + 28), page.today))
             page.locale = Qt.locale("en_US")
-            compare(grid.dayAt(0).getDay(), 0) // Sunday first in US English
+            compare(page.firstWeekday, 0); compare(page.dayAt(0).getDay(), 0)
+            compare(page.t("Gün", "Date"), "Date")
             colors.themeMode = 1
-            compare(colors.textPrimary, colors.systemIsDark ? colors.paletteBackground : colors.paletteText)
+            compare(page.colors.textPrimary, colors.systemIsDark ? colors.paletteBackground : colors.paletteText)
             colors.themeMode = 0
         }
     }
