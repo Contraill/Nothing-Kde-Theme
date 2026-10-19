@@ -3,9 +3,9 @@
 All notable changes. Versions follow [Semantic Versioning](https://semver.org/); release
 candidates are `X.Y.Z-rcN`. The format follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [Unreleased]
+## [1.0.0] - 2026-10-20
 
-Since 0.6.0-rc32.
+The first stable release, since 0.6.0-rc32.
 
 ### Added
 - Nineteen desktop widgets in one look, each style a card with a preview: clocks, date,
@@ -35,6 +35,10 @@ Since 0.6.0-rc32.
 - KWin's window menu showed black text on dark glass.
 - The cover click now brings the player's window forward on Wayland.
 - Long 12-hour times no longer overflow the large clock.
+- The large clock's block faces no longer show a gap in the 1 and the 7 on the GPU.
+- Uninstalling keeps the layout backups, in `~/.local/share/nothing-kde-backups`.
+- The notification installer no longer reinstalls on every run where `diff` is missing,
+  and with Qt 5 installed the tools and tests use Qt 6's qmlformat, qmllint and runner.
 
 ### Removed
 - NType 82 and three unlicensed clock fonts; no bundled font is under restrictive terms.
