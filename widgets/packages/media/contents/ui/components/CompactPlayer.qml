@@ -108,7 +108,7 @@ Item {
                 position: compactRoot.position
                 length: compactRoot.length
                 backgroundColor: compactRoot.colors.surface
-                progressColor: compactRoot.colors.textPrimary
+                progressColor: compactRoot.colors.accent
             }
 
             Item {

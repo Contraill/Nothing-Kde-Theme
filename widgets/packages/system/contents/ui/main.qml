@@ -9,8 +9,9 @@ import "components"
 import "everything"
 import org.kde.plasma.plasma5support as P5Support
 
-// CPU and memory as dot rings with temperature and network speed, as
-// dotted bars with the disk, or as a pill.
+// The chosen levels (CPU, GPU, memory, disk) as dot rings with temperatures
+// and network speed, as dotted bars, or as a pill; or one of the adapted
+// designs. The rings, dots and icons take the accent; the numbers stay ink.
 PlasmoidItem {
     id: root
     preferredRepresentation: fullRepresentation
@@ -24,15 +25,47 @@ PlasmoidItem {
     }
     Glassy.DotFont { id: dotFont }
 
+    readonly property int variant: Plasmoid.configuration.widgetVariant
+    // What the current style shows, in a fixed order.
+    function metricList(text) {
+        const chosen = String(text || "").split(",");
+        const list = ["cpu", "gpu", "memory", "disk"].filter(k => chosen.includes(k));
+        return list.length ? list : ["cpu"];
+    }
+    readonly property var metrics: variant === 0 ? metricList(Plasmoid.configuration.ringMetrics)
+        : variant === 1 ? metricList(Plasmoid.configuration.barMetrics)
+        : variant === 2 ? metricList(Plasmoid.configuration.pillMetrics)
+        : variant === 4 || variant === 5 ? metricList(Plasmoid.configuration.gaugeMetric) : []
+    // Polling an NVIDIA card can keep it awake: its sensors run only while shown.
+    readonly property bool showsGpu: metrics.includes("gpu")
+
     Sensors.Sensor { id: cpu; sensorId: "cpu/all/usage"; updateRateLimit: 2000 }
     Sensors.Sensor { id: memory; sensorId: "memory/physical/usedPercent"; updateRateLimit: 2000 }
     Sensors.Sensor { id: temperature; sensorId: "cpu/all/averageTemperature"; updateRateLimit: 4000 }
+    Sensors.Sensor { id: gpu; sensorId: root.showsGpu ? "gpu/all/usage" : ""; updateRateLimit: 2000 }
+    // No "all" temperature: the hottest of the first three GPUs.
+    Sensors.Sensor { id: gpuTemp0; sensorId: root.showsGpu ? "gpu/gpu0/temperature" : ""; updateRateLimit: 4000 }
+    Sensors.Sensor { id: gpuTemp1; sensorId: root.showsGpu ? "gpu/gpu1/temperature" : ""; updateRateLimit: 4000 }
+    Sensors.Sensor { id: gpuTemp2; sensorId: root.showsGpu ? "gpu/gpu2/temperature" : ""; updateRateLimit: 4000 }
     Sensors.Sensor { id: download; sensorId: "network/all/download"; updateRateLimit: 2000 }
     Sensors.Sensor { id: upload; sensorId: "network/all/upload"; updateRateLimit: 2000 }
     Sensors.Sensor { id: disk; sensorId: "disk/all/usedPercent"; updateRateLimit: 30000 }
     Sensors.Sensor { id: diskUsed; sensorId: "disk/all/used"; updateRateLimit: 30000 }
     Sensors.Sensor { id: diskTotal; sensorId: "disk/all/total"; updateRateLimit: 30000 }
-    readonly property int variant: Plasmoid.configuration.widgetVariant
+
+    readonly property real gpuTemperature: Math.max(Number(gpuTemp0.value) || 0, Number(gpuTemp1.value) || 0, Number(gpuTemp2.value) || 0)
+    function percent(key) {
+        return Number(key === "cpu" ? cpu.value : key === "gpu" ? gpu.value : key === "memory" ? memory.value : disk.value) || 0;
+    }
+    function caption(key) {
+        return key === "cpu" ? i18n("CPU") : key === "gpu" ? i18n("GPU") : key === "memory" ? i18n("MEMORY") : i18n("DISK");
+    }
+    function degrees(key) {
+        const value = key === "cpu" ? Number(temperature.value) || 0 : key === "gpu" ? root.gpuTemperature : 0;
+        return value > 0 ? Math.round(value) + "°" : "–°";
+    }
+    readonly property string diskDetail: diskUsed.formattedValue && diskTotal.formattedValue
+        ? diskUsed.formattedValue.replace(/​/g, "") + " / " + diskTotal.formattedValue.replace(/​/g, "") : ""
 
     // Bytes per second, short enough for the dot face: 940 B, 12 K, 3.4 M.
     function rate(bytes) {
@@ -54,8 +87,7 @@ PlasmoidItem {
             height: gauge.size
             count: 28
             value: gauge.percent / 100
-            // Nothing's red signal for a busy machine; the accent when linked to KDE.
-            litColor: gauge.percent >= 85 ? nColors.accent : nColors.textPrimary
+            litColor: gauge.percent >= 85 ? nColors.error : nColors.accent
             dimColor: nColors.divider
         }
         Row {
@@ -86,8 +118,18 @@ PlasmoidItem {
             color: nColors.textSecondary
         }
     }
+    // ↓ 12 K  ↑ 3 K: the arrows in the accent.
+    component Speeds: Row {
+        property real size: 14
+        spacing: 4
+        Text { text: "↓"; color: nColors.accent; font.family: dotFont.name; font.pixelSize: parent.size }
+        Text { text: root.rate(download.value); color: nColors.textSecondary; font.family: dotFont.name; font.pixelSize: parent.size }
+        Item { width: 8; height: 1 }
+        Text { text: "↑"; color: nColors.accent; font.family: dotFont.name; font.pixelSize: parent.size }
+        Text { text: root.rate(upload.value); color: nColors.textSecondary; font.family: dotFont.name; font.pixelSize: parent.size }
+    }
 
-    // EveryThing-UI's styles (3 to 7) and what they show beyond the sensors above.
+    // The adapted designs (3 to 7) and what they show beyond the sensors above.
     readonly property bool every: variant >= 3
     readonly property string everyLayout: ["status", "cpu", "cpu-pill", "network", "network-pill"][variant - 3] ?? "status"
     readonly property bool everyPill: every && everyLayout.endsWith("pill")
@@ -98,7 +140,7 @@ PlasmoidItem {
     }
     readonly property var battery: power.data["Battery"] ?? ({})
     // The design's own properties share the sensors' names; read them from here.
-    readonly property real cpuNow: cpu.value || 0
+    readonly property real gaugeNow: metrics.length ? percent(metrics[0]) : 0
     readonly property real memoryNow: memory.value || 0
     readonly property real diskUsedNow: diskUsed.value || 0
     readonly property real diskTotalNow: diskTotal.value || 0
@@ -113,9 +155,13 @@ PlasmoidItem {
         return Qt.locale().toString(n, "f", 1) + " " + units[i];
     }
 
+    // Rings in a row, four as a square.
+    readonly property int ringColumns: metrics.length === 4 ? 2 : Math.max(1, metrics.length)
     fullRepresentation: Item {
-        Layout.preferredWidth: root.every ? (root.everyLayout === "status" ? 400 : 200) : root.variant === 2 ? 260 : 220
-        Layout.preferredHeight: root.everyPill ? 110 : root.every ? 200 : root.variant === 2 ? 96 : 220
+        Layout.preferredWidth: root.every ? (root.everyLayout === "status" ? 400 : 200)
+            : root.variant === 2 ? 260 : root.variant === 0 && root.metrics.length >= 3 ? 320 : 220
+        Layout.preferredHeight: root.everyPill ? 110 : root.every ? 200 : root.variant === 2 ? 96
+            : root.variant === 0 && root.metrics.length === 4 ? 320 : root.variant === 1 ? 90 + 40 * root.metrics.length : 220
         Layout.minimumWidth: root.variant === 2 || root.everyPill ? 180 : 170
         Layout.minimumHeight: root.variant === 2 || root.everyPill ? 72 : 170
 
@@ -125,7 +171,8 @@ PlasmoidItem {
             colors: nColors
             family: dotFont.name
             layout: root.everyLayout
-            cpu: root.cpuNow
+            cpu: root.gaugeNow
+            gaugeLabel: root.metrics.length ? root.caption(root.metrics[0]) : "CPU"
             memory: root.memoryNow
             diskUsed: root.diskUsedNow
             diskTotal: root.diskTotalNow
@@ -149,67 +196,84 @@ PlasmoidItem {
             anchors.margins: 14
             spacing: 10
             visible: root.variant === 0
-            RowLayout {
+            GridLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                spacing: 12
-                Gauge {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    percent: cpu.value || 0
-                    label: i18n("CPU")
-                }
-                Gauge {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    percent: memory.value || 0
-                    label: i18n("MEMORY")
+                columns: root.ringColumns
+                columnSpacing: 12
+                rowSpacing: 8
+                Repeater {
+                    model: root.variant === 0 ? root.metrics : []
+                    Gauge {
+                        required property string modelData
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        percent: root.percent(modelData)
+                        label: root.caption(modelData)
+                    }
                 }
             }
             RowLayout {
                 Layout.fillWidth: true
-                spacing: 6
-                Text {
-                    text: temperature.value > 0 ? Math.round(temperature.value) + "°" : "–°"
-                    font.family: dotFont.name
-                    font.pixelSize: 20
-                    color: temperature.value >= 85 ? nColors.accent : nColors.textPrimary
+                spacing: 10
+                // A thermometer per processor shown, named when there are two.
+                Repeater {
+                    model: root.metrics.filter(k => k === "cpu" || k === "gpu")
+                    Row {
+                        id: reading
+                        required property string modelData
+                        spacing: 4
+                        Glassy.DotGlyph {
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: 12
+                            height: 16
+                            name: "thermometer"
+                            color: nColors.accent
+                        }
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: root.degrees(reading.modelData)
+                            font.family: dotFont.name
+                            font.pixelSize: 18
+                            color: nColors.textPrimary
+                        }
+                        Text {
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: root.metrics.includes("cpu") && root.metrics.includes("gpu")
+                            text: root.caption(reading.modelData)
+                            font.pixelSize: 9
+                            font.letterSpacing: 1.2
+                            color: nColors.textMuted
+                        }
+                    }
                 }
                 Item { Layout.fillWidth: true }
-                Text {
-                    text: "↓ " + root.rate(download.value) + "   ↑ " + root.rate(upload.value)
-                    font.family: dotFont.name
-                    font.pixelSize: 14
-                    color: nColors.textSecondary
-                }
+                Speeds { size: 14 }
             }
         }
 
-        // 1: CPU, memory and disk as dotted bars.
+        // 1: the chosen levels as dotted bars; processors note their temperature.
         ColumnLayout {
             anchors.fill: card
             anchors.margins: 16
             visible: root.variant === 1
             spacing: 10
-            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; label: i18n("CPU"); percent: cpu.value || 0 }
-            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; label: i18n("MEMORY"); percent: memory.value || 0 }
-            Glassy.DotMeter {
-                colors: nColors
-                Layout.fillWidth: true
-                label: i18n("DISK")
-                percent: disk.value || 0
-                detail: diskUsed.formattedValue && diskTotal.formattedValue ? diskUsed.formattedValue.replace(/\u200b/g, "") + " / " + diskTotal.formattedValue.replace(/\u200b/g, "") : ""
+            Repeater {
+                model: root.variant === 1 ? root.metrics : []
+                Glassy.DotMeter {
+                    required property string modelData
+                    colors: nColors
+                    Layout.fillWidth: true
+                    label: root.caption(modelData)
+                    percent: root.percent(modelData)
+                    detail: modelData === "disk" ? root.diskDetail : modelData === "memory" ? "" : root.degrees(modelData)
+                }
             }
             Item { Layout.fillHeight: true }
-            Text {
-                text: "↓ " + root.rate(download.value) + "   ↑ " + root.rate(upload.value)
-                color: nColors.textSecondary
-                font.family: dotFont.name
-                font.pixelSize: 13
-            }
+            Speeds { size: 13 }
         }
 
-        // 2: a pill, CPU as a ring next to both levels.
+        // 2: a pill, the first level as a ring next to the first two.
         RowLayout {
             anchors.fill: card
             anchors.leftMargin: 12
@@ -220,14 +284,23 @@ PlasmoidItem {
                 Layout.preferredWidth: card.height - 24
                 Layout.preferredHeight: card.height - 24
                 count: 20
-                value: (cpu.value || 0) / 100
-                litColor: (cpu.value || 0) >= 85 ? nColors.accent : nColors.textPrimary
+                value: root.percent(root.metrics[0] ?? "cpu") / 100
+                litColor: value >= 0.85 ? nColors.error : nColors.accent
                 dimColor: nColors.divider
             }
             Column {
                 Layout.fillWidth: true
-                Text { text: Math.round(cpu.value || 0) + "% " + i18n("CPU"); color: nColors.textPrimary; font.family: dotFont.name; font.pixelSize: Math.max(13, card.height * 0.2) }
-                Text { text: Math.round(memory.value || 0) + "% " + i18n("MEMORY"); color: nColors.textSecondary; font.family: dotFont.name; font.pixelSize: Math.max(11, card.height * 0.14) }
+                Repeater {
+                    model: root.variant === 2 ? root.metrics.slice(0, 2) : []
+                    Text {
+                        required property string modelData
+                        required property int index
+                        text: Math.round(root.percent(modelData)) + "% " + root.caption(modelData)
+                        color: index === 0 ? nColors.textPrimary : nColors.textSecondary
+                        font.family: dotFont.name
+                        font.pixelSize: index === 0 ? Math.max(13, card.height * 0.2) : Math.max(11, card.height * 0.14)
+                    }
+                }
             }
         }
     }

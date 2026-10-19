@@ -22,7 +22,7 @@ Glassy.EveryFrame {
         outer: f.round ? 95 : 35
         value: f.percent / 100
         trackColor: f.track
-        fillColor: f.percent <= 15 && !f.charging ? f.colors.accent : f.colors.textPrimary
+        fillColor: f.percent <= 15 && !f.charging ? f.colors.error : f.colors.accent
     }
     // The bolt: 27 dots on a 6 px grid (4 px in the pill), centred on x 95 / 47.5.
     Glassy.DotGlyph {

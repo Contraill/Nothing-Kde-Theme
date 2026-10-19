@@ -3,14 +3,17 @@ import QtQuick
 import "../../../../../shared" as Glassy
 
 // EveryThing-UI's system designs (Prince-1652, MIT): the status block
-// (battery, RAM pie, disk bar), CPU as a block with a bar or a pill with a
-// pie, and network speeds as a block or a pill.
+// (battery, RAM pie, disk bar), one gauge (CPU in the original; GPU, memory
+// or disk here too) as a block with a bar or a pill with a pie, and network
+// speeds as a block or a pill. Fills take the accent, alerts the warning colour.
 Glassy.EveryFrame {
     id: f
     // "status", "cpu", "cpu-pill", "network" or "network-pill"
     property string layout: "status"
     property string family
+    // The gauge: `cpu` is its value, `gaugeLabel` its name.
     property real cpu: 0
+    property string gaugeLabel: "CPU"
     property real memory: 0
     property real diskUsed: 0
     property real diskTotal: 0
@@ -40,7 +43,7 @@ Glassy.EveryFrame {
         s: f.s; bx: 20; by: 105; bw: 165; bh: 65; radius: 15
         value: Math.max(0, f.battery) / 100
         trackColor: f.track
-        fillColor: f.battery >= 0 && f.battery <= 15 && !f.charging ? f.colors.accent : f.colors.textPrimary
+        fillColor: f.battery >= 0 && f.battery <= 15 && !f.charging ? f.colors.error : f.colors.accent
         ink: f.colors.textPrimary
         overlay: Glassy.DotGlyph {
             name: "bolt-dots"
@@ -57,7 +60,7 @@ Glassy.EveryFrame {
         s: f.s; cx: 237.5; cy: 52.5; radius: 32.5
         value: f.memory / 100
         trackColor: f.track
-        fillColor: f.memory >= 85 ? f.colors.accent : f.colors.textPrimary
+        fillColor: f.memory >= 85 ? f.colors.error : f.colors.accent
     }
     Label { visible: f.layout === "status"; px: 285; py: 25; pt: 24; value: Math.round(f.memory) + "%" }
     Label { visible: f.layout === "status"; px: 285; py: 64; pt: 16; value: "RAM" }
@@ -66,7 +69,7 @@ Glassy.EveryFrame {
         s: f.s; bx: 205; by: 105; bw: 165; bh: 65; radius: 15
         value: f.diskTotal > 0 ? f.diskUsed / f.diskTotal : 0
         trackColor: f.track
-        fillColor: value >= 0.85 ? f.colors.accent : f.colors.textPrimary
+        fillColor: value >= 0.85 ? f.colors.error : f.colors.accent
         ink: f.colors.textPrimary
         overlay: Label {
             px: 82; py: 35; pt: 12; align: "CenterCenter"
@@ -77,13 +80,13 @@ Glassy.EveryFrame {
 
     // CPU block
     Label { visible: f.layout === "cpu"; px: 95; py: 20; pt: 32; align: "Center"; value: Math.round(f.cpu) + "%" }
-    Label { visible: f.layout === "cpu"; px: 95; py: 68; pt: 13; align: "Center"; value: "CPU" }
+    Label { visible: f.layout === "cpu"; px: 95; py: 68; pt: 13; align: "Center"; value: f.gaugeLabel }
     Glassy.EveryBar {
         visible: f.layout === "cpu"
         s: f.s; bx: 20; by: 105; bw: 150; bh: 65; radius: 15
         value: f.cpu / 100
         trackColor: f.track
-        fillColor: f.cpu >= 85 ? f.colors.accent : f.colors.textPrimary
+        fillColor: f.cpu >= 85 ? f.colors.error : f.colors.accent
     }
     // CPU pill
     Glassy.EveryPie {
@@ -91,10 +94,10 @@ Glassy.EveryFrame {
         s: f.s; cx: 47.5; cy: 47.5; radius: 32.5
         value: f.cpu / 100
         trackColor: f.track
-        fillColor: f.cpu >= 85 ? f.colors.accent : f.colors.textPrimary
+        fillColor: f.cpu >= 85 ? f.colors.error : f.colors.accent
     }
     Label { visible: f.layout === "cpu-pill"; px: 95; py: 52; pt: 24; align: "LeftBottom"; value: Math.round(f.cpu) + "%" }
-    Label { visible: f.layout === "cpu-pill"; px: 95; py: 57; pt: 16; align: "LeftTop"; value: "CPU" }
+    Label { visible: f.layout === "cpu-pill"; px: 95; py: 57; pt: 16; align: "LeftTop"; value: f.gaugeLabel }
 
     // Network block
     Label { visible: f.layout === "network"; px: 95; py: 20; pt: 24; align: "Center"; upper: true; value: i18n("Network") }

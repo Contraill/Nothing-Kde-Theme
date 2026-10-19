@@ -24,7 +24,7 @@ STYLES = {
     'weather': ('widgetVariant', {0: '200x200', 1: '200x200', 2: '200x200'}),
     'clock-analog': ('widgetVariant', {0: '200x200', 1: '200x200'}),
     'clock-digital': ('widgetVariant', {0: '200x200', 1: '200x200'}),
-    'clock-digital-large': ('fontStyle', {n: '400x200' for n in range(5)}),
+    'clock-digital-large': ('fontStyle', {n: '400x200' for n in (0, 2, 3, 4)}),
     'date': ('widgetVariant', {0: '200x200'}),
     'battery': ('widgetVariant', {0: '200x200'}),
     'media': ('widgetVariant', {0: '200x200'}),

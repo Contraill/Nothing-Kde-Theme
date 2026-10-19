@@ -53,22 +53,16 @@ Item {
     }
 
     // Clock 4: hollow figures, the colon filled. Hours, colon and minutes are
-    // laid out in one path space so they share a baseline.
+    // laid out in one path space so they share a baseline; the drawn outline
+    // is centred by its own bounds, not by font metrics.
     Shape {
         id: outline
-        anchors.centerIn: parent
-        // Centre the figures, not the line box with its descent.
-        anchors.verticalCenterOffset: -line.descent / 2
         visible: clock.face === "outline"
         readonly property int split: Math.max(0, clock.time.indexOf(":"))
-        // The line box is about 1.3 em tall; keep it inside the item.
-        readonly property real size: Math.min(clock.height * 0.72, clock.width / clock.time.length * 1.6)
-        width: whole.advanceWidth
-        height: whole.height
+        readonly property real size: Math.min(clock.height * 1.15, clock.width / clock.time.length * 1.6)
+        x: (clock.width - boundingRect.width) / 2 - boundingRect.x
+        y: (clock.height - boundingRect.height) / 2 - boundingRect.y
         preferredRendererType: Shape.CurveRenderer
-        TextMetrics { id: whole; font: hours.font; text: clock.time }
-        // PathText puts its baseline at y; drop it by the ascent to sit inside.
-        FontMetrics { id: line; font: hours.font }
         TextMetrics { id: before; font: hours.font; text: clock.time.slice(0, outline.split) }
         TextMetrics { id: through; font: hours.font; text: clock.time.slice(0, outline.split + 1) }
         ShapePath {
@@ -78,14 +72,12 @@ Item {
             joinStyle: ShapePath.RoundJoin
             PathText {
                 id: hours
-                y: line.ascent
                 font.family: clock.outlineFamily
                 font.pixelSize: outline.size
                 text: clock.time.slice(0, outline.split)
             }
             PathText {
                 x: through.advanceWidth
-                y: line.ascent
                 font: hours.font
                 text: clock.time.slice(outline.split + 1)
             }
@@ -95,7 +87,6 @@ Item {
             fillColor: clock.colors.accent
             PathText {
                 x: before.advanceWidth
-                y: line.ascent
                 font: hours.font
                 text: ":"
             }

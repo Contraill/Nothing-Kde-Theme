@@ -206,7 +206,6 @@ PlasmoidItem {
             Glassy.DotMeter {
                 Layout.fillWidth: true
                 colors: nColors
-                alert: false
                 label: i18n("VOLUME")
                 percent: root.muted ? 0 : root.volume * 100
                 opacity: root.sink ? 1 : 0.4
@@ -238,7 +237,7 @@ PlasmoidItem {
                         anchors.fill: parent
                         count: 20
                         value: root.muted ? 0 : root.volume
-                        litColor: nColors.textPrimary
+                        litColor: nColors.accent
                         dimColor: nColors.divider
                     }
                     Glassy.DotGlyph {

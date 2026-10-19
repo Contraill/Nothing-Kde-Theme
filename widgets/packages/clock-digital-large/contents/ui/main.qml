@@ -21,7 +21,8 @@ PlasmoidItem {
 
     preferredRepresentation: fullRepresentation
 
-    property int fontStyle: Plasmoid.configuration.fontStyle
+    // The old Dot Matrix style (1) is now the dot face (7).
+    property int fontStyle: Plasmoid.configuration.fontStyle === 1 ? 7 : Plasmoid.configuration.fontStyle
     property bool showDate: Plasmoid.configuration.showDate
     property bool use24HourFormat: Plasmoid.configuration.use24HourFormat
     property bool useDarkerFont: Plasmoid.configuration.useDarkerFont
@@ -34,12 +35,6 @@ PlasmoidItem {
     FontLoader {
         id: dottedFont
         source: Qt.resolvedUrl("../fonts/close_dotted.ttf")
-    }
-
-    // The light build: at this size the regular dots would touch.
-    Glassy.DotFont {
-        id: dotMatrixFont
-        light: true
     }
 
     FontLoader {
@@ -165,14 +160,15 @@ PlasmoidItem {
                 verticalAlignment: Text.AlignVCenter
                 Layout.topMargin: -30
 
-                text: root.currentTime
+                // The colon takes the accent, as on the dot and block faces.
+                textFormat: Text.StyledText
+                text: root.currentTime.replace(":", "<font color=\"" + nColors.accent + "\">:</font>")
                 color: nColors.textPrimary
 
                 // Font selection based on style
                 font.family: {
                     switch (root.fontStyle) {
                         case 0: return dottedFont.name
-                        case 1: return dotMatrixFont.name
                         case 2: return serifFont.name
                         case 3: return arrowSubwayFont.name
                         case 4: return arrowSharpFont.name
@@ -187,7 +183,7 @@ PlasmoidItem {
 
                     // Calculate optimal size based on text width
                     // Dotted and dot matrix fonts need more space
-                    if (root.fontStyle === 0 || root.fontStyle === 1) {
+                    if (root.fontStyle === 0) {
                         return Math.min(availableHeight * 0.6, availableWidth / 3.5)
                     } else if (root.fontStyle === 3) {
                         // Arrow Subway font needs more space (no colon separator)

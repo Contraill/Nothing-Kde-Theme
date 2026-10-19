@@ -21,13 +21,14 @@ KCM.SimpleKCM {
         Glassy.StyleCards {
             Layout.fillWidth: true
             title: i18n("Font Style:")
-            selected: configAppearance.cfg_fontStyle
+            selected: configAppearance.cfg_fontStyle === 1 ? 7 : configAppearance.cfg_fontStyle
             onPicked: value => configAppearance.cfg_fontStyle = value
             themeMode: theme.themeMode
             useSystemAccent: theme.useSystemAccent
             monochrome: theme.monochrome
-            styles: [i18n("Dotted"), i18n("Dot Matrix"), i18n("Serif"), i18n("Segmented"), i18n("Segmented Sharp")].map((label, i) => ({
-                label: label, value: i, image: Qt.resolvedUrl("../previews/style-" + i + "-dark.png")
+            // 1, Dot Matrix, became the dot face (7).
+            styles: [[i18n("Dotted"), 0], [i18n("Serif"), 2], [i18n("Segmented"), 3], [i18n("Segmented Sharp"), 4]].map(v => ({
+                label: v[0], value: v[1], image: Qt.resolvedUrl("../previews/style-" + v[1] + "-dark.png")
             })).concat(["blocks", "blocks-dual", "dots", "bubbles", "bubbles-inverse", "outline"].map((face, i) => ({
                 label: [i18n("Blocks"), i18n("Two tone"), i18n("Dots"), i18n("Bubbles"), i18n("Inverted"), i18n("Outline")][i],
                 value: 5 + i,

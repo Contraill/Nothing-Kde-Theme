@@ -31,9 +31,10 @@ QtObject {
     readonly property color error: Kirigami.Theme.negativeTextColor
     readonly property color divider: alpha(textPrimary, 0.12)
     readonly property color pagePeel: Qt.tint(background, alpha(textPrimary, 0.12))
-    readonly property color indicatorActive: textPrimary
+    // Icons and the current page take the accent, like the rings and bars.
+    readonly property color indicatorActive: accent
     readonly property color indicatorInactive: textDisabled
-    readonly property color iconColor: textPrimary
+    readonly property color iconColor: accent
     readonly property color borderLight: textSecondary
     readonly property color neutral: textSecondary
     readonly property color surfaceAlt: surface

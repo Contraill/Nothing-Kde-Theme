@@ -52,7 +52,7 @@ Item {
                 Layout.alignment: Qt.AlignRight | Qt.AlignTop
                 text: root.locale.toString(root.today, "ddd")
                 font.family: root.labelFont; font.pixelSize: Math.min(face.width, face.height) * 0.12
-                color: root.colors.textSecondary
+                color: root.colors.accent
             }
             Text {
                 Layout.fillWidth: true; Layout.fillHeight: true

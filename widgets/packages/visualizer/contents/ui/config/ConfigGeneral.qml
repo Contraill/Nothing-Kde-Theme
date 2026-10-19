@@ -8,6 +8,7 @@ import "../../../../../shared" as Glassy
 KCM.SimpleKCM {
     property int cfg_widgetVariant
     property alias cfg_sensitivity: sensitivity.value
+    property alias cfg_transparent: transparent.checked
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
     property alias cfg_monochrome: theme.monochrome
@@ -24,8 +25,12 @@ KCM.SimpleKCM {
             styles: ["circle", "bars", "pill"].map((layout, i) => ({
                 label: [i18n("Circle"), i18n("Bars"), i18n("Short pill")][i], value: i,
                 source: Qt.resolvedUrl("../everything/EveryVisualizer.qml"),
-                props: {layout: layout, levels: Array.from({length: 25}, (_, k) => 0.3 + 0.6 * Math.abs(Math.sin(k * 1.3)))}
+                props: {layout: layout, transparent: transparent.checked, levels: Array.from({length: 25}, (_, k) => 0.3 + 0.6 * Math.abs(Math.sin(k * 1.3)))}
             }))
+        }
+        QQC2.CheckBox {
+            id: transparent
+            text: i18n("On the wallpaper, without a card")
         }
         RowLayout {
             QQC2.Label { text: i18n("Sensitivity:") }

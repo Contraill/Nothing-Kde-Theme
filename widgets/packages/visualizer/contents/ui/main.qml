@@ -64,5 +64,6 @@ PlasmoidItem {
         colors: nColors
         layout: root.layout
         levels: root.levels
+        transparent: Plasmoid.configuration.transparent
     }
 }

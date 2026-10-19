@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCMUtils
 import org.kde.kdeconnect as KDEConnect
+import org.kde.plasma.plasma5support as P5Support
 import "../../../../shared" as Glassy
 
 // The first paired, reachable KDE Connect device, read the way Plasma's own
@@ -15,6 +16,12 @@ Item {
     id: root
     property QtObject colors
     property string dotFamily: ""
+
+    P5Support.DataSource {
+        id: launcher
+        engine: "executable"
+        onNewData: sourceName => disconnectSource(sourceName)
+    }
 
     KDEConnect.DevicesModel {
         id: devices
@@ -52,26 +59,31 @@ Item {
     Repeater {
         id: phones
         model: devices
-        delegate: ColumnLayout {
+        delegate: Item {
             id: phone
             required property int index
             required property string deviceId
             required property string name
             readonly property KDEConnect.DeviceDbusInterface device: KDEConnect.DeviceDbusInterfaceFactory.create(deviceId)
             readonly property KDEConnect.PluginChecker batteryPlugin: KDEConnect.PluginChecker { pluginName: "battery"; device: phone.device }
-            readonly property KDEConnect.PluginChecker findPlugin: KDEConnect.PluginChecker { pluginName: "findmyphone"; device: phone.device }
             readonly property KDEConnect.BatteryDbusInterface battery: batteryPlugin.available ? KDEConnect.DeviceBatteryDbusInterfaceFactory.create(deviceId) : null
-            readonly property KDEConnect.FindMyPhoneDbusInterface finder: findPlugin.available ? KDEConnect.FindMyPhoneDbusInterfaceFactory.create(deviceId) : null
             readonly property int charge: battery?.charge ?? -1
             readonly property bool charging: battery?.isCharging ?? false
             readonly property bool low: charge >= 0 && charge <= 15 && !charging
 
             anchors.fill: parent
             visible: index === 0
-            spacing: 8
+            // A click opens the phone in KDE Connect; setsid keeps the app
+            // from living and dying with plasmashell.
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                Accessible.role: Accessible.Button
+                Accessible.name: i18n("Open in KDE Connect")
+                onClicked: launcher.connectSource("setsid -f kdeconnect-app --device " + phone.deviceId.replace(/[^A-Za-z0-9_]/g, ""))
+            }
             Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
+                anchors.fill: parent
                 Glassy.DotRing {
                     id: ring
                     anchors.centerIn: parent
@@ -79,8 +91,7 @@ Item {
                     height: width
                     count: 36
                     value: Math.max(0, phone.charge) / 100
-                    // Ink; Nothing red only when the phone runs low.
-                    litColor: phone.low ? root.colors.accent : root.colors.textPrimary
+                    litColor: phone.low ? root.colors.error : root.colors.accent
                     dimColor: root.colors.divider
                 }
                 Column {
@@ -103,28 +114,6 @@ Item {
                         font.letterSpacing: 1.2
                         color: phone.charging ? root.colors.accent : root.colors.textSecondary
                     }
-                }
-            }
-            QQC2.AbstractButton {
-                id: ringButton
-                Layout.alignment: Qt.AlignHCenter
-                visible: !!phone.finder
-                implicitWidth: 36
-                implicitHeight: 36
-                Accessible.name: i18n("Ring the phone")
-                QQC2.ToolTip.text: Accessible.name
-                QQC2.ToolTip.visible: hovered
-                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
-                onClicked: phone.finder.ring()
-                background: Rectangle {
-                    radius: width / 2
-                    color: root.colors.alpha(root.colors.textPrimary, ringButton.hovered ? 0.16 : 0.08)
-                }
-                contentItem: Glassy.DotGlyph {
-                    name: "volume"
-                    color: root.colors.textPrimary
-                    implicitWidth: 18
-                    implicitHeight: 18
                 }
             }
         }

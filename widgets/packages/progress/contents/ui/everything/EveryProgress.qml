@@ -36,7 +36,7 @@ Glassy.EveryFrame {
         outer: f.round ? 95 : 70
         value: f.kind === "year" ? f.yearFraction : f.dayFraction
         trackColor: f.track
-        fillColor: f.colors.textPrimary
+        fillColor: f.colors.accent
     }
 
     // Year
@@ -46,11 +46,11 @@ Glassy.EveryFrame {
         visible: f.kind === "year"
         px: 95; py: f.round ? 125 : 160; pt: f.round ? 14 : 10; align: "Center"
         value: String(f.now.getFullYear())
-        color: f.colors.accent
+        color: f.colors.textSecondary
     }
 
     // Countdown block
-    Label { visible: f.kind === "countdown" && !f.round; px: 95; py: 20; pt: 13; align: "Center"; upper: true; value: i18n("Until midnight"); color: f.colors.accent }
+    Label { visible: f.kind === "countdown" && !f.round; px: 95; py: 20; pt: 13; align: "Center"; upper: true; value: i18n("Until midnight"); color: f.colors.textSecondary }
     Label { visible: f.kind === "countdown" && !f.round; px: 95; py: 55; pt: 40; align: "Center"; value: f.hoursLeft + "h" }
     Label {
         visible: f.kind === "countdown" && !f.round
@@ -62,7 +62,7 @@ Glassy.EveryFrame {
         s: f.s; bx: 20; by: 140; bw: 150; bh: 30; radius: 15
         value: f.dayFraction
         trackColor: f.track
-        fillColor: f.colors.textPrimary
+        fillColor: f.colors.accent
     }
     // Countdown circle
     Label {

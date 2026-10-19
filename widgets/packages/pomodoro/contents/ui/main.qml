@@ -132,7 +132,7 @@ PlasmoidItem {
                     height: width
                     count: 60
                     value: 1 - root.remaining / root.total
-                    litColor: nColors.textPrimary
+                    litColor: nColors.accent
                     dimColor: nColors.divider
                 }
                 Column {

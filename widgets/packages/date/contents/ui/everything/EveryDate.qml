@@ -33,9 +33,9 @@ Glassy.EveryFrame {
         s: f.s; cx: 47.5; cy: 47.5; inner: 28; outer: 35
         value: (f.day - 1) / 30
         trackColor: f.track
-        fillColor: f.colors.textPrimary
+        fillColor: f.colors.accent
     }
-    Label { visible: f.layout === "pill"; px: 47.5; py: 52; pt: 24; align: "CenterCenter"; value: Qt.formatDate(f.now, "dd"); color: f.colors.accent }
+    Label { visible: f.layout === "pill"; px: 47.5; py: 52; pt: 24; align: "CenterCenter"; value: Qt.formatDate(f.now, "dd") }
     Label { visible: f.layout === "pill"; px: 95; py: 45; pt: 14; align: "LeftBottom"; upper: true; value: f.monthName; clipWidth: 85 }
     Label {
         visible: f.layout === "pill"

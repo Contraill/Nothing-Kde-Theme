@@ -13,10 +13,12 @@ Glassy.EveryFrame {
     // "circle", "bars" or "pill"
     property string layout: "circle"
     property var levels: []
+    // Straight on the wallpaper, without the card.
+    property bool transparent: false
     readonly property int bands: layout === "circle" ? 20 : layout === "bars" ? 25 : 11
     designWidth: layout === "bars" ? 390 : 190
     designHeight: layout === "circle" ? 190 : 95
-    card: layout === "circle" ? "block" : "pill"
+    card: transparent ? "none" : layout === "circle" ? "block" : "pill"
 
     // Circle: a sector every 18 degrees between radii 50 and 85, opening up to 10 degrees with its level.
     Repeater {
@@ -29,7 +31,7 @@ Glassy.EveryFrame {
             preferredRendererType: Shape.CurveRenderer
             ShapePath {
                 strokeWidth: 35 * f.s
-                strokeColor: f.colors.textPrimary
+                strokeColor: f.colors.accent
                 fillColor: "transparent"
                 capStyle: ShapePath.FlatCap
                 PathAngleArc {
@@ -54,7 +56,7 @@ Glassy.EveryFrame {
             width: 8 * f.s
             height: tall * f.s
             radius: 4 * f.s
-            color: f.colors.textPrimary
+            color: f.colors.accent
         }
     }
 }

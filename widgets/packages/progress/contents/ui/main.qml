@@ -81,7 +81,7 @@ PlasmoidItem {
                 height: width
                 count: 40
                 value: root.spans.year
-                litColor: nColors.textPrimary
+                litColor: nColors.accent
                 dimColor: nColors.divider
             }
             Column {
@@ -106,7 +106,7 @@ PlasmoidItem {
                     text: root.now.getFullYear()
                     font.family: dotFont.name
                     font.pixelSize: Math.max(10, ring.width * 0.08)
-                    color: nColors.accent
+                    color: nColors.textSecondary
                 }
             }
         }
@@ -117,10 +117,10 @@ PlasmoidItem {
             anchors.margins: 16
             visible: root.variant === 1
             spacing: 6
-            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; alert: false; label: i18n("DAY"); percent: root.spans.day * 100 }
-            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; alert: false; label: i18n("WEEK"); percent: root.spans.week * 100 }
-            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; alert: false; label: i18n("MONTH"); percent: root.spans.month * 100 }
-            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; alert: true; label: i18n("YEAR"); percent: root.spans.year * 100 }
+            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; label: i18n("DAY"); percent: root.spans.day * 100 }
+            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; label: i18n("WEEK"); percent: root.spans.week * 100 }
+            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; label: i18n("MONTH"); percent: root.spans.month * 100 }
+            Glassy.DotMeter { colors: nColors; Layout.fillWidth: true; label: i18n("YEAR"); percent: root.spans.year * 100 }
             Item { Layout.fillHeight: true }
             Text {
                 Layout.fillWidth: true

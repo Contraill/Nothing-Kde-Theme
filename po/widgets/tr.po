@@ -15,6 +15,9 @@ msgstr ""
 msgid "%1 h %2 min until midnight"
 msgstr "Gece yarısına %1 sa %2 dk"
 
+msgid "%1 pill"
+msgstr "%1 hapı"
+
 msgid "Add Mapping"
 msgstr "Eşleştirme ekle"
 
@@ -83,9 +86,6 @@ msgstr "ŞARJ OLUYOR"
 
 msgid "CPU"
 msgstr "CPU"
-
-msgid "CPU pill"
-msgstr "CPU hapı"
 
 msgid "Cards"
 msgstr "Kartlar"
@@ -192,14 +192,14 @@ msgstr "Dijital saat"
 msgid "Discharging"
 msgstr "Boşalıyor"
 
+msgid "Disk"
+msgstr "Disk"
+
 msgid "Display the current date above the time (e.g., \"Thu, 31 Jan\")"
 msgstr "Güncel tarihi saatin üzerinde gösterir (ör. \"Per, 31 Oca\")"
 
 msgid "Dog"
 msgstr "Köpek"
-
-msgid "Dot Matrix"
-msgstr "Nokta matrisi"
 
 msgid "Dots"
 msgstr "Noktalar"
@@ -275,6 +275,12 @@ msgstr "Dondurucu yağmur"
 
 msgid "Full"
 msgstr "Tam"
+
+msgid "GPU"
+msgstr "GPU"
+
+msgid "GPU readings can keep a sleeping graphics card awake, so they are read only while the GPU is shown."
+msgstr "GPU okumaları uykudaki ekran kartını uyanık tutabilir; bu yüzden yalnızca GPU gösterilirken okunur."
 
 msgid "General"
 msgstr "Genel"
@@ -384,6 +390,9 @@ msgstr "Mantra"
 msgid "Mantra pill"
 msgstr "Mantra hapı"
 
+msgid "Memory"
+msgstr "Bellek"
+
 msgid "Minimalist"
 msgstr "Sade"
 
@@ -428,6 +437,9 @@ msgstr "Sayılar"
 
 msgid "On the wallpaper, without a card"
 msgstr "Kart olmadan, doğrudan duvar kağıdında"
+
+msgid "Open in KDE Connect"
+msgstr "KDE Connect'te aç"
 
 msgid "Outline"
 msgstr "Dış hat"
@@ -483,9 +495,6 @@ msgstr "Sıfırla"
 msgid "Right-click to configure"
 msgstr "Ayarlamak için sağ tıklayın"
 
-msgid "Ring the phone"
-msgstr "Telefonu çaldır"
-
 msgid "Rings"
 msgstr "Halkalar"
 
@@ -536,6 +545,9 @@ msgstr "Tarihi göster"
 
 msgid "Show time in 24-hour format (e.g., 14:30) instead of 12-hour format (e.g., 2:30)"
 msgstr "Saati 12 saat biçimi (ör. 2:30) yerine 24 saat biçiminde (ör. 14:30) gösterir"
+
+msgid "Shows:"
+msgstr "Gösterilenler:"
 
 msgid "Skip"
 msgstr "Atla"

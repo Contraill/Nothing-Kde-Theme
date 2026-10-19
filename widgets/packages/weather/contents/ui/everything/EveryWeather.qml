@@ -43,7 +43,7 @@ Glassy.EveryFrame {
         readonly property string cloud: "M14 40A9 9 0 0 1 14 22A13 13 0 0 1 39 21A9.5 9.5 0 0 1 40 40Z"
         ShapePath {
             strokeWidth: 4
-            strokeColor: f.colors.textPrimary
+            strokeColor: f.colors.accent
             fillColor: "transparent"
             capStyle: ShapePath.RoundCap
             joinStyle: ShapePath.RoundJoin

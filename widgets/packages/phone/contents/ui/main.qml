@@ -6,9 +6,9 @@ import org.kde.plasma.core as PlasmaCore
 import "../../../../shared" as Glassy
 import "components"
 
-// The KDE Connect phone: its battery, and a button to ring it. KDE Connect
-// is optional, so its view is loaded on demand and a missing module shows a
-// hint instead.
+// The KDE Connect phone and its battery; a click opens it in KDE Connect.
+// KDE Connect is optional, so its view is loaded on demand and a missing
+// module shows a hint instead.
 PlasmoidItem {
     id: root
     preferredRepresentation: fullRepresentation
