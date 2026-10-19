@@ -52,6 +52,12 @@ The expanded island's cards open detail pages with the chevron or a right-click:
 output and input device selection with both volumes and a live microphone level, and
 brightness for every display plus the keyboard. Hovering the battery shows the remaining time and battery health.
 
+Clicking the player's cover, in the island or on its card, opens the player's window. Browsers
+report little over MPRIS: a YouTube video without a cover gets its thumbnail from YouTube's
+image server (in the island and the media widget), and the
+[Plasma Browser Integration](https://community.kde.org/Plasma/Browser_Integration) extension
+adds the position, length and the tab to open.
+
 Notifications support actions, inline replies and grouping by application. Do Not Disturb
 stays on until it is turned off. The calendar marks holidays (Plasma's holiday regions) and,
 optionally, moon phases.
