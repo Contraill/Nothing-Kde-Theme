@@ -52,6 +52,29 @@ PlasmoidItem {
     }
 
     Component.onCompleted: Beat.users += 1
+    // Turning the strip turns its widget: Plasma only ever grows a widget to
+    // what it prefers, so swap the desktop's box for it, about its centre,
+    // and have the desktop place it and keep it.
+    function turn() {
+        const box = root.parent;
+        if (shape !== "strip" || !box || box.layout === undefined) return;
+        const sideways = Plasmoid.configuration.sideways;
+        if (box.width !== box.height && (box.width > box.height) === sideways) return;
+        // The long side stays; a square box narrows to a strip's proportions.
+        const long = Math.max(box.width, box.height);
+        const short = Math.min(box.width, box.height, Math.max(48, Math.round(long / 3)));
+        const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
+        box.width = sideways ? long : short;
+        box.height = sideways ? short : long;
+        box.x = Math.round(cx - box.width / 2);
+        box.y = Math.round(cy - box.height / 2);
+        box.layout.positionItem?.(box);
+        box.layout.save?.();
+    }
+    Connections {
+        target: Plasmoid.configuration
+        function onSidewaysChanged() { root.turn() }
+    }
     Component.onDestruction: Beat.users -= 1
 
     readonly property real gain: Plasmoid.configuration.sensitivity / 100
@@ -100,7 +123,8 @@ PlasmoidItem {
     fullRepresentation: GlyphLight {
         readonly property real side: root.shape === "dot" ? 72 : 180
         // The lines' default proportions; resize to stretch them.
-        readonly property size stretched: root.shape === "strip" ? Qt.size(64, 200) : Qt.size(side, side)
+        // On its side the strip asks Plasma for a wide, low box, and lies down in it.
+        readonly property size stretched: root.shape === "strip" ? (Plasmoid.configuration.sideways ? Qt.size(200, 64) : Qt.size(64, 200)) : Qt.size(side, side)
         Layout.preferredWidth: stretched.width
         Layout.preferredHeight: stretched.height
         Layout.minimumWidth: 24

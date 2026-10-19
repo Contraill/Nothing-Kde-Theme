@@ -15,6 +15,7 @@ KCM.SimpleKCM {
     property alias cfg_mirror: mirror.checked
     property int cfg_corner
     property alias cfg_segments: segments.value
+    property alias cfg_sideways: sideways.checked
     readonly property int shape: cfg_widgetVariant
     property alias cfg_themeMode: theme.themeMode
     property alias cfg_useSystemAccent: theme.useSystemAccent
@@ -67,6 +68,11 @@ KCM.SimpleKCM {
                 valueFromText: text => text === i18n("Auto") ? 0 : Math.max(2, Number(text) || 0)
                 onValueModified: if (value === 1) value = up.pressed ? 2 : 0
             }
+        }
+        QQC2.CheckBox {
+            id: sideways
+            visible: page.shape === 2
+            text: i18n("On its side")
         }
         // Where the corner sits; four of them frame something.
         RowLayout {

@@ -32,6 +32,10 @@
       <min>0</min>
       <max>16</max>
     </entry>
+    <!-- The strip lies on its side -->
+    <entry name="sideways" type="Bool">
+      <default>false</default>
+    </entry>
     <!-- How far round the arc goes, in degrees -->
     <entry name="arcSweep" type="Int">
       <default>255</default>

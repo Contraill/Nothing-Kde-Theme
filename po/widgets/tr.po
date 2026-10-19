@@ -525,6 +525,9 @@ msgstr "Korkacak bir şey yok"
 msgid "Numbers"
 msgstr "Sayılar"
 
+msgid "On its side"
+msgstr "Yan yatır"
+
 msgid "On the wallpaper, without a card"
 msgstr "Kart olmadan, doğrudan duvar kağıdında"
 
