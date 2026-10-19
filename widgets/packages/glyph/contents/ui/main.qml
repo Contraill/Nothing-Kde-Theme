@@ -8,9 +8,10 @@ import "."
 
 // One glyph light that plays the music with every other glyph widget: they
 // share one beat (Beat.qml), so together they put on one show. Soft passages
-// glow softly, hits flash sharply: the step from one to the other is the
-// point. On each beat the lead moves to the next zone, the louder a hit the
-// more zones join it, and the strongest light everything.
+// glow softly, beats flash. Each beat is ranked against the song's recent
+// ones, so the steps a light shows (parts of the ring, dots of the dot ring,
+// segments of the strip, zones across the lights) come up about equally
+// often and read clearly; the lead walks the lights from beat to beat.
 PlasmoidItem {
     id: root
     preferredRepresentation: fullRepresentation
@@ -23,7 +24,7 @@ PlasmoidItem {
         monochrome: Plasmoid.configuration.monochrome
     }
 
-    readonly property string shape: ["ring", "arc", "strip", "line", "dot", "corner", "dots", "comet", "wave"][Plasmoid.configuration.widgetVariant] ?? "ring"
+    readonly property string shape: ["ring", "arc", "strip", "line", "dot", "corner", "dots"][Plasmoid.configuration.widgetVariant] ?? "ring"
 
     // This desktop's glyph widgets in the order they were added: each light's
     // place in the show, however many there are.
@@ -54,51 +55,52 @@ PlasmoidItem {
     Component.onDestruction: Beat.users -= 1
 
     readonly property real gain: Plasmoid.configuration.sensitivity / 100
-    readonly property real hit: Math.min(1, Beat.hit * gain)
     readonly property real body: Math.min(1, Beat.body * gain)
     readonly property double since: Beat.now - Beat.beatTime
+
+    // A beat's place among the song's last 32 beats, so the steps a light
+    // shows come up about equally often: the ring lights one to four parts,
+    // the dot ring up to twelve dots, the tiers one zone to all five.
+    readonly property real strength: Math.min(1, Beat.beatRank * gain)
+    readonly property real hold: Beat.fade(since, 350)
 
     // The light of part `n` of this widget: the ring has four, the dot ring
     // twelve, the rest one.
     function light(n) {
-        // The ring's further parts need harder hits: all four only on the hardest.
-        const step = 0.30 + zone * 0.13 + (shape === "ring" ? n * 0.2 : 0);
         // Soft: the music's body, a gentle glow well under a flash.
         let soft = Math.max(0, Math.min(1, (body - zone * 0.12) / 0.6)) * 0.38;
-        // The dot ring turns softly with the music on its own.
-        if (shape === "dots") {
+        let beat = 0;
+        if (shape === "ring") {
+            // As many parts as the beat ranks, from the lead part round,
+            // drawing back one by one as it fades.
+            const lead = (Beat.beats + rank) % 4;
+            const lit = Math.ceil(strength * 4 * hold - 0.001);
+            beat = (n - lead + 4) % 4 < lit ? 1 : 0;
+        } else if (shape === "dots") {
+            // The dots turn softly on their own and spread from the lead on a beat.
             const turn = (Beat.travel * 4 + rank * 3) % 12;
-            const d = Math.min(Math.abs(n - turn), 12 - Math.abs(n - turn));
-            soft = Math.max(soft * 0.6, Math.max(0, 1 - d / 2.5) * Math.min(1, 0.25 + body) * 0.55);
+            const near = Math.min(Math.abs(n - turn), 12 - Math.abs(n - turn));
+            soft = Math.max(soft * 0.6, Math.max(0, 1 - near / 2.5) * Math.min(1, 0.25 + body) * 0.5);
+            const lead = (Beat.beats * 5 + rank * 3) % 12;
+            const d = Math.min(Math.abs(n - lead), 12 - Math.abs(n - lead));
+            const lit = Math.round(strength * 12 * Beat.fade(since, 400));
+            beat = lit > 0 && d <= (lit - 1) / 2 ? 1 : 0;
+        } else {
+            // A tier of the beat: zone 1 on every beat, zone 5 on the top fifth;
+            // the lead, walking the lights, flashes whatever the tier.
+            const tier = strength >= zone / 5 ? Beat.fade(since, 300) : 0;
+            const lead = leads(Beat.beats) ? Beat.fade(since, 300) * (0.5 + 0.5 * strength) : 0;
+            beat = Math.max(tier, lead);
         }
-        // Sharp: the hit over this zone's step; the dot ring flashes from its lead instead.
-        const sharp = shape === "dots" ? 0 : Math.max(0, Math.min(1, (hit - step) / 0.1));
-        let chase = 0;
-        if (leads(Beat.beats)) {
-            const flash = Beat.fade(since, 300) * Math.min(1, Beat.beatStrength * gain * 1.1);
-            if (shape === "ring") {
-                // In the ring the lead's flash turns from part to part.
-                chase = (Beat.beats + rank) % 4 === n ? flash : 0;
-            } else if (shape === "dots") {
-                // From the lead dot, wider the harder the hit.
-                const lead = (Beat.beats * 5 + rank * 3) % 12;
-                const d = Math.min(Math.abs(n - lead), 12 - Math.abs(n - lead));
-                const reach = Math.round(Math.min(1, Beat.beatStrength * gain) * 3);
-                chase = d <= reach ? flash * (1 - d / (reach + 1)) : 0;
-            } else {
-                chase = flash;
-            }
-        }
-        // The hardest hits, a few a minute, light everything at once.
-        const blast = Beat.beatStrength * gain > 1.25 ? Beat.fade(since, 170) : 0;
-        return Math.max(soft, sharp, chase, blast);
+        // The hardest beats, the top few in a song, light everything at once.
+        const blast = Beat.beatRank > 0.93 ? Beat.fade(since, 170) : 0;
+        return Math.max(soft, beat, blast);
     }
 
     fullRepresentation: GlyphLight {
         readonly property real side: root.shape === "dot" ? 72 : 180
         // The lines' default proportions; resize to stretch them.
-        readonly property size stretched: root.shape === "strip" ? Qt.size(64, 200) : root.shape === "comet" ? Qt.size(260, 64)
-            : root.shape === "wave" ? Qt.size(260, 96) : Qt.size(side, side)
+        readonly property size stretched: root.shape === "strip" ? Qt.size(64, 200) : Qt.size(side, side)
         Layout.preferredWidth: stretched.width
         Layout.preferredHeight: stretched.height
         Layout.minimumWidth: 24
@@ -107,12 +109,12 @@ PlasmoidItem {
         shape: root.shape
         transparent: Plasmoid.configuration.transparent
         light: n => root.light(n)
-        // The strip, and the line and arc as a progress, fill with the beat.
-        fill: Math.max(root.hit, root.body * 0.6)
+        // The strip, and the line, arc and corner as a progress, rise to the
+        // beat's rank and fall back, with the moment's level in between.
+        fill: Math.max(Math.min(1, Beat.level * root.gain) * 0.85, root.strength * Beat.fade(root.since, 450))
         progress: Plasmoid.configuration.progress
         sweep: Plasmoid.configuration.arcSweep
         mirror: Plasmoid.configuration.mirror
         corner: Plasmoid.configuration.corner
-        travel: Beat.travel
     }
 }

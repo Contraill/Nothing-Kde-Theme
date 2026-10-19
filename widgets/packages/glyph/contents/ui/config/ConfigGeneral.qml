@@ -29,11 +29,11 @@ KCM.SimpleKCM {
             themeMode: theme.themeMode
             useSystemAccent: theme.useSystemAccent
             monochrome: theme.monochrome
-            styles: ["ring", "arc", "strip", "line", "dot", "corner", "dots", "comet", "wave"].map((shape, i) => ({
-                label: [i18n("Ring"), i18n("Arc"), i18n("Strip"), i18n("Line"), i18n("Dot"), i18n("Corner"), i18n("Dot ring"), i18n("Comet"), i18n("Wave")][i], value: i,
+            styles: ["ring", "arc", "strip", "line", "dot", "corner", "dots"].map((shape, i) => ({
+                label: [i18n("Ring"), i18n("Arc"), i18n("Strip"), i18n("Line"), i18n("Dot"), i18n("Corner"), i18n("Dot ring")][i], value: i,
                 source: Qt.resolvedUrl("../GlyphLight.qml"),
                 props: {shape: shape, light: n => shape === "dots" ? Math.max(0, 1 - Math.min(n, 12 - n) / 3) : [0.95, 0.45, 0.8, 0.25][n % 4],
-                        fill: 0.6, travel: 0.7, progress: progress.checked, sweep: sweep.value, mirror: mirror.checked, corner: page.cfg_corner, transparent: theme.transparent}
+                        fill: 0.6, progress: progress.checked, sweep: sweep.value, mirror: mirror.checked, corner: page.cfg_corner, transparent: theme.transparent}
             }))
         }
         QQC2.CheckBox {
@@ -43,12 +43,12 @@ KCM.SimpleKCM {
         }
         QQC2.CheckBox {
             id: mirror
-            visible: page.shape === 3 || page.shape === 7
+            visible: page.shape === 3
             text: i18n("The other diagonal")
         }
         QQC2.Label {
             Layout.fillWidth: true
-            visible: [2, 3, 5, 7, 8].includes(page.shape)
+            visible: [2, 3, 5].includes(page.shape)
             text: i18n("Resize the widget to stretch it: lines run corner to corner, or straight when long and thin; the strip gains segments; the corner's arms follow the edges.")
             wrapMode: Text.Wrap
             opacity: 0.7

@@ -168,9 +168,6 @@ msgstr "Kahve"
 msgid "Coffee mode from the quick toggles"
 msgstr "Hızlı geçişlerden kahve modu"
 
-msgid "Comet"
-msgstr "Kuyruklu yıldız"
-
 msgid "Computer"
 msgstr "Bilgisayar"
 
@@ -845,9 +842,6 @@ msgstr "HAFTA"
 
 msgid "Watch"
 msgstr "Akıllı saat"
-
-msgid "Wave"
-msgstr "Dalga"
 
 msgid "Wi-Fi"
 msgstr "Wi-Fi"

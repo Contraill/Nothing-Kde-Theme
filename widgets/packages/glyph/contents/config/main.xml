@@ -6,7 +6,7 @@
   <kcfgfile name=""/>
 
   <group name="General">
-    <!-- 0 ring, 1 arc, 2 strip, 3 line, 4 dot, 5 corner, 6 dot ring, 7 comet, 8 wave -->
+    <!-- 0 ring, 1 arc, 2 strip, 3 line, 4 dot, 5 corner, 6 dot ring -->
     <entry name="widgetVariant" type="Int">
       <default>0</default>
     </entry>

@@ -15,7 +15,7 @@ import "../../../../shared" as Glassy
 // the widget instead of being cut at its edge.
 Glassy.EveryFrame {
     id: f
-    // "ring", "arc", "strip", "line", "dot", "corner", "dots", "comet" or "wave"
+    // "ring", "arc", "strip", "line", "dot", "corner" or "dots"
     property string shape: "ring"
     // Unused; every design takes it so settings previews can pass it.
     property string family
@@ -24,15 +24,13 @@ Glassy.EveryFrame {
     property bool progress: false
     // The arc's length in degrees; its gap stays at the lower right.
     property real sweep: 255
-    // The line (and the comet's path) runs the other diagonal.
+    // The line runs the other diagonal.
     property bool mirror: false
     // The corner: 0 top left, 1 top right, 2 bottom left, 3 bottom right.
     property int corner: 0
-    // The shared distance the comet and the wave have moved.
-    property real travel: 0
 
     // Each round shape's own box; the line and strip use the widget's pixels.
-    readonly property bool stretch: ["line", "strip", "corner", "comet", "wave"].includes(shape)
+    readonly property bool stretch: ["line", "strip", "corner"].includes(shape)
     readonly property size box: shape === "dot" ? Qt.size(50, 50) : Qt.size(150, 150)
     // The glow's room on every side, as a share of the box's short side.
     readonly property real glowRoom: 0.16
@@ -44,7 +42,7 @@ Glassy.EveryFrame {
     readonly property real thickness: shape === "strip" ? Math.max(6, Math.min(22, shortSide * 0.42)) : Math.max(4, Math.min(16, shortSide * 0.25))
     readonly property real stretchRoom: thickness * 0.9 + (transparent ? 0 : thickness * 0.5)
     inset: transparent ? 0 : 10
-    card: shape === "strip" || shape === "comet" ? "pill" : shape === "dot" || shape === "dots" ? "circle" : "block"
+    card: shape === "strip" ? "pill" : shape === "dot" || shape === "dots" ? "circle" : "block"
 
     readonly property color lit: colors.accent
     readonly property color unlit: colors.alpha(colors.textPrimary, 0.10)
@@ -257,81 +255,6 @@ Glassy.EveryFrame {
                 x: (75 + 62 * Math.cos(angle)) * lights.u - width / 2
                 y: (75 + 62 * Math.sin(angle)) * lights.u - height / 2
                 color: f.tone(f.light(index))
-            }
-        }
-        // The comet's rail, unlit glass where it runs.
-        Shape {
-            anchors.fill: parent
-            visible: f.shape === "comet"
-            preferredRendererType: Shape.CurveRenderer
-            Stroke {
-                strokeWidth: f.thickness * 0.5
-                strokeColor: f.unlit
-                startX: comet.x0; startY: comet.y0
-                PathLine { x: comet.x1; y: comet.y1 }
-            }
-        }
-        // A comet going to and fro along the line, its trail fading behind.
-        Repeater {
-            id: comet
-            readonly property real cap: f.thickness * 0.7
-            readonly property bool flat: lights.width >= 3 * lights.height
-            readonly property bool upright: lights.height >= 3 * lights.width
-            readonly property real x0: upright ? lights.width / 2 : cap
-            readonly property real y0: flat ? lights.height / 2 : f.mirror ? cap : lights.height - cap
-            readonly property real x1: upright ? lights.width / 2 : lights.width - cap
-            readonly property real y1: flat ? lights.height / 2 : f.mirror ? lights.height - cap : cap
-            // There and back: the shared distance folded into 0..1.
-            function at(distance) {
-                const u = ((distance % 2) + 2) % 2;
-                return u > 1 ? 2 - u : u;
-            }
-            readonly property real head: at(f.travel * 0.5)
-            readonly property real brightness: Math.max(0.3 + 0.7 * f.fill, f.light(0))
-            model: f.shape === "comet" ? 12 : 0
-            Rectangle {
-                required property int index
-                readonly property real place: comet.at(f.travel * 0.5 - index * 0.025)
-                readonly property real size: f.thickness * (1.4 - index * 0.06)
-                width: size
-                height: size
-                radius: size / 2
-                x: comet.x0 + (comet.x1 - comet.x0) * place - size / 2
-                y: comet.y0 + (comet.y1 - comet.y0) * place - size / 2
-                color: f.tone(comet.brightness * Math.pow(1 - index / 12, 1.6))
-            }
-        }
-        // A wave flowing along the widget, as tall as the music is full.
-        Shape {
-            id: wave
-            anchors.fill: parent
-            visible: f.shape === "wave"
-            // A see-through stroke blends twice where the polyline's joints
-            // overlap and shows ribs: draw it solid and fade the whole layer.
-            readonly property real level: Math.max(0.35 + 0.65 * f.fill, f.light(0))
-            layer.enabled: true
-            layer.samples: 4
-            opacity: f.tone(level).a
-            readonly property bool upright: lights.height > lights.width * 1.5
-            readonly property real length: upright ? lights.height : lights.width
-            readonly property real room: (upright ? lights.width : lights.height) / 2 - f.thickness / 2
-            readonly property real swing: room * (0.12 + 0.88 * Math.min(1, f.fill))
-            readonly property real cycles: Math.max(1, Math.round(length / Math.max(1, room * 4)))
-            Stroke {
-                strokeWidth: f.thickness
-                strokeColor: Qt.rgba(f.tone(wave.level).r, f.tone(wave.level).g, f.tone(wave.level).b, 1)
-                joinStyle: ShapePath.RoundJoin
-                PathPolyline {
-                    path: {
-                        const points = [], n = 48;
-                        for (let i = 0; i <= n; ++i) {
-                            const along = f.thickness / 2 + (wave.length - f.thickness) * i / n;
-                            const off = Math.sin((i / n * wave.cycles + f.travel * 0.6) * 2 * Math.PI) * wave.swing;
-                            points.push(wave.upright ? Qt.point(lights.width / 2 + off, along) : Qt.point(along, lights.height / 2 + off));
-                        }
-                        return points;
-                    }
-                }
             }
         }
     }

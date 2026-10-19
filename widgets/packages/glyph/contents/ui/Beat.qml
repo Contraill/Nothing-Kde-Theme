@@ -26,6 +26,21 @@ QtObject {
     property real previous: 0
     property real hit: 0
     property real body: 0
+    // `level` is the hit ranked against this song's last eight seconds of
+    // hits, so a meter's steps come up about equally often, whatever the
+    // song or the volume; `beatRank` ranks a beat against the last 32.
+    property real level: 0
+    property real beatRank: 0
+    property var recentHits: []
+    property var recentBeats: []
+    // Until a song has given a dozen, typical hits stand in.
+    readonly property var typical: [0.55, 0.62, 0.7, 0.78, 0.86, 0.95, 1.05, 1.15, 1.3, 1.6]
+    function rank(list, value) {
+        const all = list.length < 12 ? list.concat(typical) : list;
+        let below = 0;
+        for (const v of all) if (v <= value) ++below;
+        return below / all.length;
+    }
     // A beat is a hit that rises out of a quiet moment.
     property int beats: 0
     property double beatTime: 0
@@ -34,29 +49,35 @@ QtObject {
     // The clock the lights fade by; ticks while anything is lit.
     property double now: 0
     property double lastSample: 0
-    // How far the moving lights (comet, wave, the dot ring's turn) have
-    // gone: a shared distance, faster the more the music drives.
+    // How far the dot ring has turned: a shared distance, faster the more
+    // the music drives.
     property real travel: 0
     property double lastStep: 0
 
     // Samples heard since the sound came on: the first second settles the
     // running loudness as a plain average, so a song's start is not one flash.
     property int heard: 0
-    function step(level) {
+    function step(sample) {
         if (heard === 0) {
-            if (level < 0.01) return;
-            mean = level;
-            previous = level;
+            if (sample < 0.01) return;
+            mean = sample;
+            previous = sample;
             spread = 0;
         }
         heard = Math.min(heard + 1, 1000);
-        mean += (level - mean) * Math.max(0.04, 1 / heard);
-        spread += (Math.abs(level - mean) - spread) * Math.max(0.05, 1 / heard);
-        const above = Math.max(0, level - mean) / Math.max(0.02, 2.2 * spread);
-        const rise = Math.max(0, level - previous) / Math.max(0.02, 3 * spread);
-        previous = level;
+        mean += (sample - mean) * Math.max(0.04, 1 / heard);
+        spread += (Math.abs(sample - mean) - spread) * Math.max(0.05, 1 / heard);
+        const above = Math.max(0, sample - mean) / Math.max(0.02, 2.2 * spread);
+        const rise = Math.max(0, sample - previous) / Math.max(0.02, 3 * spread);
+        previous = sample;
         const raw = above * 0.7 + rise * 0.6;
         hit = Math.max(hit * 0.62, Math.min(1, raw));
+        // 25 samples a second: 200 are eight seconds of the song.
+        if (raw > 0.05) {
+            recentHits.push(raw);
+            if (recentHits.length > 200) recentHits.shift();
+        }
+        beat.level = Math.max(beat.level * 0.72, raw > 0.05 ? rank(recentHits, raw) : 0);
         body += (Math.min(1, above) - body) * (above > body ? 0.35 : 0.08);
         now = Date.now();
         advance();
@@ -65,6 +86,9 @@ QtObject {
             beatTime = now;
             // Unclipped: most beats land near 0.6 to 1.3, the hardest well over.
             beatStrength = raw;
+            recentBeats.push(raw);
+            if (recentBeats.length > 32) recentBeats.shift();
+            beatRank = rank(recentBeats, raw);
             armed = false;
         } else if (hit < 0.35) {
             armed = true;
@@ -91,7 +115,7 @@ QtObject {
     readonly property Timer ticker: Timer {
         interval: 30
         repeat: true
-        running: beat.users > 0 && (beat.hit > 0.01 || beat.body > 0.01 || Date.now() - beat.beatTime < 600)
+        running: beat.users > 0 && (beat.hit > 0.01 || beat.body > 0.01 || beat.level > 0.01 || Date.now() - beat.beatTime < 600)
         onTriggered: {
             if (Date.now() - beat.lastSample > 50) beat.step(beat.monitor.volume);
             else { beat.now = Date.now(); beat.advance(); }
