@@ -19,4 +19,4 @@ for name in battery clock-analog clock-digital clock-digital-large date media no
     kpackagetool6 --type Plasma/Applet --install "$stage/packages/$name"
   fi
 done
-printf 'Nothing KDE: 12 desktop widgets installed. Add Widgets / Gereç Ekle. No panels or services changed.\n'
+printf 'Nothing KDE: 15 desktop widgets installed. Add Widgets / Gereç Ekle. No panels or services changed.\n'
