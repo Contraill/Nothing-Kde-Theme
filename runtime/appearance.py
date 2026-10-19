@@ -217,7 +217,17 @@ def config_text(p, options=None):
     # Keep those opaque to avoid white-on-white startup views/editable combos.
     # Window, button, text, highlight and link roles need no config override.
     roles = {'base.color': p['base'], 'alt.base.color': p['alternate']}
-    return configure_glassy(TEMPLATE.read_text(), options or glassy_settings()) + '\n[GeneralColors]\n' + ''.join(k + '=' + v + '\n' for k, v in roles.items())
+    config = configure_glassy(TEMPLATE.read_text(), options or glassy_settings())
+    # Exception: menu and tooltip text sit on the glass rendered from this
+    # palette, so they take its colours too. A process without the KDE palette
+    # (KWin's window menu) otherwise drew black text on dark glass.
+    menu = {'[MenuItem]\n': {'text.normal.color': p['text'], 'text.focus.color': p['highlight_text'],
+                             'text.press.color': p['highlight_text']},
+            '[ToolTip]\n': {'text.normal.color': p['text']}}
+    for header, keys in menu.items():
+        assert config.count(header) == 1, header
+        config = config.replace(header, header + ''.join(k + '=' + v + '\n' for k, v in keys.items()))
+    return config + '\n[GeneralColors]\n' + ''.join(k + '=' + v + '\n' for k, v in roles.items())
 
 
 def running_kvantum_apps():

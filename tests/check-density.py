@@ -73,7 +73,8 @@ def main():
                             old=configparser.ConfigParser(interpolation=None); old.optionxform=str; old.read_string(config)
                             old['PanelButtonCommand'].update({'text.margin.top':'4','text.margin.bottom':'4',
                                 'text.margin.left':'7','text.margin.right':'7','min_height':'1.5font'})
-                            for key in ('text.margin.top','text.margin.bottom','min_height'): old['MenuItem'].pop(key,None)
+                            for group in ('MenuItem','ItemView'):
+                                for key in ('text.margin.top','text.margin.bottom','min_height'): old[group].pop(key,None)
                             with (kv/'Glassy.kvconfig').open('w') as stream: old.write(stream)
                             baseline=json.loads(subprocess.run([str(args.probe.resolve())],env=env,check=True,
                                                 capture_output=True,text=True,timeout=20).stdout)

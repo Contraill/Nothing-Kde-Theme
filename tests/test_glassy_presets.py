@@ -57,5 +57,8 @@ class PresetTests(unittest.TestCase):
             self.assertEqual(c['PanelButtonCommand']['min_height'], ['1.4font','1.6font','1.8font'][density])
             self.assertEqual(c.getint('PanelButtonCommand','text.margin.top'), [0,2,4][density])
             self.assertEqual(c.getint('MenuItem','text.margin.top'), density)
+            # Views no longer inherit menu items, but keep their spacing.
+            self.assertEqual(c.getint('ItemView','text.margin.top'), density)
+            self.assertEqual(c['ItemView']['min_height'], c['MenuItem']['min_height'])
             self.assertEqual(c.getint('PanelButtonCommand','frame.top'), metrics(s)['radius'])
             self.assertNotIn('max_height', c['PanelButtonCommand'])

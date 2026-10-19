@@ -152,9 +152,14 @@ inherits=MenuItem
 [ToolTip]
 inherits=Menu
 [ItemView]
-inherits=MenuItem
+inherits=PanelButtonCommand
+frame.element=selection
+interior.element=selection
+text.margin.top=1
+text.margin.bottom=1
 text.margin.left=4
 text.margin.right=4
+min_height=1font
 [CheckBox]
 frame=false
 interior=true

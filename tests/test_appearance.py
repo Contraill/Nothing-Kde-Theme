@@ -26,11 +26,17 @@ class AppearanceTests(unittest.TestCase):
     def test_config_omits_live_palette_roles(self):
         import configparser
         with patch.object(app,'TEMPLATE',ROOT/'assets/kvantum/Glassy/Glassy.kvconfig'):
-            content=app.config_text({'base':'#121212','alternate':'#202020'})
+            content=app.config_text({'base':'#121212','alternate':'#202020','text':'#eeeeee','highlight_text':'#ffffff'})
         config=configparser.ConfigParser(interpolation=None)
         config.read_string(content)
         self.assertEqual(dict(config['GeneralColors']),
                          {'base.color':'#121212','alt.base.color':'#202020'})
+        # Menu and tooltip text match the glass they sit on; views keep native palette text.
+        self.assertEqual(config['MenuItem']['text.normal.color'],'#eeeeee')
+        self.assertEqual(config['MenuItem']['text.focus.color'],'#ffffff')
+        self.assertEqual(config['ToolTip']['text.normal.color'],'#eeeeee')
+        self.assertEqual(config['ItemView']['inherits'],'PanelButtonCommand')
+        self.assertFalse([key for key in config['ItemView'] if key.endswith('color')])
 
     def test_native_palette_signal_is_not_gated_by_asset_rewrites(self):
         with patch.object(app,'read',return_value='Glassy'),patch.object(app,'palette',return_value={}), \

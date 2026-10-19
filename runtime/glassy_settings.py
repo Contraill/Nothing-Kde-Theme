@@ -64,7 +64,7 @@ def configure(template, s):
     c['ToolTip']['frame.element']='tooltip'; c['ToolTip']['interior.element']='tooltip'
     for key in ('top','bottom'):
         c['PanelButtonCommand']['text.margin.'+key]=str(m['margin'])
-        c['MenuItem']['text.margin.'+key]=str(m['menu_margin'])
+        for group in ('MenuItem','ItemView'): c[group]['text.margin.'+key]=str(m['menu_margin'])
     for key in ('left','right'):
         c['PanelButtonCommand']['text.margin.'+key]=str(m['horizontal'])
     # Qt/Kvantum measures the actual font and icons in sizeFromContents. Keep
@@ -72,7 +72,7 @@ def configure(template, s):
     # There is no supported max_height key: do not cap accessibility fonts or
     # fight application layouts. These minimums are font-relative lower bounds.
     c['PanelButtonCommand']['min_height']=m['min_height']
-    c['MenuItem']['min_height']='1font'
+    for group in ('MenuItem','ItemView'): c[group]['min_height']='1font'
     # Nine-slice widths MUST match the generated SVG geometry, including Square.
     for group, radius in (('PanelButtonCommand',m['radius']),('ScrollbarSlider',min(m['radius'],m['scroll']//2)),
                           ('HeaderSection',min(m['radius'],2)),('Slider',min(m['radius'],2)),('Focus',min(m['radius'],2))):

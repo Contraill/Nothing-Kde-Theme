@@ -37,7 +37,10 @@ transition.
 The refactor removed 11 unnecessary overrides: window, button, text, window text,
 button text, highlight, highlighted text, tooltip text, disabled text, link, and
 visited link. Per-control text colors are no longer specified either; Kvantum's
-documented palette fallback is used. The native KDE `PaletteChanged` notification
+documented palette fallback is used. The one exception is menu and tooltip text,
+which takes the same palette as the glass it is drawn on: a process without the KDE
+palette (KWin's window menu) otherwise drew black text on dark glass. List views no
+longer inherit menu items, so they keep the native palette. The native KDE `PaletteChanged` notification
 also no longer depends on a file having been written. It is emitted even when only
 text/link colors changed.
 
