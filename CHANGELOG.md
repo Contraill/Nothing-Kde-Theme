@@ -3,6 +3,13 @@
 All notable changes. Versions follow [Semantic Versioning](https://semver.org/); release
 candidates are `X.Y.Z-rcN`. The format follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Changed
+- Without pacman the installer no longer stops: Glassy uses the Kvantum and Aurorae your
+  distribution installed, found by their plugins, and is skipped with a note when they are
+  missing; Glassy Settings waits for cmake and a compiler the same way.
+
 ## [1.0.0] - 2026-10-20
 
 The first stable release, since 0.6.0-rc32.

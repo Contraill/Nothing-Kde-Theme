@@ -59,7 +59,8 @@ Three rules hold throughout:
 - **Owned files only.** What Glassy, the login wallpaper, Kitty and Dolphin write is recorded
   with its hash; a file you edited afterwards is kept and reported, never overwritten or
   removed. The accent links back up each file before they change it.
-- **Packages stay.** Glassy installs Kvantum or Aurorae from the distribution only when
-  missing, and no step ever removes a package.
+- **Packages stay.** On Arch, Glassy installs Kvantum or Aurorae through pacman only when
+  missing; elsewhere it takes what is installed, and without them the rest installs without
+  Glassy. No step ever removes a package.
 - **Uninstall stops when it must.** It refuses to run while the command-line ALSA microphone
   block is on, since the helper that lifts it is removed with the rest.

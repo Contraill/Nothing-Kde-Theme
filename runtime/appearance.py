@@ -2,6 +2,7 @@
 """Nothing KDE application style / native Aurorae installation and ownership."""
 import argparse
 import fcntl
+import glob
 import hashlib
 import json
 import os
@@ -145,9 +146,32 @@ def reload_decoration():
         run(*reconfigure, check=False)
 
 
+class MissingDependencies(ValueError):
+    """Glassy cannot run here yet; the rest of Nothing KDE can (exit status 3)."""
+
+
+# Without pacman, the plugins themselves show what is installed, whichever
+# package manager put them there.
+QT6_PLUGINS = ('/usr/lib/qt6/plugins', '/usr/lib64/qt6/plugins', '/usr/lib/*-linux-gnu/qt6/plugins')
+QT5_PLUGINS = ('/usr/lib/qt/plugins', '/usr/lib64/qt5/plugins', '/usr/lib/*-linux-gnu/qt5/plugins')
+
+
+def plugin_present(roots, *names):
+    found = [root for pattern in roots for root in glob.glob(pattern)]
+    return any(Path(root, name).is_file() for root in found for name in names)
+
+
 def dependencies(state, qt5=False):
     if not shutil.which('pacman'):
-        raise ValueError('Install Qt6 Kvantum and Aurorae using your distribution, then rerun on supported Arch/CachyOS')
+        wanted = {'Kvantum for Qt 6': plugin_present(QT6_PLUGINS, 'styles/libkvantum.so'),
+                  'Aurorae': plugin_present(QT6_PLUGINS, 'org.kde.kdecoration3/org.kde.kwin.aurorae.so',
+                                            'org.kde.kdecoration2/org.kde.kwin.aurorae.so')}
+        if qt5: wanted['Kvantum for Qt 5'] = plugin_present(QT5_PLUGINS, 'styles/libkvantum.so')
+        missing = [name for name, present in wanted.items() if not present]
+        if missing:
+            raise MissingDependencies('Glassy needs ' + ' and '.join(missing) + ': install them with your '
+                                      "distribution's package manager, then run ./install.sh --appearance install. Nothing was changed.")
+        return
     names = ['kvantum', 'aurorae'] + (['kvantum-qt5'] if qt5 else [])
     # Verified Arch providers; only source-build tools, never a new style engine.
     if state.get('settings_build') != settings_signature() or not (DATA/'nothing-plasma/bin/glassy-settings').is_file():
@@ -302,6 +326,10 @@ def install_settings_tool(state):
     signature = settings_signature()
     if state.get('settings_build') != signature or not binary.is_file():
         if not shutil.which('cmake') or not shutil.which('c++'):
+            # Arch gets the build tools above; elsewhere the utility waits for them.
+            if not shutil.which('pacman'):
+                print('Glassy Settings skipped: building it needs cmake and a C++ compiler. Glassy itself is installed.')
+                return
             raise ValueError('Building the native Glassy settings utility requires cmake and a C++ compiler (build tools only).')
         with tempfile.TemporaryDirectory(prefix='glassy-settings-build-') as directory:
             subprocess.run(['cmake','-S',str(source),'-B',directory,'-DCMAKE_BUILD_TYPE=Release'],check=True)
@@ -417,5 +445,7 @@ def main():
 
 if __name__ == '__main__':
     try: main()
+    except MissingDependencies as error:
+        print(error, file=sys.stderr); sys.exit(3)
     except (OSError, ValueError, subprocess.SubprocessError) as error:
         sys.exit(str(error))

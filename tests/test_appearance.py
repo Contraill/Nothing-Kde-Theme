@@ -23,6 +23,28 @@ class AppearanceTests(unittest.TestCase):
             defaults = (ROOT / f'plasma/look-and-feel/com.nothingplasma.{mode}/contents/defaults').read_text()
             self.assertIn('org.glassy.decoration', defaults)
 
+    def test_without_pacman_glassy_takes_what_is_installed(self):
+        # Outside Arch nothing is installed: the plugins decide, and a missing one stops only Glassy.
+        with tempfile.TemporaryDirectory() as root:
+            plugins = Path(root) / 'qt6/plugins'
+            (plugins / 'styles').mkdir(parents=True)
+            (plugins / 'styles/libkvantum.so').touch()
+            with patch.object(app.shutil, 'which', return_value=None), \
+                 patch.object(app, 'QT6_PLUGINS', (str(plugins),)), patch.object(app, 'run') as run:
+                with self.assertRaises(app.MissingDependencies) as missing:
+                    app.dependencies({})
+                self.assertIn('Aurorae', str(missing.exception))
+                self.assertNotIn('Kvantum', str(missing.exception))
+                (plugins / 'org.kde.kdecoration3').mkdir()
+                (plugins / 'org.kde.kdecoration3/org.kde.kwin.aurorae.so').touch()
+                app.dependencies({})
+                run.assert_not_called()
+        # install.sh goes on without Glassy on status 3 and stops on any other failure.
+        install = (ROOT / 'install.sh').read_text()
+        self.assertIn('if (( appearance_status == 3 )); then', install)
+        self.assertIn('exit "$appearance_status"', install)
+        self.assertIn('sys.exit(3)', (ROOT / 'runtime/appearance.py').read_text())
+
     def test_config_omits_live_palette_roles(self):
         import configparser
         with patch.object(app,'TEMPLATE',ROOT/'assets/kvantum/Glassy/Glassy.kvconfig'):

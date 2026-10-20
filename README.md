@@ -28,7 +28,7 @@ Turkish, with no daemon of its own.
 | KDE Frameworks | 6 | 6.31 |
 | Kvantum (Glassy) | 1.1 | 1.1.8 |
 | Session | Wayland | Wayland; X11 is untested |
-| Distribution | Arch Linux, CachyOS | CachyOS; Glassy's setup installs Kvantum through pacman |
+| Distribution | Arch Linux, CachyOS; others untested | CachyOS. Elsewhere, install Kvantum and Aurorae first for Glassy; without them the installer skips Glassy |
 
 It also needs Python 3, `kpackagetool6` and `qdbus6`. The island is built on Plasma's own
 components (plasma-nm, plasma-pa, bluez-qt, PowerDevil, libksysguard), and `install.sh` warns

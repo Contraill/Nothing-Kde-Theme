@@ -170,7 +170,16 @@ check_plasma_modules
 
 # Capture original appearance before any bundle settings change. Partial panel
 # or widget installs do not claim ownership of the application/decorations.
-if (( ! PANEL_ONLY )); then python3 "$ROOT/runtime/appearance.py" install; fi
+if (( ! PANEL_ONLY )); then
+  # 3: Glassy's Kvantum or Aurorae is missing outside Arch; the rest installs without Glassy.
+  appearance_status=0
+  python3 "$ROOT/runtime/appearance.py" install || appearance_status=$?
+  if (( appearance_status == 3 )); then
+    printf 'Continuing without Glassy.\n' >&2
+  elif (( appearance_status )); then
+    exit "$appearance_status"
+  fi
+fi
 
 install_panel_package
 install_launcher_bridge
