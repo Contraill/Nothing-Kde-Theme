@@ -91,9 +91,26 @@ class PackageTests(unittest.TestCase):
             ]
             artifacts += [('Plasma/Applet', path.name) for path in sorted(DIST.glob(f'Nothing-KDE-Widget-*-{VERSION}.plasmoid'))]
             for kind, name in artifacts:
-                result = subprocess.run(['kpackagetool6', '--type', kind, '--install', str(DIST / name)],
+                path = self.without_store_dependencies(DIST / name, Path(td)) if kind == 'Plasma/LookAndFeel' else DIST / name
+                result = subprocess.run(['kpackagetool6', '--type', kind, '--install', str(path)],
                                         env=env, capture_output=True, text=True, timeout=20)
                 self.assertEqual(result.returncode, 0, name + '\n' + result.stdout + result.stderr)
+
+    def without_store_dependencies(self, path, scratch):
+        # kpackagetool6 would install a theme's store dependencies from the store
+        # first: check their form, and install the theme itself without them.
+        with zipfile.ZipFile(path) as source:
+            data = json.loads(source.read('metadata.json'))
+            dependencies = data.pop('X-KPackage-Dependencies', [])
+            for url in dependencies:
+                self.assertRegex(url, r'^kns://(plasmoids|plasma-themes|colorschemes)\.knsrc/api\.kde-look\.org/\d+$')
+            if not dependencies:
+                return path
+            copy = scratch / path.name
+            with zipfile.ZipFile(copy, 'w', zipfile.ZIP_DEFLATED) as target:
+                for item in source.infolist():
+                    target.writestr(item, json.dumps(data, indent=2) + '\n' if item.filename == 'metadata.json' else source.read(item))
+        return copy
 
     @unittest.skipUnless(shutil.which('kpackagetool6'), 'KDE package tools unavailable')
     def test_changed_applets_upgrade_and_remove_in_isolation(self):
