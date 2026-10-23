@@ -125,8 +125,14 @@ PlasmoidItem {
         // The lines' default proportions; resize to stretch them.
         // On its side the strip asks Plasma for a wide, low box, and lies down in it.
         readonly property size stretched: root.shape === "strip" ? (Plasmoid.configuration.sideways ? Qt.size(200, 64) : Qt.size(64, 200)) : Qt.size(side, side)
-        Layout.preferredWidth: stretched.width
-        Layout.preferredHeight: stretched.height
+        // Plasma grows a desktop widget to what it prefers whenever that is
+        // set, so at every login: an upright line came back wide, and slanted.
+        // Once placed, the light prefers no more than the box it was given.
+        // shortcut: a box left at the desktop's default size still grows, as it cannot be told from a new one.
+        readonly property Item box: root.parent?.layout ? root.parent : null
+        readonly property bool placed: box !== null && (box.width !== box.layout.defaultItemWidth || box.height !== box.layout.defaultItemHeight)
+        Layout.preferredWidth: placed ? Math.min(stretched.width, box.width) : stretched.width
+        Layout.preferredHeight: placed ? Math.min(stretched.height, box.height) : stretched.height
         Layout.minimumWidth: 24
         Layout.minimumHeight: 24
         colors: nColors
