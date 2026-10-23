@@ -5,10 +5,16 @@ candidates are `X.Y.Z-rcN`. The format follows [Keep a Changelog](https://keepac
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-23
+
 ### Changed
 - Without pacman the installer no longer stops: Glassy uses the Kvantum and Aurorae your
   distribution installed, found by their plugins, and is skipped with a note when they are
   missing; Glassy Settings waits for cmake and a compiler the same way.
+
+### Fixed
+- A resized Glyph light keeps its size after logging in: an upright or flat line no longer
+  comes back slanted.
 
 ## [1.0.0] - 2026-10-20
 

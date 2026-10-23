@@ -18,7 +18,7 @@ PATTERN = r'\d+\.\d+\.\d+(-rc\d+)?'
 
 def metadata_files():
     listed = subprocess.run(['git', 'ls-files', '*metadata.json'], cwd=ROOT, capture_output=True, text=True, check=True).stdout.split()
-    return [ROOT / path for path in listed if 'upstream-cache' not in path]
+    return [ROOT / path for path in listed if 'upstream-cache' not in path and 'org.glassy.decoration' not in path]
 
 
 def main():
